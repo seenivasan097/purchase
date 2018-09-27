@@ -7,83 +7,33 @@
     <script type="text/javascript" src="js/script.js"></script>
 
 
-    <style>
+<style>
     
 </style>
 
 }
-
+<div class="row">
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+        <a class="btn btn-success" href="/Transaction/Transaction/InvoiceList" title="Invoice List">Invoice List</a>
+    </div>
+</div>
+</br>
 <div class="card border-primary">
     <div class="card-body">
-
-        <div class="row">
-            <div class="col-md-12"></div>
-            <div class="col-md-2">
-
-                <label><b>Invoice ID</b><span style="color: red;"> *</span></label>
-            </div>
-
-            <div class="col-md-4">
-                <select class="form-control" tabindex="-1" aria-hidden="true">
-
-
-                    <option value="">-Select-</option>
-                    <option value="Customer">Invoice ID1</option>
-                    <option value="Supplier">Invoice ID2</option>
-                </select>
-            </div>
-
-
-
-
+        <div class="alert alert-success text-center divsuccess hidden">
         </div>
-        <br />
-
-        <div class="row">
-            <div class="col-md-12"></div>
-            <div class="col-md-2">
-
-                <label><b>Location Name</b><span style="color: red;"> *</span></label>
-            </div>
-
-            <div class="col-md-4">
-                <input type="text" value="" class="form-control" />
-                <!-- Dropdown List Option -->
-
-            </div>
-            <div class="col-md-2">
-
-                <label><b>Taxable</b><span style="color: red;"> *</span></label>
-            </div>
-            <div class="col-md-4">
-                <select class="form-control" tabindex="-1" aria-hidden="true">
-
-
-                    <option value="">-Select-</option>
-                    <option value="Customer">Taxable</option>
-                    <option value="Supplier">Non Taxable</option>
-                </select>
-                <!-- Dropdown List Option -->
-
-            </div>
+        <div class="alert alert-danger text-center diverror hidden">
         </div>
-
-        <br />
-
         <div class="row">
-            <div class="col-md-12"></div>
             <div class="col-md-2">
-
-                <label><b>Invoice No</b><span style="color: red;"> *</span></label>
+                <label><b>Invoice NO</b></label>
             </div>
-
             <div class="col-md-4">
-                <input type="text" value="" class="form-control" />
-                <!-- Dropdown List Option -->
-
+                <input type="hidden" id="hdnInvoiceId" value="0" />
+                <input type="text" value="" class="form-control" id="txtInvoiceNo" disabled />
             </div>
             <div class="col-md-2">
-
                 <label><b>Invoice Date</b><span style="color: red;"> *</span></label>
             </div>
             <div class="col-md-4">
@@ -93,32 +43,80 @@
                             <i class="fa fa-calendar"></i>
                         </span>
                     </div>
-                    <input type="text" id="txtFromDate" onkeydown="return false;" class="form-control">
+                    <input type="text" id="txtInvoiceDate" onkeydown="return false;" class="form-control">
                 </div>
             </div>
         </div>
         <br />
         <div class="row">
-            <div class="col-md-12"></div>
             <div class="col-md-2">
-
-                <label><b>DC No</b><span style="color: red;"> *</span></label>
+                <label><b>Customer</b><span style="color: red;"> *</span></label>
+            </div>
+            <div class="col-md-4">
+                <input type="hidden" id="selectedUserId" value="0" />
+                <input type="text" id="txtCustomerName" class="form-control" />
+                <div class="errorCustomerName custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Choose Customer Name
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label><b>Approval Date</b></label>
+            </div>
+            <div class="col-md-4">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                    </div>
+                    <input type="text" id="txtApprovalDate" onkeydown="return false;" class="form-control">
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2">
+                <label><b>Location Name</b><span style="color: red;"> *</span></label>
             </div>
 
             <div class="col-md-4">
-                <select class="form-control" tabindex="-1" aria-hidden="true">
-
-
-                    <option value="">-Select-</option>
-                    <option value="Customer">DC No1</option>
-                    <option value="Supplier">DC No1</option>
-                </select>
-                <!-- Dropdown List Option -->
-
+                <input type="text" value="" class="form-control" id="txtLocation" />
+                <div class="errorLocation custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Enter Location Name
+                    </p>
+                </div>
             </div>
             <div class="col-md-2">
 
-                <label><b>DC Date</b><span style="color: red;"> *</span></label>
+                <label><b>Taxable</b><span style="color: red;"> *</span></label>
+            </div>
+            <div class="col-md-4">
+                <select class="form-control" tabindex="-1" id="drpTaxable" aria-hidden="true">
+                    <option value="">-Select-</option>
+                    <option value="Customer">Taxable</option>
+                    <option value="Supplier">Non Taxable</option>
+                </select>
+                <div class="errorTaxable custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Select Taxable
+                    </p>
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-md-2">
+                <label><b>DC No</b></label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" value="" class="form-control" id="txtDCNo" />
+            </div>
+            <div class="col-md-2">
+                <label><b>DC Date</b></label>
             </div>
 
             <div class="col-md-4">
@@ -128,7 +126,7 @@
                             <i class="fa fa-calendar"></i>
                         </span>
                     </div>
-                    <input type="text" id="txtToDate" onkeydown="return false;" class="form-control">
+                    <input type="text" id="txtDCDate" onkeydown="return false;" class="form-control">
                 </div>
             </div>
 
@@ -138,158 +136,85 @@
         <div class="row">
             <div class="col-md-12"></div>
             <div class="col-md-2">
-
-                <label><b>Customer Code</b><span style="color: red;"> *</span></label>
-            </div>
-
-            <div class="col-md-4">
-                <select class="form-control" tabindex="-1" aria-hidden="true">
-
-
-                    <option value="">-Select-</option>
-                    <option value="Customer">Customer Code1</option>
-                    <option value="Supplier">Customer Code2</option>
-                </select>
-                <!-- Dropdown List Option -->
-
-            </div>
-        </div>
-        <br />
-
-        <div class="row">
-            <div class="col-md-12"></div>
-            <div class="col-md-2">
-
                 <label><b>Currency</b><span style="color: red;"> *</span></label>
             </div>
-
             <div class="col-md-4">
-                <select class="form-control" tabindex="-1" aria-hidden="true">
-
-
+                <select class="form-control" tabindex="-1" id="drpCurrency" aria-hidden="true">
                     <option value="">-Select-</option>
-                    <option value="Customer">INR</option>
-                    <option value="Supplier">UST</option>
+                    <option value="INR">INR</option>
+                    <option value="USD">USD</option>
                 </select>
-                <!-- Dropdown List Option -->
-
-            </div>
-            <div class="col-md-2">
-
-                <label><b>Exchange Rate</b><span style="color: red;"> *</span></label>
-            </div>
-
-            <div class="col-md-4">
-                <input type="text" value="" class="form-control" />
-
-            </div>
-
-        </div>
-        <br />
-
-
-        <div class="row">
-            <div class="col-md-12"></div>
-            <div class="col-md-2">
-
-                <label><b>Delivery Code</b><span style="color: red;"> *</span></label>
-            </div>
-
-            <div class="col-md-4">
-                <input type="text" value="" class="form-control" />
-
-            </div>
-            <div class="col-md-2">
-
-                <label><b>Delivery at Name</b><span style="color: red;"> *</span></label>
-            </div>
-
-            <div class="col-md-4">
-                <input type="text" value="" class="form-control" />
-
-            </div>
-
-        </div>
-        <br />
-
-
-
-        <div class="row">
-            <div class="col-md-12"></div>
-            <div class="col-md-2">
-
-                <label><b>Delivery Type</b><span style="color: red;"> *</span></label>
-            </div>
-
-            <div class="col-md-4">
-                <select class="form-control" tabindex="-1" aria-hidden="true">
-
-
-                    <option value="">-Select-</option>
-                    <option value="Customer">Inside</option>
-                    <option value="Supplier">outside</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-
-                <label><b>Place of Supply</b><span style="color: red;"> *</span></label>
-            </div>
-
-            <div class="col-md-4">
-                <input type="text" value="" class="form-control" />
-
-            </div>
-
-        </div>
-        <br />
-
-        <div class="row">
-            <div class="col-md-12"></div>
-            <div class="col-md-2">
-
-                <label><b>Approval Date</b><span style="color: red;"> *</span></label>
-            </div>
-
-            <div class="col-md-4">
-
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">
-                            <i class="fa fa-calendar"></i>
-                        </span>
-                    </div>
-                    <input type="text" id="txtapproval" onkeydown="return false;" class="form-control">
+                <div class="errorCurrency custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Select Currency
+                    </p>
                 </div>
             </div>
+            <div class="col-md-2">
+                <label><b>Exchange Rate</b></label>
+            </div>
 
+            <div class="col-md-4">
+                <input type="text" value="0.00" id="txtExchangeRate" class="form-control" />
+            </div>
+
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2">
+                <label><b>Delivery Type</b><span style="color: red;"> *</span></label>
+            </div>
+            <div class="col-md-4">
+                <select class="form-control" tabindex="-1" id="drpDeliveryType" aria-hidden="true">
+                    <option value="">-Select-</option>
+                    <option value="Road">Road</option>
+                    <option value="Railway">Railway</option>
+                    <option value="Airway">Airway</option>
+                </select>
+                <div class="errorDeliveryType custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Select Delivery Type
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label><b>Place of Supply</b><span style="color: red;"> *</span></label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" value="" id="txtPlaceSupply" class="form-control" />
+                <div class="errorPlaceSupply custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Enter Place Supply
+                    </p>
+                </div>
+            </div>
         </div>
         <br />
 
         <div class="row">
             <div class="col-md-12">
-
+                <div class="alert alert-danger text-center divitemerrormessage hidden">
+                </div>
                 <div class="mappingdiv" style="overflow-x: scroll;">
 
 
-                    <table id="customertable" width="100%" class="display table table-striped table-bordered dataTable no-footer">
+                    <table id="itemtable" width="100%" class="display table table-striped table-bordered dataTable no-footer">
                         <thead>
                             <tr>
                                 <th class="text-center">Item Name <span style="color: red">*</span></th>
-                                <th class="text-center">Rate <span style="color: red">*</span></th>
+                                <th class="text-center">Unit </th>
                                 <th class="text-center">Quantity <span style="color: red">*</span></th>
-                                <th class="text-center">UOM <span style="color: red">*</span></th>
-                                <th class="text-center">Baggage <span style="color: red">*</span></th>
-                                <th class="text-center">SubTotal <span style="color: red">*</span></th>
-                                <th class="text-center">Discount %<span style="color: red">*</span></th>
-                                <th class="text-center">Discount Value<span style="color: red">*</span></th>
-
-                                <th class="text-center">CGST Per<span style="color: red">*</span></th>
-                                <th class="text-center">CGST Value  <span style="color: red">*</span></th>
-                                <th class="text-center">SGST Per <span style="color: red">*</span></th>
-                                <th class="text-center">SGST Value  <span style="color: red">*</span></th>
-                                <th class="text-center">IGST Per  <span style="color: red">*</span></th>
-                                <th class="text-center">IGST Value  <span style="color: red">*</span></th>
-
+                                <th class="text-center">Rate <span style="color: red">*</span></th>
+                                <th class="text-center">SubTotal </th>
+                                <th class="text-center">CGST % </th>
+                                <th class="text-center">CGST Amount </th>
+                                <th class="text-center">SGST % </th>
+                                <th class="text-center">SGST Amount </th>
+                                <th class="text-center">IGST % </th>
+                                <th class="text-center">IGST Amount </th>
+                                <th class="text-center">Discount % </th>
+                                <th class="text-center">Discount Amount </th>
+                                <th class="text-center">Total </th>
                                 <th class="text-center">Action</th>
                             </tr>
                         </thead>
@@ -303,30 +228,49 @@
         <br />
         <div class="row">
             <div class="col-md-2">
-
                 <label><b>Payment Type</b><span style="color: red;"> *</span></label>
             </div>
-
             <div class="col-md-4">
-                <select class="form-control" tabindex="-1" aria-hidden="true">
+                <select class="form-control" tabindex="-1" id="drpPaymentType" aria-hidden="true">
                     <option value="">-Select-</option>
-                    <option value="Customer">Credit card</option>
-                    <option value="Supplier">cash</option>
+                    <option value="CC">Credit Card</option>
+                    <option value="CH">Cash</option>
                 </select>
+                <div class="errorPaymentType custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Select Payment Type
+                    </p>
+                </div>
             </div>
             <div class="col-md-2">
-
                 <label><b>Transport</b><span style="color: red;"> *</span></label>
             </div>
 
             <div class="col-md-4">
-                <select class="form-control" tabindex="-1" aria-hidden="true">
+                <input type="text" value="" id="txtTransport" class="form-control" />
+                <div class="errorTransport custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Enter Transport
+                    </p>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2">
+                <label><b>Advance Amount</b></label>
+            </div>
 
+            <div class="col-md-4">
+                <input type="text" value="0.00" id="txtAdvanceAmount" class="form-control" />
+            </div>
+            <div class="col-md-2">
 
-                    <option value="">-Select-</option>
-                    <option value="Customer">Transport</option>
-                    <option value="Supplier">Transport</option>
-                </select>
+                <label><b>Balance Amount </b></label>
+            </div>
+
+            <div class="col-md-4">
+                <input type="text" value="0.00" id="txtBalanceAmount" class="form-control" />
 
             </div>
 
@@ -335,41 +279,54 @@
         <div class="row">
             <div class="col-md-12"></div>
             <div class="col-md-2">
-
-                <label><b>Advance Amount</b><span style="color: red;"> *</span></label>
+                <label><b>Prepared By</b><span style="color: red;"> *</span></label>
             </div>
-
             <div class="col-md-4">
-                <input type="text" value="" class="form-control" />
+                <input type="text" value="" id="txtPreparedBy" class="form-control" />
+                <div class="errorPreparedBy custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Enter Prepared By
+                    </p>
+                </div>
             </div>
             <div class="col-md-2">
-
-                <label><b>Balance Amount </b><span style="color: red;">*</span></label>
+                <label><b>Remarks</b></label>
             </div>
-
             <div class="col-md-4">
-                <input type="text" value="" class="form-control" />
-
+                <textarea class="form-control" id="txtRemarks" placeholder=""></textarea>
             </div>
-
         </div>
         <br />
         <div class="row">
-            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
+                <label><b>Courier Charges</b></label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control gridCalculation" onkeypress='return validateFloatKeyPress(this,event);' value="0.00" id="txtCourierCharges" />
+            </div>
+            <div class="col-md-4"></div>
+
             <div class="col-md-2 text-right">
                 <label><b>Sub Total:</b></label>
             </div>
             <div class="col-md-2">
-                <input type="text" class="form-control" value="" />
+                <input type="text" class="form-control" value="0.00" id="txtSubTotal" disabled />
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8"></div>
+
+            <div class="col-md-2 text-right">
+                <label><b>Discount %</b></label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control gridCalculation" onkeypress='return validateFloatKeyPress(this,event);' value="0.00" id="txtDiscountPer" />
+            </div>
+            <div class="col-md-4"></div>
             <div class="col-md-2 text-right">
                 <label><b>CGST:</b></label>
             </div>
             <div class="col-md-2">
-                <input type="text" class="form-control" value="" />
+                <input type="text" class="form-control" value="0.00" id="txtCGST" disabled />
             </div>
         </div>
         <div class="row">
@@ -378,7 +335,7 @@
                 <label><b>SGST:</b></label>
             </div>
             <div class="col-md-2">
-                <input type="text" class="form-control" value="" />
+                <input type="text" class="form-control" value="0.00" id="txtSGST" disabled />
             </div>
         </div>
         <div class="row">
@@ -387,50 +344,43 @@
                 <label><b>IGST:</b></label>
             </div>
             <div class="col-md-2">
-                <input type="text" class="form-control" value="" />
+                <input type="text" class="form-control" value="0.00" id="txtIGST" disabled />
             </div>
         </div>
         <div class="row">
             <div class="col-md-8"></div>
             <div class="col-md-2 text-right">
-                <label><b>New Total:</b></label>
+                <label><b>Grid Discount:</b></label>
             </div>
             <div class="col-md-2">
-                <input type="text" class="form-control" value="" />
+                <input type="text" class="form-control" value="0.00" id="txtGridDiscount" disabled />
             </div>
         </div>
-
-        <br />
         <div class="row">
-            <div class="col-md-12"></div>
-            <div class="col-md-2">
-                 <label><b>Prepared By</b><span style="color: red;"> *</span></label>
-            </div>
-
-            <div class="col-md-4">
-                <input type="text" value="" class="form-control" />
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
+                <label><b>Discount:</b></label>
             </div>
             <div class="col-md-2">
-
-                <label><b>Remarks</b><span style="color: red;"></span></label>
-            </div>
-
-            <div class="col-md-4">
-
-                <textarea class="form-control" id="remarks" placeholder="Enter Remarks"></textarea>
-
-
+                <input type="text" class="form-control" value="0.00" id="txtDiscount" disabled />
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
+                <label><b>Total:</b></label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" value="0.00" id="txtTotal" disabled />
+            </div>
+        </div>
+
         <br />
-
-
-
 
 
         <div class="pull-right btnRequest">
-            <div class="btn btn-success " id="btnsaveExitRequest" title="Apply">Submit</div>
-            <div class="btn btn-warning " title="Cancel" id="btnclose">Cancel</div>
+            <div class="btn btn-success" id="btnSave" title="Submit">Submit</div>
+            <div class="btn btn-warning" title="Cancel" id="btnCancel">Cancel</div>
 
         </div>
 
@@ -440,166 +390,692 @@
 @section scripts{
     <script>
         $(function () {
-            $("#txtFromDate").datepicker().datepicker("setDate", new Date());
-            $("#txtToDate").datepicker().datepicker("setDate", new Date());
-            $("#txtapproval").datepicker().datepicker("setDate", new Date());
-
+            $("#txtInvoiceDate").datepicker().datepicker("setDate", new Date());
+            $("#txtApprovalDate").datepicker();
+            $("#txtDCDate").datepicker();
         });
     </script>
-    <script type="text/javascript">
+<script type="text/javascript">
 
-
-
-
-        $(document).ready(function () {
-            $("#customertable tbody tr").remove();
-
-            debugger;
-            //$('.sidebar-toggle').click();
-            //$('.sidebar-toggle').css('margin-left', '-150px');
-            //$('.brand-header').css('margin-left', '-109px');
-            //gettimesheetlist();
-            //TimeSheetUpdatedWeeks();
-
-            var initialList = [];
-            var obj = {
-                category: "",
-                Project: "",
-                Task: "",
-                Description: "",
-                TrasactionDate: "",
-                Estimated_effort: "",
-                Actual_effort: "",
-                Status: "",
-                Remarks: ""
-            };
-            initialList.push(obj);
-            AddTimeListTable(initialList, "add");
+    $(document).ready(function () {
+        $("#drpCurrency").val("INR");
+        var InvoiceId = getQueryString("InvoiceId");
+        if (InvoiceId != null) {
+            EditInvoice(InvoiceId);
+        } else {
+            getAccountYear();
+            AppendTR();
+        }
+        $("#txtCustomerName").mcautocomplete({
+            showHeader: true,
+            columns: [{
+                name: 'Code',
+                width: '150px',
+                valueField: 'CustomerCode'
+            }, {
+                name: 'Name',
+                width: '150px',
+                valueField: 'CustomerName'
+            }],
+            select: function (event, ui) {
+                this.value = (ui.item ? ui.item.CustomerName : '');
+                $("#selectedUserId").val(ui.item.CustomerId);
+                return false;
+            },
+            change: function (event, ui) {
+                if (!ui.item) {
+                    this.value = "";
+                    $("#selectedUserId").val("0");
+                }
+            },
+            minLength: 1,
+            source: function (request, response) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Master/Master/getUserList",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ 'type':'Customer','prefix':'" + request.term + "'}",
+                    success: function (data) {
+                        var result;
+                        if (!data || data.length === 0) {
+                            result = [{
+                                CustomerCode: 'No records found.',
+                                CustomerName: ""
+                            }];
+                        } else {
+                            result = data;
+                        }
+                        response(result);
+                    }
+                });
+            }
         });
 
-        function AppendTR() {
-            var trCount = $("#customertable tbody tr").length;
-            var str = "<tr>";
-            str += "<td><select id='ProductName" + trCount + "' style='width:100px;' class='ProductName form-control'><option>Item 1</option></select></td>";
-            str += "<td><input type='Text' value='' style='width: 125px;' class='txtquantity Item approvalcheck form-control'></input></td>";
-            str += "<td><input type='Text' value='' style='width: 100px;' class='txtRate  approvalcheck form-control'></input></td>";
-            str += "<td><select id='Unit" + trCount + "' style='width:100px;' class='unit form-control'><option>NOS</option></select></td>";
-            str += "<td><input type='Text' value='' style='width: 100px;' class='txtSgstpers  approvalcheck form-control'></input></td>";
-            str += "<td><input type='Text' value='' style='width: 100px;' class='txtsgstvalue  approvalcheck form-control'></input></td>";
-            str += "<td><input type='Text' value='' style='width: 100px;' class='txtcgstpers  approvalcheck form-control'></input></td>";
-            str += "<td><input type='Text' value='' style='width: 100px;' class='txtcgstvalue  approvalcheck form-control'></input></td>";
-            str += "<td><input type='Text' value='' style='width: 100px;' class='txtcgstvalue  approvalcheck form-control'></input></td>";
-            str += "<td><input type='Text' value='' style='width: 100px;' class='txtcgstvalue  approvalcheck form-control'></input></td>";
-            str += "<td><input type='Text' value='' style='width: 100px;' class='txtcgstvalue  approvalcheck form-control'></input></td>";
-            str += "<td><input type='Text' value='' style='width: 100px;' class='txtiostpers  approvalcheck form-control'></input></td>";
-            str += "<td><input type='Text' value='' style='width: 100px;' class='txtiostvalue  approvalcheck form-control'></input></td>";
+    });
 
-            str += "<td><input type='Text' value='' style='width: 100px;' class='txttotal  approvalcheck form-control'></input></td>";
+    function EditInvoice(invoiceid) {
+        $.ajax({
+            url: "/Transaction/Transaction/GetInvoiceById",
+            type: "GET",
+            data: { InvoiceId: invoiceid },
+            cache: false,
+            success: function (result) {
 
-            str += "<td class='text-center'><button class='addrow btn btn-success btn-xs' title='add row' type='button' aria-label='addRow'><i class='fa fa-plus'></i></button> <button class='delrow btn btn-danger btn-xs' title='Remove this row' type='button' aria-label='addRow'><i class='fa fa-times'></i></button></td>";
-            str += "</tr>";
-            $('#customertable').append(str);
-            var rowCount = $('#customertable >tbody >tr').length;
+                if (result.InvoiceModel.InvoiceDate != null) {
+                    $("#txtInvoiceDate").val(moment(result.InvoiceModel.InvoiceDate).format("MM/DD/YYYY"));
+                } else {
+                    $("#txtInvoiceDate").val("");
+                }
+                $("#drpCurrency").val(result.InvoiceModel.Currency);
+                $("#hdnInvoiceId").val(result.InvoiceModel.InvoiceId);
+                $("#txtInvoiceNo").val(result.InvoiceModel.InvoiceNO);
+                $("#selectedUserId").val(result.InvoiceModel.CustomerId);
+                $("#txtCustomerName").val(result.InvoiceModel.CustomerName);
 
-            //$('#customertable tbody tr:first').find('.delrow').addClass('hidden');
-        }
+                if (result.InvoiceModel.ApprovalDate != null) {
+                    $("#txtApprovalDate").val(moment(result.InvoiceModel.ApprovalDate).format("MM/DD/YYYY"));
+                } else {
+                    $("#txtApprovalDate").val("");
+                }
+                $("#txtLocation").val(result.InvoiceModel.Location);
+                $("#drpTaxable").val(result.InvoiceModel.Taxable);
+                $("#txtDCNo").val(result.InvoiceModel.DCNo);
 
-        function AddTimeListTable(initialList, type) {
+                if (result.InvoiceModel.DCDate != null) {
+                    $("#txtDCDate").val(moment(result.InvoiceModel.DCDate).format("MM/DD/YYYY"));
+                } else {
+                    $("#txtDCDate").val("");
+                }
+                $("#txtExchangeRate").val(result.InvoiceModel.ExchangeRate);
+                $("#txtDeliveryType").val(result.InvoiceModel.DeliveryType);
+                $("#txtPlaceSupply").val(result.InvoiceModel.PlaceOfSupply);
+                $("#drpPaymentType").val(result.InvoiceModel.PaymentType);
+                $("#txtTransport").val(result.InvoiceModel.Transport);
+                $("#txtAdvanceAmount").val(result.InvoiceModel.AdvanceAmount);
+                $("#txtBalanceAmount").val(result.InvoiceModel.BalanceAmount);
+                $("#txtPreparedBy").val(result.InvoiceModel.PreparedBy);
+                $("#txtRemarks").val(result.InvoiceModel.Remarks);
+                $("#txtCourierCharges").val(result.InvoiceModel.CourierCharges);
+                $("#txtDiscountPer").val(result.InvoiceModel.DiscountPer);
+                $("#txtDiscount").val(result.InvoiceModel.DiscountAmount);
+                $("#txtSubTotal").val(result.InvoiceModel.SubTotal);
+                $("#txtCGST").val(result.InvoiceModel.CGST);
+                $("#txtSGST").val(result.InvoiceModel.SGST);
+                $("#txtIGST").val(result.InvoiceModel.IGST);
+                $("#txtTotal").val(result.InvoiceModel.Total);
+                $("#drpDeliveryType").val(result.InvoiceModel.DeliveryType);
+                $("#itemtable tbody tr").remove();
+                for (var columnCt = 0; columnCt < result.InvoiceItemModel.length; columnCt++) {
+                    AppendTR();
+                }
+                var itemDetailsCount = $("#itemtable tbody tr").length;
+                var itemDetailsTable = $("#itemtable").find('tbody tr');
 
-            if (type == "add") {
-                AppendTR();
+                if (itemDetailsCount > 0) {
+                    $(itemDetailsTable).each(function (i, v) {
 
+                        $(v).find('.hdnItemId').val(result.InvoiceItemModel[i].ItemId);
+                        $(v).find('.txtquantity').val(result.InvoiceItemModel[i].Quantity);
+                        $(v).find('.txtcgstpers').val(result.InvoiceItemModel[i].CGSTPer);
+                        $(v).find('.txtcgstvalue').val(result.InvoiceItemModel[i].CGSTAmount);
+                        $(v).find('.txtSgstpers').val(result.InvoiceItemModel[i].SGSTPer);
+                        $(v).find('.txtsgstvalue').val(result.InvoiceItemModel[i].SGSTAmount);
+                        $(v).find('.txtigstpers').val(result.InvoiceItemModel[i].IGSTPer);
+                        $(v).find('.txtigstvalue').val(result.InvoiceItemModel[i].IGSTAmount);
+                        $(v).find('.txttotal').val(result.InvoiceItemModel[i].Total);
+                        $(v).find('.txtRate').val(result.InvoiceItemModel[i].Rate);
+                        $(v).find('.txtunit').val(result.InvoiceItemModel[i].Unit);
+                        $(v).find('.txtItemName').val(result.InvoiceItemModel[i].ItemName);
+                        $(v).find('.txtdiscountpers').val(result.InvoiceItemModel[i].DiscountPer);
+                        $(v).find('.txtdiscountvalue').val(result.InvoiceItemModel[i].DiscountAmount);
+                        $(v).find('.txtsubtotal').val(result.InvoiceItemModel[i].SubTotal);
+                    });
+                }
+                gridCalculation();
             }
 
-        }
-        $("#btnCancel").click(function () {
-
-            location.reload();
-
-
         });
+    }
 
-        function checkvalidation() {
-            var formCollectionResult = {};
-            formCollectionResult.timesubtransaction = [];
-            var familyDetailsCount = $("#customertable tbody tr").length;
-            var familyDetailsTable = $("#customertable").find('tbody tr');
-            var isValid = true;
+    function AppendTR() {
+        var trCount = $("#itemtable tbody tr").length;
+        var str = "<tr>";
+        str += "<td><input type='hidden' value='0' class='hdnItemId'/><input type='Text' value='' id='txtgriditemname' style='width: 200px;' placeholder='Search item...' class='txtItemName approvalcheck form-control'></input></td>";
+        str += "<td><input type='Text' value='' style='width: 125px;' class='txtunit Item approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='0' style='width: 125px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtquantity gridCalculation Item approvalcheck form-control'></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtRate  gridCalculation approvalcheck form-control'></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txtsubtotal  approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtcgstpers gridCalculation approvalcheck form-control'></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txtcgstvalue  approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtSgstpers gridCalculation approvalcheck form-control'></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txtsgstvalue  approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;'onkeypress='return validateFloatKeyPress(this,event);' class='txtigstpers gridCalculation approvalcheck form-control'></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txtigstvalue  approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtdiscountpers gridCalculation approvalcheck form-control'></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txtdiscountvalue  approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txttotal  approvalcheck form-control' disabled></input></td>";
+        str += "<td class='text-center'><button class='addrow btn btn-success btn-xs' title='add row' type='button' aria-label='addRow'><i class='fa fa-plus'></i></button> <button class='delrow btn btn-danger btn-xs' title='Remove this row' type='button' aria-label='addRow'><i class='fa fa-times'></i></button></td>";
+        str += "</tr>";
+        $('#itemtable').append(str);
+        var rowCount = $('#itemtable >tbody >tr').length;
+        var str = 'txtgriditemname' + rowCount + getAppRandomNumber();
+        var transactiondate = $('#itemtable tr:last').find('.txtItemName').attr('id', str);
+        gridAutocomplete('#' + str);
+        $(".gridCalculation").change(function () {
+            gridCalculation();
+        });
+    }
+
+    function gridAutocomplete(selector) {
+        $(selector).mcautocomplete({
+            showHeader: true,
+            columns: [{
+                name: 'Code',
+                width: '150px',
+                valueField: 'ItemCode'
+            }, {
+                name: 'Name',
+                width: '150px',
+                valueField: 'ItemName'
+            }, {
+                name: 'Unit',
+                width: '100px',
+                valueField: 'Unit'
+            }, {
+                name: 'Quantity',
+                width: '80px',
+                valueField: 'Quantity'
+            }],
+            select: function (event, ui) {
+                this.value = (ui.item ? ui.item.ItemName : '');
+                $(selector).closest('tr').find(".hdnItemId").val(ui.item.ItemId);
+                $(selector).closest('tr').find(".txtunit").val(ui.item.Unit);
+                return false;
+            },
+            change: function (event, ui) {
+                if (!ui.item) {
+                    this.value = "";
+                    $(selector).closest('tr').find(".hdnItemId").val("0");
+                    $(selector).closest('tr').find(".txtunit").val("");
+
+                }
+            },
+            minLength: 1,
+            source: function (request, response) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Transaction/Transaction/GetItemStockItem",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ 'CustomerId':'" + $('#selectedUserId').val() + "','prefix':'" + request.term + "'}",
+                    success: function (data) {
+                        var result;
+                        if (!data || data.length === 0) {
+                            result = [{
+                                ItemCode: 'No records found.',
+                                ItemName: "",
+                                Unit: "",
+                                Quantity: "0.00"
+                            }];
+                        } else {
+                            result = data;
+                        }
+                        response(result);
+                    }
+                });
+            }
+        });
+    }
+
+    $("#btnCancel").click(function () {
+        window.location = "/Transaction/Transaction/Invoice";
+    });
+
+    function checkvalidation() {
+        var formCollectionResult = {};
+        formCollectionResult.timesubtransaction = [];
+        var familyDetailsCount = $("#itemtable tbody tr").length;
+        var familyDetailsTable = $("#itemtable").find('tbody tr');
+        var isValid = true;
+        $(familyDetailsTable).each(function (i, v) {
+            if ($(v).find('.txtItemName').val() == "") {
+                isValid = false;
+            }
+            if ($(v).find('.hdnItemId').val() == "0") {
+                isValid = false;
+            }
+            if ($(v).find('.txtquantity').val() === "") {
+                isValid = false;
+            } else if (!checkIsNumber($(v).find('.txtquantity').val())) {
+                isValid = false;
+            } else if (checkIsZero($(v).find('.txtquantity').val())) {
+                isValid = false;
+            }
+            if ($(v).find('.txtRate').val() === "") {
+                isValid = false;
+            } else if (!checkIsNumber($(v).find('.txtRate').val())) {
+                isValid = false;
+            } else if (checkIsZero($(v).find('.txtRate').val())) {
+                isValid = false;
+            }
+        });
+        return isValid;
+    }
+
+    function gridCalculation() {
+        if (checkvalidation() == true) {
+            var OverAllSubTotal = parseFloat(0.00);
+            var OverAllCGST = parseFloat(0.00);
+            var OverAllSGST = parseFloat(0.00);
+            var OverAllIGST = parseFloat(0.00);
+            var OverAllTotal = parseFloat(0.00);
+            var OverAllDiscount = parseFloat(0.00);
+            var Courier = parseFloat(0.00);
+            var HDDiscount = parseFloat(0.00);
+
+            var familyDetailsCount = $("#itemtable tbody tr").length;
+            var familyDetailsTable = $("#itemtable").find('tbody tr');
             $(familyDetailsTable).each(function (i, v) {
-                if ($(v).find('.txtItemName').val() === "") {
-                    isValid = false;
+                var qty = $(v).find('.txtquantity').val();
+                var rate = $(v).find('.txtRate').val();
+                var sgstper = $(v).find('.txtSgstpers').val();
+                var cgstper = $(v).find('.txtcgstpers').val();
+                var igstper = $(v).find('.txtigstpers').val();
+                var discountper = $(v).find('.txtdiscountpers').val();
+                var subtotal;
+
+                rate = parseFloat(rate);
+                var total = 0.00;
+                subtotal = qty * rate;
+                $(v).find('.txtsubtotal').val(parseFloat(subtotal).toFixed(2));
+
+                OverAllSubTotal += parseFloat(subtotal);
+                if (sgstper == "") {
+                    sgstper = "0.00";
+                    $(v).find('.txtSgstpers').val(sgstper);
                 }
-                if ($(v).find('.Customer').val() === "") {
-                    isValid = true;
+                if (cgstper == "") {
+                    cgstper = "0.00";
+                    $(v).find('.txtcgstpers').val(cgstper);
                 }
-                if ($(v).find('.Quantity').val() === "") {
-                    isValid = false;
+                if (igstper == "") {
+                    igstper = "0.00";
+                    $(v).find('.txtigstpers').val(igstper);
                 }
-                if ($(v).find('.unit').val() === "") {
-                    isValid = false;
+                if (discountper == "") {
+                    discountper = "0.00";
+                    $(v).find('.txtdiscountpers').val(discountper);
                 }
-                if ($(v).find('.Package').val() === "") {
-                    isValid = true;
-                }
-                if ($(v).find('.Rate').val() === "") {
-                    isValid = false;
-                }
+                sgstper = parseFloat(sgstper);
+                cgstper = parseFloat(cgstper);
+                igstper = parseFloat(igstper);
+                discountper = parseFloat(discountper);                
+                var cgstvalue = subtotal * (cgstper.toFixed(2) / 100.00);
+                var sgstvalue = subtotal * (sgstper.toFixed(2) / 100.00);
+                var igstvalue = subtotal * (igstper.toFixed(2) / 100.00);
+                total = subtotal + cgstvalue + sgstvalue + igstvalue;
+                total = parseFloat(total);
+
+                var discountvalue = total * (discountper.toFixed(2) / 100.00);
+                OverAllCGST += parseFloat(cgstvalue);
+                OverAllSGST += parseFloat(sgstvalue);
+                OverAllIGST += parseFloat(igstvalue);
+                total = total - discountvalue;
+                OverAllDiscount += parseFloat(discountvalue);
+                OverAllTotal += parseFloat(total);
+
+                $(v).find('.txtcgstvalue').val(cgstvalue.toFixed(2));
+                $(v).find('.txtsgstvalue').val(sgstvalue.toFixed(2));
+                $(v).find('.txtigstvalue').val(igstvalue.toFixed(2));
+                $(v).find('.txtdiscountvalue').val(discountvalue.toFixed(2));
+                
+                $(v).find('.txttotal').val(total.toFixed(2));
+
             });
-            return isValid;
+            Courier = $('#txtCourierCharges').val();
+            HDDiscount = $('#txtDiscountPer').val();
+            if (Courier == "") {
+                Courier = "0.00";
+                $('#txtCourierCharges').val(Courier);
+            }
+            if (HDDiscount == "") {
+                HDDiscount = "0.00";
+                $('#txtDiscountPer').val(HDDiscount);
+            }
+            HDDiscount = parseFloat(HDDiscount);
+            $("#txtSubTotal").val(OverAllSubTotal.toFixed(2));
+            $("#txtCGST").val(OverAllCGST.toFixed(2));
+            $("#txtSGST").val(OverAllSGST.toFixed(2));
+            $("#txtIGST").val(OverAllIGST.toFixed(2));
+            $("#txtGridDiscount").val(OverAllDiscount.toFixed(2));
+            var caldiscountvalue = OverAllTotal * (HDDiscount.toFixed(2) / 100.00);
+            OverAllTotal -= parseFloat(caldiscountvalue);
+            $("#txtDiscount").val(caldiscountvalue.toFixed(2));
+            OverAllTotal += parseFloat(Courier);
+            $("#txtTotal").val(OverAllTotal.toFixed(2));
+            TotalCalculation();
         }
-        $("#customertable tbody").on('click', '.addrow', function () {
-            debugger;
+    }
 
-            var isValid = checkvalidation();
-            if (isValid) {
+    function TotalCalculation() {
 
-                AppendTR();
+    }
+
+    $("#itemtable tbody").on('click', '.addrow', function () {
+        var isValid = checkvalidation();
+        if (isValid) {
+
+            AppendTR();
+        }
+        else {
+            $(".divitemerrormessage").removeClass("hidden").html("Marked * field are mandatory");
+            window.setTimeout(function () {
+                $(".divitemerrormessage").addClass("hidden")
+            }, 5000);
+        }
+
+
+    });
+
+    $("#itemtable tbody").on('click', '.delrow', function () {
+        if ($(this).parent().parent()[0].rowIndex > 1) {
+            $(this).parents('tr').remove();
+            gridCalculation();
+            //var table = $('#customertable').DataTable();
+            //table.row($(this).parents('tr')).remove().draw();
+        } else if ($("#itemtable tbody tr").length > 1) {
+            $(this).parent().parent().remove();
+            gridCalculation();
+        }
+
+    });
+
+
+    function getAccountYear() {
+        $.ajax({
+            type: "POST",
+            url: "/Transaction/Transaction/GetCurrentInvoiceNo",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $("#txtInvoiceNo").val(data);
             }
-            else {
-                $(".divErrorMessage").removeClass("hidden").html("Marked * field are mandatory");
-                window.setTimeout(function () {
-                    $(".divErrorMessage").addClass("hidden")
-                }, 5000);
+        });
+    }
+
+    $("#btnSave").click(function () {
+        gridCalculation();
+        var hdnInvoiceId = $("#hdnInvoiceId").val();
+        var txtInvoiceNo = $("#txtInvoiceNo").val();
+        var txtInvoiceDate = $("#txtInvoiceDate").val();
+        var selectedUserId = $("#selectedUserId").val();
+        var txtCustomerName = $("#txtCustomerName").val();
+        var txtApprovalDate = $("#txtApprovalDate").val();
+        var txtLocation = $("#txtLocation").val();
+        var drpTaxable = $("#drpTaxable").val();
+        var txtDCNo = $("#txtDCNo").val();
+        var txtDCDate = $("#txtDCDate").val();
+        var drpCurrency = $("#drpCurrency").val();
+        var txtExchangeRate = $("#txtExchangeRate").val();
+        var txtDeliveryType = $("#txtDeliveryType").val();
+        var txtPlaceSupply = $("#txtPlaceSupply").val();
+        var drpPaymentType = $("#drpPaymentType").val();
+        var txtTransport = $("#txtTransport").val();
+        var txtAdvanceAmount = $("#txtAdvanceAmount").val();
+        var txtBalanceAmount = $("#txtBalanceAmount").val();
+        var txtPreparedBy = $("#txtPreparedBy").val();
+        var txtRemarks = $("#txtRemarks").val();
+        var txtCourierCharges = $("#txtCourierCharges").val();
+        var txtDiscountPer = $("#txtDiscountPer").val();
+        var txtDiscount = $("#txtDiscount").val();
+        var txtSubTotal = $("#txtSubTotal").val();
+        var txtCGST = $("#txtCGST").val();
+        var txtSGST = $("#txtSGST").val();
+        var txtIGST = $("#txtIGST").val();
+        var txtTotal = $("#txtTotal").val();
+        var drpDeliveryType = $("#drpDeliveryType").val();
+
+        var vaild = true;
+
+        $(".errorCustomerName").addClass("hidden");
+        $(".errorLocation").addClass("hidden");
+        $(".errorTaxable").addClass("hidden");
+        $(".errorCurrency").addClass("hidden");
+        $(".errorDeliveryType").addClass("hidden");
+        $(".errorPlaceSupply").addClass("hidden");
+        $(".errorPaymentType").addClass("hidden");
+        $(".errorPreparedBy").addClass("hidden");
+        $(".errorTransport").addClass("hidden");
+
+        if (selectedUserId == "" || selectedUserId == "0") {
+            $(".errorCustomerName").removeClass("hidden");
+            vaild = false;
+        }
+        if (txtLocation == "") {
+            $(".errorLocation").removeClass("hidden");
+            vaild = false;
+        }
+        if (drpTaxable == "") {
+            $(".errorTaxable").removeClass("hidden");
+            vaild = false;
+        }
+        if (txtDeliveryType == "") {
+            $(".errorDeliveryType").removeClass("hidden");
+            vaild = false;
+        }
+        if (txtPlaceSupply == "") {
+            $(".errorPlaceSupply").removeClass("hidden");
+            vaild = false;
+        }
+        if (drpPaymentType == "") {
+            $(".errorPaymentType").removeClass("hidden");
+            vaild = false;
+        }
+        if (txtPreparedBy == "") {
+            $(".errorPreparedBy").removeClass("hidden");
+            vaild = false;
+        }
+        if (txtTransport == "") {
+            $(".errorTransport").removeClass("hidden");
+            vaild = false;
+        }
+        if (drpCurrency == "") {
+            $(".errorCurrency").removeClass("hidden");
+            vaild = false;
+        }
+        if (drpDeliveryType == "") {
+            $(".errorDeliveryType").removeClass("hidden");
+            vaild = false;
+        }
+
+
+        var objInvoice = {
+            InvoiceId: hdnInvoiceId,
+            AccountYear: "",
+            IncrementId: 0,
+            InvoiceNO: txtInvoiceNo,
+            InvoiceDate: txtInvoiceDate,
+            Location: txtLocation,
+            Taxable: drpTaxable,
+            DCNo: txtDCNo,
+            DCDate: txtDCDate,
+            CustomerId: selectedUserId,
+            Currency: drpCurrency,
+            ExchangeRate: txtExchangeRate,
+            PlaceOfSupply: txtPlaceSupply,
+            ApprovalDate: txtApprovalDate,
+            PaymentType: drpPaymentType,
+            Transport: txtTransport,
+            PreparedBy: txtPreparedBy,
+            Remarks: txtRemarks,
+            AdvanceAmount: txtAdvanceAmount,
+            BalanceAmount: txtBalanceAmount,
+            DiscountPer: txtDiscountPer,
+            DiscountAmount: txtDiscount,
+            SubTotal: txtSubTotal,
+            CGST: txtCGST,
+            SGST: txtSGST,
+            IGST: txtIGST,
+            CourierCharges: txtCourierCharges,
+            Total: txtTotal,
+            IsActive: 1,
+            Createdby: 0,
+            Createdon: null,
+            Modifiedby: null,
+            Modifiedon: null,
+            DeliveryType: drpDeliveryType
+        };
+
+        var objModel = {};
+        objModel.InvoiceModel = objInvoice;
+        objModel.InvoiceSubItemList = [];
+        var itemDetailsCount = $("#itemtable tbody tr").length;
+        var itemDetailsTable = $("#itemtable").find('tbody tr');
+        var isValid = checkvalidation();
+        if (isValid == false) {
+            vaild = isValid;
+            $(".divitemerrormessage").removeClass("hidden").html("Marked * field are mandatory");
+        }
+        if (!vaild) {
+            return;
+        }
+
+        var totalItems = [];
+        if (itemDetailsCount > 0) {
+            $(itemDetailsTable).each(function (i, v) {
+
+                var ItemId = $(v).find('.hdnItemId').val();
+                var txtquantity = $(v).find('.txtquantity').val();
+                var txtRate = $(v).find('.txtRate').val();
+                var txtcgstpers = $(v).find('.txtcgstpers').val();
+                var txtcgstvalue = $(v).find('.txtcgstvalue').val();
+                var txtSgstpers = $(v).find('.txtSgstpers').val();
+                var txtsgstvalue = $(v).find('.txtsgstvalue').val();
+                var txtigstpers = $(v).find('.txtigstpers').val();
+                var txtigstvalue = $(v).find('.txtigstvalue').val();
+                var txttotal = $(v).find('.txttotal').val();
+                var txtdiscountpers = $(v).find('.txtdiscountpers').val();
+                var txtdiscountvalue = $(v).find('.txtdiscountvalue').val();
+                var txtsubtotal = $(v).find('.txtsubtotal').val();
+
+                totalItems.push(ItemId);
+                var objExp = {
+                    SubInvoiceId: 0,
+                    InvoiceId: hdnInvoiceId,
+                    ItemId: ItemId,
+                    Quantity: txtquantity,
+                    Rate: txtRate,
+                    CGSTPer: txtcgstpers,
+                    CGSTAmount: txtcgstvalue,
+                    SGSTPer: txtSgstpers,
+                    SGSTAmount: txtsgstvalue,
+                    IGSTPer: txtigstpers,
+                    IGSTAmount: txtigstvalue,
+                    DiscountPer: txtdiscountpers,
+                    DiscountAmount: txtdiscountvalue,
+                    SubTotal: txtsubtotal,
+                    Total: txttotal,
+                    IsActive: 1,
+                    Createdby: 0,
+                    Createdon: null,
+                    Modifiedby: null,
+                    Modifiedon: null
+                };
+                objModel.InvoiceSubItemList.push(objExp);
+            });
+        }
+
+        var uinqItem = [];
+        $.each(totalItems, function (i, el) {
+            if ($.inArray(el, uinqItem) == -1) {
+                uinqItem.push(el);
             }
+        });
+        if (uinqItem.length != itemDetailsCount) {
+            $(".divitemerrormessage").removeClass("hidden").html("Duplicate items found.");
+            return;
+        }
 
+        $.ajax({
+            url: "/Transaction/Transaction/SaveInvoice",
+            contentType: 'application/json',
+            cache: false,
+            type: "post",
+            traditional: true,
+            async: true,
+            data: JSON.stringify({ model: objModel }),
+            success: function (response) {
+                if (response.success == true) {
+                    swal({
+                        title: "",
+                        text: response.message,
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-success",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+                                        function () {
+                                            window.location = "/Transaction/Transaction/Invoice"
+                                        });
+                } else {
+                    swal({
+                        title: "",
+                        text: response.message,
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+                                       function () {
 
+                                       });
+                }
+            },
+            error: function (xhr, status, error) {
+
+            }
         });
 
-        $("#customertable tbody").on('click', '.delrow', function () {
-            if ($(this).parent().parent()[0].rowIndex > 1) {
-                $(this).parents('tr').remove();
-                //var table = $('#customertable').DataTable();
-                //table.row($(this).parents('tr')).remove().draw();
-            } else if ($("#tblTimesheetDetails tbody tr").length > 1) {
-                $(this).parent().parent().remove();
-            }
+    });
 
-        });
+    function refreshScreen() {
+        $("#txtInvoiceDate").datepicker().datepicker("setDate", new Date());
+        $("#drpCurrency").val("INR");
+        $("#hdnInvoiceId").val("0");
+        $("#txtInvoiceNo").val("");
+        $("#selectedUserId").val("0");
+        $("#txtCustomerName").val("");
+        $("#txtApprovalDate").val("");
+        $("#txtLocation").val("");
+        $("#drpTaxable").val("");
+        $("#txtDCNo").val("");
+        $("#txtDCDate").val("");
+        $("#txtExchangeRate").val("0.00");
+        $("#txtDeliveryType").val("");
+        $("#txtPlaceSupply").val("");
+        $("#drpPaymentType").val("");
+        $("#txtTransport").val("");
+        $("#txtAdvanceAmount").val("0.00");
+        $("#txtBalanceAmount").val("0.00");
+        $("#txtPreparedBy").val("");
+        $("#txtRemarks").val("");
+        $("#txtCourierCharges").val("0.00");
+        $("#txtDiscountPer").val("0.00");
+        $("#txtDiscount").val("0.00");
+        $("#txtSubTotal").val("0.00");
+        $("#txtCGST").val("0.00");
+        $("#txtSGST").val("0.00");
+        $("#txtIGST").val("0.00");
+        $("#txtTotal").val("0.00");
+        getAccountYear();
+        $("#itemtable tbody tr").remove();
+        AppendTR();
+    }
 
-
-
-
-
-
-
-
-
-
-
-        $("#btnclose").click(function () {
-
-            location.reload();
-
-
-        });
-
-
-
-
-
-
-
-    </script>
+</script>
 }
 
 

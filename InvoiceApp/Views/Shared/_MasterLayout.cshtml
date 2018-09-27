@@ -22,8 +22,7 @@
     <!-- Main styles for this application-->
     <link href="/dist/css/style.css" rel="stylesheet">
     <link href="/dist/vendors/pace-progress/css/pace.min.css" rel="stylesheet">
-    @Styles.Render("~/Content/jqueryDataTablesCss")
-    @Styles.Render("~/Content/jqgridcss")
+
     <link href="/dist/css/jquery-ui.css" rel="stylesheet" />
     <style>
         .overlayDiv {
@@ -67,8 +66,8 @@
         <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto" type="button" data-toggle="sidebar-show">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="#">
-           @* <img class="navbar-brand-full" src="/dist/img/brand/1.jpg" height="70" alt="Invoice App">
+        <a class="navbar-brand" href="#">@*
+            <img class="navbar-brand-full" src="/dist/img/brand/1.jpg" height="70" alt="Invoice App">
             <img class="navbar-brand-minimized" src="/dist/img/brand/1.jpg" height="30" alt="Invoice App">*@
         </a>
         <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show">
@@ -201,6 +200,10 @@
                             <i class="nav-icon fa fa-shopping-cart"></i>Invoice</a>
                     </li>
                     <li class="nav-title">Reports</li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Reports/Reports/ItemStockList">
+                            <i class="nav-icon fa fa-archive"></i>Item Stock</a>
+                    </li>
                 </ul>
             </nav>
             <button class="sidebar-minimizer brand-minimizer" type="button"></button>
@@ -565,11 +568,12 @@
 
     <script src="~/assets/js/jquery.dataTables.min.js"></script>
     <script src="~/assets/js/dataTables.buttons.min.js"></script>
+    <script src="~/assets/js/buttons.flash.min.js"></script>
     <script src="~/assets/js/jszip.min.js"></script>
     <script src="~/assets/js/pdfmake.min.js"></script>
     <script src="~/assets/js/vfs_fonts.js"></script>
     <script src="~/assets/js/buttons.html5.min.js"></script>
-
+    <script src="~/assets/js/buttons.print.min.js"></script>
 
 
     <script>

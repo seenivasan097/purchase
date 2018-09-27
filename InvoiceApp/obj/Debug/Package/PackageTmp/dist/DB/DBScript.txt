@@ -1,14 +1,21 @@
-﻿CREATE TYPE [dbo].[ItemOpeningStock] AS TABLE(
-    ItemId int not null,
-	Quantity numeric(18,2) not null,
-	TranId varchar(50) not null,
-	TranDate date not null
-);
+﻿USE [Application]
+GO
+/****** Object:  UserDefinedTableType [dbo].[ItemOpeningStock]    Script Date: 9/27/2018 12:44:07 ******/
+CREATE TYPE [dbo].[ItemOpeningStock] AS TABLE(
+	[ItemId] [int] NOT NULL,
+	[Quantity] [numeric](18, 2) NOT NULL,
+	[TranId] [varchar](50) NOT NULL,
+	[TranDate] [date] NOT NULL
+)
+GO
+/****** Object:  StoredProcedure [dbo].[getAccountYear]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
-go
 
-
-create proc [dbo].[getAccountYear]
+CREATE proc [dbo].[getAccountYear]
 as
 begin
 DECLARE @FIYear VARCHAR(20)    
@@ -17,8 +24,394 @@ SELECT @FIYear = (CASE WHEN (MONTH(GETDATE())) <= 3 THEN convert(varchar(4), YEA
                         ELSE convert(varchar(4),YEAR(GETDATE()))+ '-' + convert(varchar(4),(YEAR(GETDATE())%100)+1)END)     
 SELECT @FIYear AS FYEAR,Getdate() CurrentDate 
 end
+GO
+/****** Object:  StoredProcedure [dbo].[proc_getPendingGRNPO]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
 
+CREATE proc [dbo].[proc_getPendingGRNPO]
+@prefix varchar(500)
+as
+begin
+
+select * from ViwPendingGRNPO where POId like '%'+@prefix+'%'
+or PODate like '%'+@prefix+'%'
+or PONo like '%'+@prefix+'%'
+or SupplierName like '%'+@prefix+'%'
+or ItemCode like '%'+@prefix+'%'
+or HSNCode like '%'+@prefix+'%'
+or ItemName like '%'+@prefix+'%'
+or Quantity like '%'+@prefix+'%'
+ 
+end
+GO
+/****** Object:  StoredProcedure [dbo].[proc_GRNItemStock]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE proc [dbo].[proc_GRNItemStock]
+@Type varchar(50),
+@TranId varchar(50),
+@list ItemOpeningStock READONLY
+as
+begin
+   SET NOCOUNT ON 
+   SET FMTONLY OFF 
+  declare @total int=(select count(*) from  @list)
+  declare @totalOld int
+  declare @i int=1
+  declare @j int=1
+  declare @ItemId int
+  declare @Quantity numeric(18,2)
+  declare @count int
+ if(@Type='Add')
+ begin
+	 insert into ItemStockTran(TranId,TranDate,ItemId,Quantity,TranType,OutTranId,ScreenType)
+	 select TranId,TranDate,ItemId,Quantity,'In','','GRN' from @list
+
+	 while(@i <= @total) 
+	BEGIN
+		set @ItemId=(select ItemId from(select ItemId,ROW_NUMBER() over (order by ItemId asc) RowNo from @list)a where RowNo=@i)
+		set @Quantity=(select Quantity from(select Quantity,ROW_NUMBER() over (order by ItemId asc) RowNo from @list)a where RowNo=@i)
+
+		set @count=(select count(*) from  ItemStock where TranId=@TranId and ItemId=@ItemId and TranType='GRN')
+		if(@count=0)
+		begin
+			insert into ItemStock(ItemId,Quantity,TranId,TranType)
+			values(@ItemId,@Quantity,@TranId,'GRN')
+		end
+		else
+		begin
+		    update ItemStock set Quantity=Quantity+@Quantity where TranId=@TranId and ItemId=@ItemId and TranType='GRN'
+		end 
+
+	  SET @i  = @i  + 1  
+	END
+
+ end
+ else if(@Type='Update')
+ begin
+     set @totalOld=(select count(*) from  ItemStockTran where TranId=@TranId and TranType='GRN')
+	  while(@j <= @totalOld) 
+		BEGIN
+			set @ItemId=(select ItemId from(select ItemId,ROW_NUMBER() over (order by ItemId asc) RowNo from ItemStockTran where TranId=@TranId and TranType='GRN')a where RowNo=@j)
+			set @Quantity=(select Quantity from(select Quantity,ROW_NUMBER() over (order by ItemId asc) RowNo from ItemStockTran where TranId=@TranId and TranType='GRN')a where RowNo=@j)
+
+			update ItemStock set Quantity=Quantity-@Quantity where TranId=@TranId and ItemId=@ItemId and TranType='GRN'
+
+		  SET @j  = @j  + 1  
+		END
+	 
+	 delete from ItemStockTran where TranId=@TranId and TranType='GRN'
+
+	 insert into ItemStockTran(TranId,TranDate,ItemId,Quantity,TranType,OutTranId,ScreenType)
+	 select TranId,TranDate,ItemId,Quantity,'In','','GRN' from @list
+
+	 while(@i <= @total) 
+	BEGIN
+		set @ItemId=(select ItemId from(select ItemId,ROW_NUMBER() over (order by ItemId asc) RowNo from @list)a where RowNo=@i)
+		set @Quantity=(select Quantity from(select Quantity,ROW_NUMBER() over (order by ItemId asc) RowNo from @list)a where RowNo=@i)
+
+		set @count=(select count(*) from  ItemStock where ItemId=@ItemId)
+		if(@count=0)
+		begin
+			insert into ItemStock(ItemId,Quantity,TranId,TranType)
+			values(@ItemId,@Quantity,@TranId,'GRN')
+		end
+		else
+		begin
+		    update ItemStock set Quantity=Quantity+@Quantity where TranId=@TranId and ItemId=@ItemId and TranType='GRN'
+		end 
+
+	  SET @i  = @i  + 1  
+	END
+ end
+ else if(@Type='Delete')
+ begin
+	  set @totalOld=(select count(*) from  ItemStockTran where TranId=@TranId and TranType='GRN')
+	  while(@j <= @totalOld) 
+		BEGIN
+			set @ItemId=(select ItemId from(select ItemId,ROW_NUMBER() over (order by ItemId asc) RowNo from ItemStockTran where TranId=@TranId and TranType='GRN')a where RowNo=@j)
+			set @Quantity=(select Quantity from(select Quantity,ROW_NUMBER() over (order by ItemId asc) RowNo from ItemStockTran where TranId=@TranId and TranType='GRN')a where RowNo=@j)
+
+			update ItemStock set Quantity=Quantity-@Quantity where TranId=@TranId and ItemId=@ItemId and TranType='GRN'
+
+		  SET @j  = @j  + 1  
+		END
+	 
+	 delete from ItemStockTran where TranId=@TranId and TranType='GRN'
+ end
+
+ Select 1 Id,'Success' PType,'' PError 
+
+end
+
+GO
+/****** Object:  StoredProcedure [dbo].[proc_InvoiceItemStock]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+create proc [dbo].[proc_InvoiceItemStock]
+@Type varchar(50),
+@TranId varchar(50),
+@list ItemOpeningStock READONLY
+as
+begin
+   SET NOCOUNT ON 
+   SET FMTONLY OFF 
+  declare @total int=(select count(*) from  @list)
+  declare @totalOld int
+  declare @i int=1
+  declare @j int=1
+  declare @ItemId int
+  declare @Quantity numeric(18,2)
+  declare @count int
+
+BEGIN TRY
+    BEGIN TRANSACTION;
+     
+Declare @NeedQty as Numeric(18,2)      
+Declare @IssQty as Numeric(18,2)      
+Declare @BalQty as Numeric(18,2)      
+Declare @StkQty as Numeric(18,2) 
+declare @SQty as Numeric(18,2)   
+declare @TranNo varchar(50)
+declare @TranDate date
+declare @k  int=1
+
+if(@Type='Add')
+begin
+	set @k=1
+	while(@i <= @total) 
+	BEGIN
+		set @ItemId=(select ItemId from(select ItemId,ROW_NUMBER() over (order by ItemId asc) RowNo from @list)a where RowNo=@i)
+		set @Quantity=(select Quantity from(select Quantity,ROW_NUMBER() over (order by ItemId asc) RowNo from @list)a where RowNo=@i)
+		set @TranDate=(select TranDate from(select TranDate,ROW_NUMBER() over (order by ItemId asc) RowNo from @list)a where RowNo=@i)
+
+		 SET @NeedQty=@Quantity        
+		 SET @BalQty=0                         
+		 Set @COUNT =(Select COUNT(*) from ItemStock where ItemId=@ItemId and Quantity>0)    
+		 while @k < =@COUNT    
+		 BEGIN      
+		  Set @TranNo =(Select TranId from (Select TranId,ROW_NUMBER() over (order by TranId Asc) ROW from ItemStock where ItemId=@ItemId and Quantity>0) a Where ROW=@k)      
+		  Set @SQty =(Select Quantity from (Select Quantity,ROW_NUMBER() over (order by TranId Asc) ROW from ItemStock where ItemId=@ItemId and Quantity>0) a Where ROW=@k)      
+			  if @NeedQty>@SQty      
+			   begin      
+				  set @BalQty=@NeedQty-@SQty      
+				  set @StkQty=@SQty      
+			   end      
+			  else      
+			   begin      
+				  Set @BalQty=0      
+				  set @StkQty=@NeedQty      
+			   end      
+          
+			  IF @NeedQty>0      
+			  BEGIN     
+				update ItemStock set Quantity=Quantity-@StkQty where TranId=@TranNo and ItemId=@ItemId and Quantity>0
+		    
+				insert into ItemStockTran(TranId,TranDate,ItemId,Quantity,TranType,OutTranId,ScreenType)
+				select @TranId,@TranDate,@ItemId,@StkQty,'Out',@TranNo,'Invoice' from @list                                                             
+			  END      
+			
+			Set @NeedQty=@BalQty      
+			Set @COUNT=@COUNT-1      
+			SET @k=1      
+		  END 
+
+	  SET @i  = @i  + 1  
+	END
+
+ end
+ else if(@Type='Update')
+ begin
+    SET @k=1      
+	
+    while @k <=(Select COUNT(*) from ItemStockTran where TranId=@TranId and ScreenType='Invoice' and TranType='Out')                                                       
+	Begin                                    
+		Set @ItemId =(Select ItemId from (Select ItemId,ROW_NUMBER() over (order by ItemId Asc) ROW1 from ItemStockTran  where TranId=@TranId and ScreenType='Invoice' and TranType='Out') a Where ROW1=@k)                                 
+		Set @TranNo =(Select OutTranId from (Select OutTranId,ROW_NUMBER() over (order by ItemId Asc) ROW1 from ItemStockTran where TranId=@TranId and ScreenType='Invoice' and TranType='Out') a Where ROW1=@k)                                          
+		Set @Quantity =(Select Quantity from (Select Quantity,ROW_NUMBER() over (order by ItemId Asc) ROW1 from ItemStockTran where TranId=@TranId and ScreenType='Invoice' and TranType='Out') a Where ROW1=@k)                                     
+		
+
+		update ItemStock Set Quantity=Quantity+@Quantity where TranId=@TranNo and ItemId=@ItemId                             
+     
+	 set @k=@k+1
+    End        
+
+	Delete from ItemStockTran  where TranId=@TranId and ScreenType='Invoice' and TranType='Out'
+
+	set @k=1
+	set @i=1
+	while(@i <= @total) 
+	BEGIN
+		set @ItemId=(select ItemId from(select ItemId,ROW_NUMBER() over (order by ItemId asc) RowNo from @list)a where RowNo=@i)
+		set @Quantity=(select Quantity from(select Quantity,ROW_NUMBER() over (order by ItemId asc) RowNo from @list)a where RowNo=@i)
+		set @TranDate=(select TranDate from(select TranDate,ROW_NUMBER() over (order by ItemId asc) RowNo from @list)a where RowNo=@i)
+
+		 SET @NeedQty=@Quantity        
+		 SET @BalQty=0                         
+		 Set @COUNT =(Select COUNT(*) from ItemStock where ItemId=@ItemId and Quantity>0)    
+		 while @k < =@COUNT    
+		 BEGIN      
+		  Set @TranNo =(Select TranId from (Select TranId,ROW_NUMBER() over (order by TranId Asc) ROW from ItemStock where ItemId=@ItemId and Quantity>0) a Where ROW=@k)      
+		  Set @SQty =(Select Quantity from (Select Quantity,ROW_NUMBER() over (order by TranId Asc) ROW from ItemStock where ItemId=@ItemId and Quantity>0) a Where ROW=@k)      
+			 if @NeedQty>@SQty      
+			   begin      
+				  set @BalQty=@NeedQty-@SQty      
+				  set @StkQty=@SQty      
+			   end      
+			  else      
+			   begin      
+				  Set @BalQty=0      
+				  set @StkQty=@NeedQty      
+			   end    
+          
+			  IF @NeedQty>0      
+			  BEGIN     
+				update ItemStock set Quantity=Quantity-@StkQty where TranId=@TranNo and ItemId=@ItemId and Quantity>0
+		    
+				insert into ItemStockTran(TranId,TranDate,ItemId,Quantity,TranType,OutTranId,ScreenType)
+				select @TranId,@TranDate,@ItemId,@StkQty,'Out',@TranNo,'Invoice' from @list                                                             
+			  END      
+			
+			Set @NeedQty=@BalQty      
+			Set @COUNT=@COUNT-1      
+			SET @k=1      
+		  END 
+
+	  SET @i  = @i  + 1  
+	END
+
+ end
+ else if(@Type='Delete')
+ begin
+	SET @k=1      
+    while @k < =(Select COUNT(*) from ItemStockTran where TranId=@TranId and ScreenType='Invoice' and TranType='Out')                                                       
+	Begin                                    
+		Set @ItemId =(Select ItemId from (Select ItemId,ROW_NUMBER() over (order by ItemId Asc) ROW1 from ItemStockTran  where TranId=@TranId and ScreenType='Invoice' and TranType='Out') a Where ROW1=@k)                                 
+		Set @TranNo =(Select OutTranId from (Select OutTranId,ROW_NUMBER() over (order by ItemId Asc) ROW1 from ItemStockTran where TranId=@TranId and ScreenType='Invoice' and TranType='Out') a Where ROW1=@k)                                          
+		Set @Quantity =(Select Quantity from (Select Quantity,ROW_NUMBER() over (order by ItemId Asc) ROW1 from ItemStockTran where TranId=@TranId and ScreenType='Invoice' and TranType='Out') a Where ROW1=@k)                                     
+		
+		
+		update ItemStock Set Quantity=Quantity+@Quantity where TranId=@TranNo and ItemId=@ItemId                             
+     
+	 set @k=@k+1
+    End        
+
+	Delete from ItemStockTran  where TranId=@TranId and ScreenType='Invoice' and TranType='Out'
+
+
+
+ end
+ Select 1 Id,'Success' PType,'' PError 
+ 
+
+COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0
+        ROLLBACK TRANSACTION;
+
+		 Select 1 Id,'Error' PType,'' PError 
+END CATCH
+end
+GO
+
+
+CREATE proc [dbo].[proc_ItemOpeningStock]
+@Type varchar(50),
+@TranId varchar(50),
+@TranDate Datetime,
+@ItemId int,
+@Quantity numeric(18,2)
+as
+begin
+ SET NOCOUNT ON 
+ SET FMTONLY OFF 
+ declare @i int=1
+  declare @j int=1
+ declare @count int
+ declare @oldQty numeric(18,2)
+ declare @oldItemId int
+ if(@Type='Add')
+ begin
+	 insert into ItemStockTran(TranId,TranDate,ItemId,Quantity,TranType,OutTranId,ScreenType)
+	 select @TranId,@TranDate,@ItemId,@Quantity,'In','','Opening Stock'
+
+	
+		set @count=(select count(*) from  ItemStock where TranId=@TranId and ItemId=@ItemId and TranType='Opening Stock')
+		if(@count=0)
+		begin
+			insert into ItemStock(ItemId,Quantity,TranId,TranType)
+			values(@ItemId,@Quantity,@TranId,'Opening Stock')
+		end
+		else
+		begin
+		    update ItemStock set Quantity=Quantity+@Quantity where ItemId=@ItemId and TranId=@TranId and TranType='Opening Stock'
+		end 
+
+
+ end
+ else if(@Type='Update')
+ begin
+     
+	     set @oldQty=(select top  1 Quantity from ItemStockTran where TranId=@TranId and TranType='Opening Stock')
+		 set @oldItemId=(select top  1 ItemId from ItemStockTran where TranId=@TranId and TranType='Opening Stock')
+
+			update ItemStock set Quantity=Quantity-@oldQty where ItemId=@oldItemId and TranId=@TranId and TranType='Opening Stock'
+
+	 
+	 delete from ItemStockTran where TranId=@TranId and TranType='Opening Stock'
+	 
+	 insert into ItemStockTran(TranId,TranDate,ItemId,Quantity,TranType,OutTranId,ScreenType)
+	 select @TranId,@TranDate,@ItemId,@Quantity,'In','','Opening Stock'
+
+	 
+		set @count=(select count(*) from  ItemStock where TranId=@TranId and ItemId=@ItemId and TranType='Opening Stock')
+		if(@count=0)
+		begin
+			insert into ItemStock(ItemId,Quantity,TranId,TranType)
+			values(@ItemId,@Quantity,@TranId,'Opening Stock')
+		end
+		else
+		begin
+		    update ItemStock set Quantity=Quantity+@Quantity where ItemId=@ItemId and TranId=@TranId and TranType='Opening Stock'
+		end 
+ end
+ else if(@Type='Delete')
+ begin
+	   set @oldQty=(select top  1 Quantity from ItemStockTran where TranId=@TranId and TranType='Opening Stock')
+		 set @oldItemId=(select top  1 ItemId from ItemStockTran where TranId=@TranId and TranType='Opening Stock')
+
+	 update ItemStock set Quantity=Quantity-@oldQty where ItemId=@oldItemId and TranType='Opening Stock'
+	 delete from ItemStockTran where TranId=@TranId and TranType='Opening Stock'
+ end
+
+ Select 1 Id,'Success' PType,'' PError 
+
+end
+
+GO
+/****** Object:  Table [dbo].[Customer]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING OFF
+GO
 CREATE TABLE [dbo].[Customer](
 	[CustomerId] [int] IDENTITY(1,1) NOT NULL,
 	[CustomerType] [varchar](15) NOT NULL,
@@ -51,7 +444,99 @@ PRIMARY KEY CLUSTERED
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[Item]    Script Date: 9/15/2018 19:37:21 ******/
+/****** Object:  Table [dbo].[GRN]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[GRN](
+	[GRNId] [int] IDENTITY(1,1) NOT NULL,
+	[AccountYear] [varchar](20) NOT NULL,
+	[IncrementId] [int] NOT NULL,
+	[GRNNO] [varchar](50) NOT NULL,
+	[GRNDate] [date] NOT NULL,
+	[PODate] [date] NULL,
+	[GateInwardDate] [date] NULL,
+	[SupplierId] [int] NOT NULL,
+	[RequestBy] [varchar](200) NULL,
+	[GRNType] [varchar](50) NULL,
+	[SubTotal] [numeric](18, 2) NOT NULL,
+	[CGST] [numeric](18, 2) NOT NULL,
+	[SGST] [numeric](18, 2) NOT NULL,
+	[IGST] [numeric](18, 2) NOT NULL,
+	[Total] [numeric](18, 2) NOT NULL,
+	[IsActive] [int] NOT NULL,
+	[Createdby] [int] NOT NULL,
+	[Createdon] [datetime] NOT NULL,
+	[Modifiedby] [int] NULL,
+	[Modifiedon] [datetime] NULL,
+	[SuppInvoiceNo] [varchar](100) NULL,
+	[SuppInvoiceDate] [date] NULL,
+	[SuppInvoiceFile] [varchar](500) NULL,
+	[CourierCharges] [numeric](18, 2) NULL,
+	[POId] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[GRNId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Invoice]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Invoice](
+	[InvoiceId] [int] IDENTITY(1,1) NOT NULL,
+	[AccountYear] [varchar](20) NOT NULL,
+	[IncrementId] [int] NOT NULL,
+	[InvoiceNO] [varchar](50) NOT NULL,
+	[InvoiceDate] [date] NOT NULL,
+	[Location] [varchar](100) NULL,
+	[Taxable] [varchar](20) NOT NULL,
+	[DCNo] [varchar](50) NOT NULL,
+	[DCDate] [date] NULL,
+	[CustomerId] [int] NOT NULL,
+	[Currency] [varchar](50) NOT NULL,
+	[ExchangeRate] [numeric](18, 2) NOT NULL,
+	[PlaceOfSupply] [varchar](250) NULL,
+	[ApprovalDate] [date] NULL,
+	[PaymentType] [varchar](250) NULL,
+	[Transport] [varchar](100) NULL,
+	[PreparedBy] [varchar](200) NULL,
+	[Remarks] [varchar](1000) NULL,
+	[AdvanceAmount] [numeric](18, 2) NOT NULL,
+	[BalanceAmount] [numeric](18, 2) NOT NULL,
+	[SubTotal] [numeric](18, 2) NOT NULL,
+	[CGST] [numeric](18, 2) NOT NULL,
+	[SGST] [numeric](18, 2) NOT NULL,
+	[IGST] [numeric](18, 2) NOT NULL,
+	[DiscountPer] [numeric](18, 2) NOT NULL,
+	[DiscountAmount] [numeric](18, 2) NOT NULL,
+	[CourierCharges] [numeric](18, 2) NULL,
+	[Total] [numeric](18, 2) NOT NULL,
+	[IsActive] [int] NOT NULL,
+	[Createdby] [int] NOT NULL,
+	[Createdon] [datetime] NOT NULL,
+	[Modifiedby] [int] NULL,
+	[Modifiedon] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[InvoiceId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Item]    Script Date: 9/27/2018 12:44:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -70,17 +555,19 @@ CREATE TABLE [dbo].[Item](
 	[Createdby] [int] NOT NULL,
 	[Createdon] [datetime] NOT NULL,
 	[Modifiedby] [int] NULL,
-	[Modifiedon] [datetime] NULL,
+	[Modifiedon] [datetime] NULL
+) ON [PRIMARY]
+SET ANSI_PADDING ON
+ALTER TABLE [dbo].[Item] ADD [HSNCode] [varchar](150) NULL
 PRIMARY KEY CLUSTERED 
 (
 	[ItemId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
 
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[ItemMapping]    Script Date: 9/15/2018 19:37:21 ******/
+/****** Object:  Table [dbo].[ItemMapping]    Script Date: 9/27/2018 12:44:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -105,35 +592,60 @@ PRIMARY KEY CLUSTERED
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[SubItemMapping]    Script Date: 9/15/2018 19:37:21 ******/
+/****** Object:  Table [dbo].[ItemStock]    Script Date: 9/27/2018 12:44:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-SET ANSI_PADDING OFF
+SET ANSI_PADDING ON
 GO
-CREATE TABLE [dbo].[SubItemMapping](
-	[SubItemMappingId] [int] IDENTITY(1,1) NOT NULL,
-	[ItemMappingId] [int] NOT NULL,
+CREATE TABLE [dbo].[ItemStock](
+	[ItemStockId] [int] IDENTITY(1,1) NOT NULL,
 	[ItemId] [int] NOT NULL,
-	[CustomerItemCode] [varchar](100) NOT NULL,
-	[Package] [varchar](100) NOT NULL,
-	[Rate] [numeric](18, 2) NOT NULL,
-	[IsActive] [int] NOT NULL,
-	[Createdby] [int] NOT NULL,
-	[Createdon] [datetime] NOT NULL,
-	[Modifiedby] [int] NULL,
-	[Modifiedon] [datetime] NULL,
+	[Quantity] [numeric](18, 2) NOT NULL,
+	[TranId] [varchar](50) NULL,
+	[TranType] [varchar](50) NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[SubItemMappingId] ASC
+	[ItemStockId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
 GO
 SET ANSI_PADDING OFF
 GO
+/****** Object:  Table [dbo].[ItemStockTran]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[ItemStockTran](
+	[ItemStockTranId] [int] IDENTITY(1,1) NOT NULL,
+	[TranId] [varchar](50) NOT NULL,
+	[TranDate] [date] NOT NULL,
+	[ItemId] [int] NOT NULL,
+	[Quantity] [numeric](18, 2) NOT NULL,
+	[TranType] [varchar](10) NOT NULL,
+	[OutTranId] [varchar](50) NOT NULL,
+	[ScreenType] [varchar](50) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ItemStockTranId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[OpeningStock]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
 CREATE TABLE [dbo].[OpeningStock](
 	[OpeningStockId] [int] IDENTITY(1,1) NOT NULL,
 	[AccountYear] [varchar](20) NOT NULL,
@@ -156,113 +668,15 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 
 GO
-
 SET ANSI_PADDING OFF
 GO
-
-ALTER TABLE [dbo].[OpeningStock]  WITH CHECK ADD FOREIGN KEY([ItemId])
-REFERENCES [dbo].[Item] ([ItemId])
+/****** Object:  Table [dbo].[PurchaseOrder]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
 GO
-
-
-
-
-create table ItemStock(
-ItemStockId int not null identity(1,1) primary key,
-ItemId int not null references Item(ItemId),
-Quantity numeric(18,2) not null,
-)
-
-go
-
-create table ItemStockTran(
-ItemStockTranId int not null identity(1,1) primary key,
-TranId varchar(50) not null,
-TranDate date not null,
-ItemId int not null references Item(ItemId),
-Quantity numeric(18,2) not null,
-TranType varchar(10) not null
-)
-
-go
-
-
-
-CREATE TABLE [dbo].[GRN](
-	[GRNId] [int] IDENTITY(1,1) NOT NULL,
-	[AccountYear] [varchar](20) NOT NULL,
-	[IncrementId] [int] NOT NULL,
-	[GRNNO] [varchar](50) NOT NULL,
-	[GRNDate] [date] NOT NULL,
-	[PONO] [varchar](50) NOT NULL,
-	[PODate] [date] NULL,
-	[GateInwardDate] [date] NULL,
-	[SupplierId] [int] NOT NULL,
-	[RequestBy] [varchar](200) NULL,
-	[GRNType] [varchar](50) NULL,
-	[SubTotal] [numeric](18, 2) NOT NULL,
-	[CGST] [numeric](18, 2) NOT NULL,
-	[SGST] [numeric](18, 2) NOT NULL,
-	[IGST] [numeric](18, 2) NOT NULL,
-	[Total] [numeric](18, 2) NOT NULL,
-	[IsActive] [int] NOT NULL,
-	[Createdby] [int] NOT NULL,
-	[Createdon] [datetime] NOT NULL,
-	[Modifiedby] [int] NULL,
-	[Modifiedon] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[GRNId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-
+SET QUOTED_IDENTIFIER ON
 GO
-
 SET ANSI_PADDING OFF
 GO
-
-ALTER TABLE [dbo].[GRN]  WITH CHECK ADD FOREIGN KEY([SupplierId])
-REFERENCES [dbo].[Customer] ([CustomerId])
-GO
-
-
-
-CREATE TABLE [dbo].[SubGRN](
-	[SubGRNId] [int] IDENTITY(1,1) NOT NULL,
-	[GRNId] [int] NOT NULL,
-	[ItemId] [int] NOT NULL,
-	[Quantity] [numeric](18, 2) NOT NULL,
-	[Rate] [numeric](18, 2) NOT NULL,
-	[CGSTPer] [numeric](18, 2) NOT NULL,
-	[CGSTAmount] [numeric](18, 2) NOT NULL,
-	[SGSTPer] [numeric](18, 2) NOT NULL,
-	[SGSTAmount] [numeric](18, 2) NOT NULL,
-	[IGSTPer] [numeric](18, 2) NOT NULL,
-	[IGSTAmount] [numeric](18, 2) NOT NULL,
-	[Total] [numeric](18, 2) NOT NULL,
-	[IsActive] [int] NOT NULL,
-	[Createdby] [int] NOT NULL,
-	[Createdon] [datetime] NOT NULL,
-	[Modifiedby] [int] NULL,
-	[Modifiedon] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[SubGRNId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-ALTER TABLE [dbo].[SubGRN]  WITH CHECK ADD FOREIGN KEY([GRNId])
-REFERENCES [dbo].[GRN] ([GRNId])
-GO
-
-ALTER TABLE [dbo].[SubGRN]  WITH CHECK ADD FOREIGN KEY([ItemId])
-REFERENCES [dbo].[Item] ([ItemId])
-GO
-
-
-
 CREATE TABLE [dbo].[PurchaseOrder](
 	[POId] [int] IDENTITY(1,1) NOT NULL,
 	[PODate] [date] NOT NULL,
@@ -292,6 +706,7 @@ CREATE TABLE [dbo].[PurchaseOrder](
 	[Createdon] [datetime] NOT NULL,
 	[Modifiedby] [int] NULL,
 	[Modifiedon] [datetime] NULL,
+	[CourierCharges] [numeric](18, 2) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[POId] ASC
@@ -299,16 +714,104 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 
 GO
-
 SET ANSI_PADDING OFF
 GO
-
-ALTER TABLE [dbo].[PurchaseOrder]  WITH CHECK ADD FOREIGN KEY([SupplierId])
-REFERENCES [dbo].[Customer] ([CustomerId])
+/****** Object:  Table [dbo].[SubGRN]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
 GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[SubGRN](
+	[SubGRNId] [int] IDENTITY(1,1) NOT NULL,
+	[GRNId] [int] NOT NULL,
+	[ItemId] [int] NOT NULL,
+	[Quantity] [numeric](18, 2) NOT NULL,
+	[Rate] [numeric](18, 2) NOT NULL,
+	[CGSTPer] [numeric](18, 2) NOT NULL,
+	[CGSTAmount] [numeric](18, 2) NOT NULL,
+	[SGSTPer] [numeric](18, 2) NOT NULL,
+	[SGSTAmount] [numeric](18, 2) NOT NULL,
+	[IGSTPer] [numeric](18, 2) NOT NULL,
+	[IGSTAmount] [numeric](18, 2) NOT NULL,
+	[Total] [numeric](18, 2) NOT NULL,
+	[IsActive] [int] NOT NULL,
+	[Createdby] [int] NOT NULL,
+	[Createdon] [datetime] NOT NULL,
+	[Modifiedby] [int] NULL,
+	[Modifiedon] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[SubGRNId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 
+GO
+/****** Object:  Table [dbo].[SubInvoice]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[SubInvoice](
+	[SubInvoiceId] [int] IDENTITY(1,1) NOT NULL,
+	[InvoiceId] [int] NOT NULL,
+	[ItemId] [int] NOT NULL,
+	[Quantity] [numeric](18, 2) NOT NULL,
+	[Rate] [numeric](18, 2) NOT NULL,
+	[SubTotal] [numeric](18, 2) NOT NULL,
+	[CGSTPer] [numeric](18, 2) NOT NULL,
+	[CGSTAmount] [numeric](18, 2) NOT NULL,
+	[SGSTPer] [numeric](18, 2) NOT NULL,
+	[SGSTAmount] [numeric](18, 2) NOT NULL,
+	[IGSTPer] [numeric](18, 2) NOT NULL,
+	[IGSTAmount] [numeric](18, 2) NOT NULL,
+	[DiscountPer] [numeric](18, 2) NOT NULL,
+	[DiscountAmount] [numeric](18, 2) NOT NULL,
+	[Total] [numeric](18, 2) NOT NULL,
+	[IsActive] [int] NOT NULL,
+	[Createdby] [int] NOT NULL,
+	[Createdon] [datetime] NOT NULL,
+	[Modifiedby] [int] NULL,
+	[Modifiedon] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[SubInvoiceId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 
+GO
+/****** Object:  Table [dbo].[SubItemMapping]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING OFF
+GO
+CREATE TABLE [dbo].[SubItemMapping](
+	[SubItemMappingId] [int] IDENTITY(1,1) NOT NULL,
+	[ItemMappingId] [int] NOT NULL,
+	[ItemId] [int] NOT NULL,
+	[CustomerItemCode] [varchar](100) NOT NULL,
+	[Package] [varchar](100) NOT NULL,
+	[Rate] [numeric](18, 2) NOT NULL,
+	[IsActive] [int] NOT NULL,
+	[Createdby] [int] NOT NULL,
+	[Createdon] [datetime] NOT NULL,
+	[Modifiedby] [int] NULL,
+	[Modifiedon] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[SubItemMappingId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[SubPurchaseOrder]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [dbo].[SubPurchaseOrder](
 	[SubPOId] [int] IDENTITY(1,1) NOT NULL,
 	[POId] [int] NOT NULL,
@@ -334,192 +837,89 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 
 GO
+/****** Object:  View [dbo].[ViwItemStock]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create view [dbo].[ViwItemStock] as
+select ItemId,Sum(Quantity) Quantity from ItemStock
+group by ItemId
+GO
+/****** Object:  View [dbo].[ViwPendingGRNPO]    Script Date: 9/27/2018 12:44:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
+CREATE view [dbo].[ViwPendingGRNPO]
+as
+select a.POId,a.PODate,a.PONo,a.SupplierId,a.SupplierName,
+a.ItemId,a.ItemCode,a.HSNCode,a.ItemName,a.Unit,a.Rate,a.CGSTPer,a.IGSTPer,a.SGSTPer,sum(a.Quantity) Quantity  from
+(
+select a.POId,a.PODate,a.PONo,a.SupplierId,c.CustomerName SupplierName,
+b.ItemId,d.ItemCode,d.HSNCode,d.ItemName,d.Unit,b.Rate,b.CGSTPer,b.IGSTPer,b.SGSTPer,b.Quantity 
+from  
+PurchaseOrder a 
+inner join SubPurchaseOrder b on a.POId=b.POId
+inner join  Customer c on a.SupplierId=c.CustomerId
+inner join Item d on b.ItemId=d.ItemId 
+where a.IsActive=1 and c.IsActive=1 and d.IsActive=1 and b.IsActive=1
+union all
+select a.POId,e.PODate,e.PONo,a.SupplierId,c.CustomerName SupplierName,
+b.ItemId,d.ItemCode,d.HSNCode,d.ItemName,d.Unit,f.Rate,f.CGSTPer,f.IGSTPer,f.SGSTPer,-b.Quantity 
+from  
+GRN a 
+inner join SubGRN b on a.GRNId=b.GRNId
+inner join  Customer c on a.SupplierId=c.CustomerId
+inner join Item d on b.ItemId=d.ItemId 
+inner join PurchaseOrder e on a.POId=e.POId
+inner join SubPurchaseOrder f  on e.POId=f.POId 
+where a.IsActive=1 and c.IsActive=1 and d.IsActive=1 and b.IsActive=1 and e.IsActive=1
+)a group by a.POId,a.PODate,a.PONo,a.SupplierId,a.SupplierName,
+a.ItemId,a.ItemCode,a.HSNCode,a.ItemName,a.Unit,a.Rate,a.CGSTPer,a.IGSTPer,a.SGSTPer
+having sum(a.Quantity)>0
+
+GO
+ALTER TABLE [dbo].[GRN]  WITH CHECK ADD FOREIGN KEY([POId])
+REFERENCES [dbo].[PurchaseOrder] ([POId])
+GO
+ALTER TABLE [dbo].[GRN]  WITH CHECK ADD FOREIGN KEY([SupplierId])
+REFERENCES [dbo].[Customer] ([CustomerId])
+GO
+ALTER TABLE [dbo].[Invoice]  WITH CHECK ADD FOREIGN KEY([CustomerId])
+REFERENCES [dbo].[Customer] ([CustomerId])
+GO
+ALTER TABLE [dbo].[ItemStock]  WITH CHECK ADD FOREIGN KEY([ItemId])
+REFERENCES [dbo].[Item] ([ItemId])
+GO
+ALTER TABLE [dbo].[ItemStockTran]  WITH CHECK ADD FOREIGN KEY([ItemId])
+REFERENCES [dbo].[Item] ([ItemId])
+GO
+ALTER TABLE [dbo].[OpeningStock]  WITH CHECK ADD FOREIGN KEY([ItemId])
+REFERENCES [dbo].[Item] ([ItemId])
+GO
+ALTER TABLE [dbo].[PurchaseOrder]  WITH CHECK ADD FOREIGN KEY([SupplierId])
+REFERENCES [dbo].[Customer] ([CustomerId])
+GO
+ALTER TABLE [dbo].[SubGRN]  WITH CHECK ADD FOREIGN KEY([GRNId])
+REFERENCES [dbo].[GRN] ([GRNId])
+GO
+ALTER TABLE [dbo].[SubGRN]  WITH CHECK ADD FOREIGN KEY([ItemId])
+REFERENCES [dbo].[Item] ([ItemId])
+GO
+ALTER TABLE [dbo].[SubInvoice]  WITH CHECK ADD FOREIGN KEY([InvoiceId])
+REFERENCES [dbo].[Invoice] ([InvoiceId])
+GO
+ALTER TABLE [dbo].[SubInvoice]  WITH CHECK ADD FOREIGN KEY([ItemId])
+REFERENCES [dbo].[Item] ([ItemId])
+GO
 ALTER TABLE [dbo].[SubPurchaseOrder]  WITH CHECK ADD FOREIGN KEY([ItemId])
 REFERENCES [dbo].[Item] ([ItemId])
 GO
-
 ALTER TABLE [dbo].[SubPurchaseOrder]  WITH CHECK ADD FOREIGN KEY([POId])
 REFERENCES [dbo].[PurchaseOrder] ([POId])
 GO
-
-
-
-
-
-create proc [dbo].[proc_ItemStock]
-@Type varchar(50),
-@TranId varchar(50),
-@list ItemOpeningStock READONLY
-as
-begin
- SET NOCOUNT ON 
-   SET FMTONLY OFF 
- declare @total int=(select count(*) from  @list)
-  declare @totalOld int
- declare @i int=1
-  declare @j int=1
- declare @ItemId int
- declare @Quantity numeric(18,2)
- declare @count int
- if(@Type='Add')
- begin
-	 insert into ItemStockTran(TranId,TranDate,ItemId,Quantity,TranType)
-	 select TranId,TranDate,ItemId,Quantity,'In' from @list
-
-	 while(@i <= @total) 
-	BEGIN
-		set @ItemId=(select ItemId from(select ItemId,ROW_NUMBER() over (order by ItemId asc) RowNo from @list)a where RowNo=@i)
-		set @Quantity=(select Quantity from(select Quantity,ROW_NUMBER() over (order by ItemId asc) RowNo from @list)a where RowNo=@i)
-
-		set @count=(select count(*) from  ItemStock where ItemId=@ItemId)
-		if(@count=0)
-		begin
-			insert into ItemStock(ItemId,Quantity)
-			values(@ItemId,@Quantity)
-		end
-		else
-		begin
-		    update ItemStock set Quantity=Quantity+@Quantity where ItemId=@ItemId
-		end 
-
-	  SET @i  = @i  + 1  
-	END
-
- end
- else if(@Type='Update')
- begin
-     set @totalOld=(select count(*) from  ItemStockTran where TranId=@TranId)
-	  while(@j <= @totalOld) 
-		BEGIN
-			set @ItemId=(select ItemId from(select ItemId,ROW_NUMBER() over (order by ItemId asc) RowNo from ItemStockTran where TranId=@TranId)a where RowNo=@j)
-			set @Quantity=(select Quantity from(select Quantity,ROW_NUMBER() over (order by ItemId asc) RowNo from ItemStockTran where TranId=@TranId)a where RowNo=@j)
-
-			update ItemStock set Quantity=Quantity-@Quantity where ItemId=@ItemId
-
-		  SET @j  = @j  + 1  
-		END
-	 
-	 delete from ItemStockTran where TranId=@TranId
-
-	 insert into ItemStockTran(TranId,TranDate,ItemId,Quantity,TranType)
-	 select TranId,TranDate,ItemId,Quantity,'In' from @list
-
-	 while(@i <= @total) 
-	BEGIN
-		set @ItemId=(select ItemId from(select ItemId,ROW_NUMBER() over (order by ItemId asc) RowNo from @list)a where RowNo=@i)
-		set @Quantity=(select Quantity from(select Quantity,ROW_NUMBER() over (order by ItemId asc) RowNo from @list)a where RowNo=@i)
-
-		set @count=(select count(*) from  ItemStock where ItemId=@ItemId)
-		if(@count=0)
-		begin
-			insert into ItemStock(ItemId,Quantity)
-			values(@ItemId,@Quantity)
-		end
-		else
-		begin
-		    update ItemStock set Quantity=Quantity+@Quantity where ItemId=@ItemId
-		end 
-
-	  SET @i  = @i  + 1  
-	END
- end
- else if(@Type='Delete')
- begin
-	  set @totalOld=(select count(*) from  ItemStockTran where TranId=@TranId)
-	  while(@j <= @totalOld) 
-		BEGIN
-			set @ItemId=(select ItemId from(select ItemId,ROW_NUMBER() over (order by ItemId asc) RowNo from ItemStockTran where TranId=@TranId)a where RowNo=@j)
-			set @Quantity=(select Quantity from(select Quantity,ROW_NUMBER() over (order by ItemId asc) RowNo from ItemStockTran where TranId=@TranId)a where RowNo=@j)
-
-			update ItemStock set Quantity=Quantity-@Quantity where ItemId=@ItemId
-
-		  SET @j  = @j  + 1  
-		END
-	 
-	 delete from ItemStockTran where TranId=@TranId
- end
-
- Select 1 Id,'Success' PType,'' PError 
-
-end
-
-
-
-
+alter table Invoice
+add DeliveryType varchar(100) 
 go
-
-
-create proc [dbo].[proc_ItemOpeningStock]
-@Type varchar(50),
-@TranId varchar(50),
-@TranDate Datetime,
-@ItemId int,
-@Quantity numeric(18,2)
-as
-begin
- SET NOCOUNT ON 
- SET FMTONLY OFF 
- declare @i int=1
-  declare @j int=1
- declare @count int
- declare @oldQty numeric(18,2)
- declare @oldItemId int
- if(@Type='Add')
- begin
-	 insert into ItemStockTran(TranId,TranDate,ItemId,Quantity,TranType)
-	 select @TranId,@TranDate,@ItemId,@Quantity,'In'
-
-	
-		set @count=(select count(*) from  ItemStock where ItemId=@ItemId)
-		if(@count=0)
-		begin
-			insert into ItemStock(ItemId,Quantity)
-			values(@ItemId,@Quantity)
-		end
-		else
-		begin
-		    update ItemStock set Quantity=Quantity+@Quantity where ItemId=@ItemId
-		end 
-
-
- end
- else if(@Type='Update')
- begin
-     
-	     set @oldQty=(select top  1 Quantity from ItemStockTran where TranId=@TranId)
-		 set @oldItemId=(select top  1 ItemId from ItemStockTran where TranId=@TranId)
-
-			update ItemStock set Quantity=Quantity-@oldQty where ItemId=@oldItemId
-
-	 
-	 delete from ItemStockTran where TranId=@TranId
-	 
-	 insert into ItemStockTran(TranId,TranDate,ItemId,Quantity,TranType)
-	 select @TranId,@TranDate,@ItemId,@Quantity,'In'
-
-	 
-		set @count=(select count(*) from  ItemStock where ItemId=@ItemId)
-		if(@count=0)
-		begin
-			insert into ItemStock(ItemId,Quantity)
-			values(@ItemId,@Quantity)
-		end
-		else
-		begin
-		    update ItemStock set Quantity=Quantity+@Quantity where ItemId=@ItemId
-		end 
- end
- else if(@Type='Delete')
- begin
-	   set @oldQty=(select top  1 Quantity from ItemStockTran where TranId=@TranId)
-		 set @oldItemId=(select top  1 ItemId from ItemStockTran where TranId=@TranId)
-
-	 update ItemStock set Quantity=Quantity-@oldQty where ItemId=@oldItemId
-	 delete from ItemStockTran where TranId=@TranId
- end
-
- Select 1 Id,'Success' PType,'' PError 
-
-end
-

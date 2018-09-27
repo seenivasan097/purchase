@@ -44,7 +44,7 @@
                 <label><b>Unit</b></label>
             </div>
             <div class="col-md-4">
-                <input type="text" value="" class="form-control" id="txtUnit" disabled/>
+                <input type="text" value="" class="form-control" id="txtUnit" disabled />
 
             </div>
 
@@ -60,7 +60,7 @@
             </div>
 
             <div class="col-md-4">
-                <input type="text" id="ActualStock"  onkeypress='return validateFloatKeyPress(this,event);' class="form-control" />
+                <input type="text" id="ActualStock" onkeypress='return validateFloatKeyPress(this,event);' class="form-control" />
                 <input type="text" id="accountyear" class="hidden" />
                 <input type="text" id="OpeningStockId" class="hidden" />
                 <input type="text" id="opno" class="hidden" />
@@ -74,7 +74,7 @@
                 <label><b>Physical Stock</b><span style="color: red;"> *</span></label>
             </div>
             <div class="col-md-4">
-                <input type="text" value=""  onkeypress='return validateFloatKeyPress(this,event);' class="form-control" id="PhysicalStock" />
+                <input type="text" value="" onkeypress='return validateFloatKeyPress(this,event);' class="form-control" id="PhysicalStock" />
                 <div class="errorPhysicalStocK custom-error hidden">
                     <p style="color: red;" class="text-danger">Enter Physical Stock</p>
                 </div>
@@ -120,7 +120,8 @@
         <div class="alert alert-success text-center divssuccess hidden">
             <span class="successmessage"></span>
         </div>
-
+        <div class="alert alert-danger text-center divlisterror hidden">
+        </div>
 
         <div class="row">
             <div class="col-md-12">
@@ -234,7 +235,7 @@
         debugger;
         var OpeningStockId = $("#OpeningStockId").val();
         var ItemId = $("#selectedItemID").val();
-       
+
         var ActualStock = $("#ActualStock").val();
         var PhysicalStock = $("#PhysicalStock").val();
         var PreparedBy = $("#PreparedBy").val();
@@ -270,7 +271,7 @@
         }
 
         var objopeningstock = {
-            OpeningStockId:OpeningStockId,
+            OpeningStockId: OpeningStockId,
             AccountYear: $("#accountyear").val(),
             IncrementId: 0,
             OpeningStockNo: $("#opno").val(),
@@ -429,25 +430,45 @@
 
 
     function Editopeningstock(OpeningStockId) {
-        debugger;
         $.ajax({
-            url: "/Transaction/Transaction/Getopeningstock",
-            type: "GET",
-            data: { OpeningStockId: OpeningStockId },
+            url: "/Transaction/Transaction/IsOpeningStockEditable",
+            type: "POST",
+            data: {
+                StockId: OpeningStockId
+            },
+            datatype: "json",
             cache: false,
-            success: function (result) {
+            success: function (data) {
+                if (data.success) {
+                    $.ajax({
+                        url: "/Transaction/Transaction/Getopeningstock",
+                        type: "GET",
+                        data: { OpeningStockId: OpeningStockId },
+                        cache: false,
+                        success: function (result) {
 
-                $("#OpeningStockId").val(result.OpeningStockId);
-                $("#ActualStock").val(result.ActualStock);
-                $("#PhysicalStock").val(result.PhysicalStock);
-                $("#PreparedBy").val(result.PreparedBy);
-                $("#Remarks").val(result.Remarks);
-                $("#txtItem").val(result.ItemName);
-                $("#selectedItemID").val(result.ItemId);
-                $("#txtUnit").val(result.Unit);
+                            $("#OpeningStockId").val(result.OpeningStockId);
+                            $("#ActualStock").val(result.ActualStock);
+                            $("#PhysicalStock").val(result.PhysicalStock);
+                            $("#PreparedBy").val(result.PreparedBy);
+                            $("#Remarks").val(result.Remarks);
+                            $("#txtItem").val(result.ItemName);
+                            $("#selectedItemID").val(result.ItemId);
+                            $("#txtUnit").val(result.Unit);
+                        }
+
+                    });
+                } else {
+                    $(".divlisterror").removeClass("hidden");
+                    $(".divlisterror").html(result.message);
+                    window.setTimeout(function () {
+                        $(".divlisterror").addClass("hidden")
+                    }, 5000);
+                }
             }
-
         });
+
+
 
     }
     function Deleteopeningstock(OpeningStockId) {
@@ -469,14 +490,23 @@
             datatype: "json",
             cache: false,
             success: function (data) {
-                openingstockList();
-                refreshScreen();
-                $("#DeleteModal").modal("hide");
-                $(".divssuccess").removeClass("hidden");
-                $(".successmessage").html("Deleted successfully.");
-                window.setTimeout(function () {
-                    $(".divssuccess").addClass("hidden")
-                }, 5000);
+                if (data.success) {
+                    openingstockList();
+                    refreshScreen();
+                    $("#DeleteModal").modal("hide");
+                    $(".divssuccess").removeClass("hidden");
+                    $(".divssuccess").html("Deleted successfully.");
+                    window.setTimeout(function () {
+                        $(".divssuccess").addClass("hidden")
+                    }, 5000);
+                } else {
+                    $("#DeleteModal").modal("hide");
+                    $(".divlisterror").removeClass("hidden");
+                    $(".divlisterror").html(data.message);
+                    window.setTimeout(function () {
+                        $(".divlisterror").addClass("hidden")
+                    }, 5000);
+                }
 
             }
         });

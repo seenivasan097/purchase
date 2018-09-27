@@ -429,6 +429,7 @@
     <Property Name="Modifiedon" Type="DateTime" Precision="3" />
     <NavigationProperty Name="Customer" Relationship="ApplicationModel.FK__Invoice__Custome__07C12930" FromRole="Invoice" ToRole="Customer" />
     <NavigationProperty Name="SubInvoice" Relationship="ApplicationModel.FK__SubInvoic__Invoi__0A9D95DB" FromRole="Invoice" ToRole="SubInvoice" />
+    <Property Name="DeliveryType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="SubInvoice">
     <Key>

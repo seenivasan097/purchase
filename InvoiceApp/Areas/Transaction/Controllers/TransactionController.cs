@@ -71,6 +71,11 @@ namespace InvoiceApp.Areas.Transaction.Controllers
             return View("~/Areas/Transaction/Views/Transaction/GRN.cshtml");
         }
 
+        public virtual ActionResult EditInvoice(int InvoiceId)
+        {
+            return View("~/Areas/Transaction/Views/Transaction/Invoice.cshtml");
+        }
+
         public virtual ActionResult GRN()
         {
             return View();
@@ -334,6 +339,11 @@ namespace InvoiceApp.Areas.Transaction.Controllers
         [HttpPost]
         public virtual JsonResult DeletePO(int POId)
         {
+            var count = db.GRN.Where(x => x.POId == POId && x.IsActive == 1).ToList().Count;
+            if (count > 0)
+            {
+                return Json(new { success = false, message = "This PO is linked with GRN." }, JsonRequestBehavior.AllowGet);
+            }
             bool result = false;
             PurchaseOrder po = db.PurchaseOrder.Where(x => x.POId == POId).FirstOrDefault();
             if (po != null)
@@ -344,7 +354,7 @@ namespace InvoiceApp.Areas.Transaction.Controllers
                 result = true;
             }
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(new { success = true, message = "Deleted successfully." }, JsonRequestBehavior.AllowGet);
         }
 
         public virtual JsonResult GetCurrentOPNo()
@@ -471,10 +481,16 @@ namespace InvoiceApp.Areas.Transaction.Controllers
         [HttpPost]
         public virtual JsonResult Deleteopeningstock(int OpeningStockId)
         {
+           
             bool result = false;
             OpeningStock OpeningStock = db.OpeningStock.Where(x => x.OpeningStockId == OpeningStockId).FirstOrDefault();
             if (OpeningStock != null)
             {
+                var count = db.ItemStockTran.Where(x => x.OutTranId == OpeningStock.OpeningStockNo && x.ScreenType == "Invoice").ToList().Count;
+                if (count > 0)
+                {
+                    return Json(new { success = false, message = "This opening stock is linked with invoice." }, JsonRequestBehavior.AllowGet);
+                }
                 OpeningStock.IsActive = 0;
                 OpeningStock.Modifiedon = DateTime.Now;
                 db.SaveChanges();
@@ -482,7 +498,7 @@ namespace InvoiceApp.Areas.Transaction.Controllers
                 result = true;
             }
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(new { success = true, message = "Deleted successfully." }, JsonRequestBehavior.AllowGet);
         }
 
         /* GRN End*/
@@ -635,14 +651,16 @@ namespace InvoiceApp.Areas.Transaction.Controllers
                     SqlDbType = SqlDbType.VarChar,
                     Direction = ParameterDirection.Input,
                     ParameterName = "TranId",
-                    Value = TranId
+                    Value = TranId,
+                     Size= 80
                 },
                 new SqlParameter
                 {
                     SqlDbType = SqlDbType.VarChar,
                     Direction = ParameterDirection.Input,
                     ParameterName = "Type",
-                    Value = Type
+                    Value = Type,
+                     Size= 80
                 }
             };
                 db.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, "proc_GRNItemStock @Type,@TranId,@list", parameters);
@@ -751,13 +769,18 @@ namespace InvoiceApp.Areas.Transaction.Controllers
             var list = db.SubGRN.Where(x => x.GRNId == GRNId).ToList();
             if (po != null)
             {
+                var count = db.ItemStockTran.Where(x => x.OutTranId == po.GRNNO && x.ScreenType == "Invoice").ToList().Count;
+                if (count > 0)
+                {
+                    return Json(new { success = false, message = "This GRN is linked with invoice." }, JsonRequestBehavior.AllowGet);
+                }
                 po.IsActive = 0;
                 po.Modifiedon = DateTime.Now;
                 db.SaveChanges();
                 GRNItemStock(po.GRNNO, po.GRNDate, "Delete", list);
                 result = true;
             }
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(new { success = true, message = "Deleted successfully." }, JsonRequestBehavior.AllowGet);
         }
 
         public virtual JsonResult GetCurrentGRNNo()
@@ -817,6 +840,22 @@ namespace InvoiceApp.Areas.Transaction.Controllers
             var isQtyValid = true;
             try
             {
+                if (model.InvoiceModel.DCNo == null)
+                {
+                    model.InvoiceModel.DCNo = "";
+                }
+                if (model.InvoiceModel.AdvanceAmount == null)
+                {
+                    model.InvoiceModel.AdvanceAmount = 0;
+                }
+                if (model.InvoiceModel.BalanceAmount == null)
+                {
+                    model.InvoiceModel.BalanceAmount = 0;
+                }
+                if (model.InvoiceModel.CourierCharges == null)
+                {
+                    model.InvoiceModel.CourierCharges = 0;
+                }
                 if (model.InvoiceModel.InvoiceId > 0)
                 {
                     var lineNo = 0;
@@ -885,6 +924,7 @@ namespace InvoiceApp.Areas.Transaction.Controllers
                     }
 
                     db.SaveChanges();
+                    InvoiceItemStock(model.InvoiceModel.InvoiceNO, model.InvoiceModel.InvoiceDate, "Update", model.InvoiceSubItemList);
                     result = true;
                 }
                 else
@@ -925,6 +965,7 @@ namespace InvoiceApp.Areas.Transaction.Controllers
                         db.SubInvoice.Add(objsubitem);
                     }
                     db.SaveChanges();
+                    InvoiceItemStock(model.InvoiceModel.InvoiceNO, model.InvoiceModel.InvoiceDate, "Add", model.InvoiceSubItemList);
                     result = true;
                 }
             }
@@ -934,6 +975,60 @@ namespace InvoiceApp.Areas.Transaction.Controllers
             }
 
             return Json(new { success = true, message = "Saved successfully." }, JsonRequestBehavior.AllowGet);
+        }
+
+        public string InvoiceItemStock(string TranId, DateTime TranDate, string Type, List<SubInvoice> subInvoice)
+        {
+            try
+            {
+
+                ItemStockCollection itemStock = new ItemStockCollection();
+                foreach (var objsubitem in subInvoice)
+                {
+                    itemStock.Add(new ItemOpeningStockType
+                    {
+                        ItemId = objsubitem.ItemId,
+                        TranDate = TranDate,
+                        TranId = TranId,
+                        Quantity = objsubitem.Quantity
+                    });
+                }
+
+
+                SqlParameter[] parameters =
+            {
+                new SqlParameter
+                {
+                    SqlDbType = SqlDbType.Structured,
+                    Direction = ParameterDirection.Input,
+                    ParameterName = "list",
+                    TypeName = "[dbo].[ItemOpeningStock]",
+                    Value = itemStock
+                },
+                new SqlParameter
+                {
+                    SqlDbType = SqlDbType.VarChar,
+                    Direction = ParameterDirection.Input,
+                    ParameterName = "TranId",
+                    Value = TranId,
+                   Size= 80
+                },
+                new SqlParameter
+                {
+                    SqlDbType = SqlDbType.VarChar,
+                    Direction = ParameterDirection.Input,
+                    ParameterName = "Type",
+                    Value = Type,
+                    Size= 80
+                }
+            };
+                db.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, "proc_InvoiceItemStock @Type,@TranId,@list", parameters);
+            }
+            catch (Exception e)
+            {
+
+            }
+            return "";
         }
 
         public virtual JsonResult GetInvoiceList()
@@ -979,6 +1074,7 @@ namespace InvoiceApp.Areas.Transaction.Controllers
                                     DCNo = im.DCNo,
                                     DCDate = im.DCDate,
                                     CustomerId = im.CustomerId,
+                                    CustomerName = cus.CustomerName,
                                     Currency = im.Currency,
                                     ExchangeRate = im.ExchangeRate,
                                     PlaceOfSupply = im.PlaceOfSupply,
@@ -1001,7 +1097,8 @@ namespace InvoiceApp.Areas.Transaction.Controllers
                                     Createdon = im.Createdon,
                                     Modifiedby = im.Modifiedby,
                                     Modifiedon = im.Modifiedon,
-                                    CourierCharges = im.CourierCharges
+                                    CourierCharges = im.CourierCharges,
+                                    DeliveryType = im.DeliveryType
                                 }).FirstOrDefault();
 
             var InvoiceItemModel = (from im in db.Invoice
@@ -1039,9 +1136,11 @@ namespace InvoiceApp.Areas.Transaction.Controllers
             Invoice po = db.Invoice.Where(x => x.InvoiceId == InvoiceId).FirstOrDefault();
             if (po != null)
             {
+                var list = db.SubInvoice.Where(x => x.InvoiceId == InvoiceId).ToList();
                 po.IsActive = 0;
                 po.Modifiedon = DateTime.Now;
                 db.SaveChanges();
+                InvoiceItemStock(po.InvoiceNO, po.InvoiceDate, "Delete", list);
                 result = true;
             }
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -1096,6 +1195,45 @@ namespace InvoiceApp.Areas.Transaction.Controllers
 
         /*GRN End*/
 
+
+        public virtual JsonResult IsGRNEditable(int GRNId)
+        {
+            GRN po = db.GRN.Where(x => x.GRNId == GRNId).FirstOrDefault();
+            if (po != null)
+            {
+                var count = db.ItemStockTran.Where(x => x.OutTranId == po.GRNNO && x.ScreenType == "Invoice").ToList().Count;
+                if (count > 0)
+                {
+                    return Json(new { success = false, message = "This GRN is linked with invoice." }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json(new { success = true, message = "Editable." }, JsonRequestBehavior.AllowGet);
+        }
+
+        public virtual JsonResult IsOpeningStockEditable(int StockId)
+        {
+            bool result = false;
+            GRN po = db.GRN.Where(x => x.GRNId == StockId).FirstOrDefault();
+            if (po != null)
+            {
+                var count = db.ItemStockTran.Where(x => x.OutTranId == po.GRNNO && x.ScreenType == "Invoice").ToList().Count;
+                if (count > 0)
+                {
+                    return Json(new { success = false, message = "This GRN is linked with invoice." }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json(new { success = true, message = "Editable." }, JsonRequestBehavior.AllowGet);
+        }
+
+        public virtual JsonResult IsPOEditable(int POId)
+        {
+            var count = db.GRN.Where(x => x.POId == POId && x.IsActive == 1).ToList().Count;
+            if (count > 0)
+            {
+                return Json(new { success = false, message = "This PO is linked with GRN." }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { success = true, message = "Editable." }, JsonRequestBehavior.AllowGet);
+        }
     }
 
 

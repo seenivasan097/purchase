@@ -161,7 +161,9 @@ GO
 
 
 
-CREATE proc [dbo].[proc_InvoiceItemStock]
+
+
+create proc [dbo].[proc_InvoiceItemStock]
 @Type varchar(50),
 @TranId varchar(50),
 @list ItemOpeningStock READONLY
@@ -176,7 +178,7 @@ begin
   declare @ItemId int
   declare @Quantity numeric(18,2)
   declare @count int
- if(@Type='Add')
+
 BEGIN TRY
     BEGIN TRANSACTION;
      
@@ -188,6 +190,7 @@ declare @SQty as Numeric(18,2)
 declare @TranNo varchar(50)
 declare @TranDate date
 declare @k  int=1
+
 if(@Type='Add')
 begin
 	set @k=1
@@ -204,9 +207,9 @@ begin
 		 BEGIN      
 		  Set @TranNo =(Select TranId from (Select TranId,ROW_NUMBER() over (order by TranId Asc) ROW from ItemStock where ItemId=@ItemId and Quantity>0) a Where ROW=@k)      
 		  Set @SQty =(Select Quantity from (Select Quantity,ROW_NUMBER() over (order by TranId Asc) ROW from ItemStock where ItemId=@ItemId and Quantity>0) a Where ROW=@k)      
-			  if @NeedQty>@StkQty      
+			  if @NeedQty>@SQty      
 			   begin      
-				  set @BalQty=@NeedQty-@StkQty      
+				  set @BalQty=@NeedQty-@SQty      
 				  set @StkQty=@SQty      
 			   end      
 			  else      
@@ -217,7 +220,7 @@ begin
           
 			  IF @NeedQty>0      
 			  BEGIN     
-				update ItemStock set Quantity=Quantity-@StkQty where TranId=@TranNo and ItemId=@ItemId
+				update ItemStock set Quantity=Quantity-@StkQty where TranId=@TranNo and ItemId=@ItemId and Quantity>0
 		    
 				insert into ItemStockTran(TranId,TranDate,ItemId,Quantity,TranType,OutTranId,ScreenType)
 				select @TranId,@TranDate,@ItemId,@StkQty,'Out',@TranNo,'Invoice' from @list                                                             
@@ -235,20 +238,21 @@ begin
  else if(@Type='Update')
  begin
     SET @k=1      
-    while @k < =(Select COUNT(*) from ItemStockTran where TranId=@TranId and ScreenType='Invoice' and TranType='Out')                                                       
+	
+    while @k <=(Select COUNT(*) from ItemStockTran where TranId=@TranId and ScreenType='Invoice' and TranType='Out')                                                       
 	Begin                                    
 		Set @ItemId =(Select ItemId from (Select ItemId,ROW_NUMBER() over (order by ItemId Asc) ROW1 from ItemStockTran  where TranId=@TranId and ScreenType='Invoice' and TranType='Out') a Where ROW1=@k)                                 
 		Set @TranNo =(Select OutTranId from (Select OutTranId,ROW_NUMBER() over (order by ItemId Asc) ROW1 from ItemStockTran where TranId=@TranId and ScreenType='Invoice' and TranType='Out') a Where ROW1=@k)                                          
 		Set @Quantity =(Select Quantity from (Select Quantity,ROW_NUMBER() over (order by ItemId Asc) ROW1 from ItemStockTran where TranId=@TranId and ScreenType='Invoice' and TranType='Out') a Where ROW1=@k)                                     
 		
-		
-		update ItemStock Set Quantity=Quantity+@Quantity where @TranId=@TranNo and ItemId=@ItemId                             
+
+		update ItemStock Set Quantity=Quantity+@Quantity where TranId=@TranNo and ItemId=@ItemId                             
      
 	 set @k=@k+1
     End        
 
 	Delete from ItemStockTran  where TranId=@TranId and ScreenType='Invoice' and TranType='Out'
-	
+
 	set @k=1
 	set @i=1
 	while(@i <= @total) 
@@ -264,20 +268,20 @@ begin
 		 BEGIN      
 		  Set @TranNo =(Select TranId from (Select TranId,ROW_NUMBER() over (order by TranId Asc) ROW from ItemStock where ItemId=@ItemId and Quantity>0) a Where ROW=@k)      
 		  Set @SQty =(Select Quantity from (Select Quantity,ROW_NUMBER() over (order by TranId Asc) ROW from ItemStock where ItemId=@ItemId and Quantity>0) a Where ROW=@k)      
-			  if @NeedQty>@StkQty      
+			 if @NeedQty>@SQty      
 			   begin      
-				  set @BalQty=@NeedQty-@StkQty      
+				  set @BalQty=@NeedQty-@SQty      
 				  set @StkQty=@SQty      
 			   end      
 			  else      
 			   begin      
 				  Set @BalQty=0      
 				  set @StkQty=@NeedQty      
-			   end      
+			   end    
           
 			  IF @NeedQty>0      
 			  BEGIN     
-				update ItemStock set Quantity=Quantity-@StkQty where TranId=@TranNo and ItemId=@ItemId
+				update ItemStock set Quantity=Quantity-@StkQty where TranId=@TranNo and ItemId=@ItemId and Quantity>0
 		    
 				insert into ItemStockTran(TranId,TranDate,ItemId,Quantity,TranType,OutTranId,ScreenType)
 				select @TranId,@TranDate,@ItemId,@StkQty,'Out',@TranNo,'Invoice' from @list                                                             
@@ -302,7 +306,7 @@ begin
 		Set @Quantity =(Select Quantity from (Select Quantity,ROW_NUMBER() over (order by ItemId Asc) ROW1 from ItemStockTran where TranId=@TranId and ScreenType='Invoice' and TranType='Out') a Where ROW1=@k)                                     
 		
 		
-		update ItemStock Set Quantity=Quantity+@Quantity where @TranId=@TranNo and ItemId=@ItemId                             
+		update ItemStock Set Quantity=Quantity+@Quantity where TranId=@TranNo and ItemId=@ItemId                             
      
 	 set @k=@k+1
     End        
@@ -324,11 +328,6 @@ BEGIN CATCH
 		 Select 1 Id,'Error' PType,'' PError 
 END CATCH
 end
-GO
-/****** Object:  StoredProcedure [dbo].[proc_ItemOpeningStock]    Script Date: 9/27/2018 12:44:07 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 
 
@@ -921,3 +920,6 @@ GO
 ALTER TABLE [dbo].[SubPurchaseOrder]  WITH CHECK ADD FOREIGN KEY([POId])
 REFERENCES [dbo].[PurchaseOrder] ([POId])
 GO
+alter table Invoice
+add DeliveryType varchar(100) 
+go

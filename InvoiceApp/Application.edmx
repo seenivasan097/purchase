@@ -99,6 +99,7 @@
           <Property Name="Createdon" Type="datetime" Nullable="false" />
           <Property Name="Modifiedby" Type="int" />
           <Property Name="Modifiedon" Type="datetime" />
+          <Property Name="DeliveryType" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="Item">
           <Key>
@@ -1025,6 +1026,7 @@ warning 6002: The table/view 'Application.dbo.ViwPendingGRNPO' does not have a p
           <Property Name="Modifiedon" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Customer" Relationship="ApplicationModel.FK__Invoice__Custome__07C12930" FromRole="Invoice" ToRole="Customer" />
           <NavigationProperty Name="SubInvoice" Relationship="ApplicationModel.FK__SubInvoic__Invoi__0A9D95DB" FromRole="Invoice" ToRole="SubInvoice" />
+          <Property Name="DeliveryType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SubInvoice">
           <Key>
@@ -1442,6 +1444,7 @@ warning 6002: The table/view 'Application.dbo.ViwPendingGRNPO' does not have a p
           <EntitySetMapping Name="Invoice">
             <EntityTypeMapping TypeName="ApplicationModel.Invoice">
               <MappingFragment StoreEntitySet="Invoice">
+                <ScalarProperty Name="DeliveryType" ColumnName="DeliveryType" />
                 <ScalarProperty Name="Modifiedon" ColumnName="Modifiedon" />
                 <ScalarProperty Name="Modifiedby" ColumnName="Modifiedby" />
                 <ScalarProperty Name="Createdon" ColumnName="Createdon" />

@@ -29,3 +29,12 @@ C:\Widget\Project\v2\Invoice_app\InvoiceApp\bin\EntityFramework.SqlServer.xml
 C:\Widget\Project\v2\Invoice_app\InvoiceApp\obj\Debug\HRMS.UI.dll
 C:\Widget\Project\v2\Invoice_app\InvoiceApp\obj\Debug\HRMS.UI.pdb
 C:\Widget\Project\v2\Invoice_app\InvoiceApp\obj\Debug\InvoiceApp.csprojResolveAssemblyReference.cache
+C:\Widget\Project\v2\purchase\InvoiceApp\bin\HRMS.UI.dll
+C:\Widget\Project\v2\purchase\InvoiceApp\bin\HRMS.UI.pdb
+C:\Widget\Project\v2\purchase\InvoiceApp\bin\EntityFramework.dll
+C:\Widget\Project\v2\purchase\InvoiceApp\bin\EntityFramework.SqlServer.dll
+C:\Widget\Project\v2\purchase\InvoiceApp\bin\EntityFramework.xml
+C:\Widget\Project\v2\purchase\InvoiceApp\bin\EntityFramework.SqlServer.xml
+C:\Widget\Project\v2\purchase\InvoiceApp\obj\Debug\InvoiceApp.csprojResolveAssemblyReference.cache
+C:\Widget\Project\v2\purchase\InvoiceApp\obj\Debug\HRMS.UI.dll
+C:\Widget\Project\v2\purchase\InvoiceApp\obj\Debug\HRMS.UI.pdb

@@ -12,6 +12,8 @@
     <div class="card-body">
         <div class="alert alert-success text-center divlistsuccess hidden">
         </div>
+        <div class="alert alert-danger text-center divlisterror hidden">
+        </div>
         <div class="row">
             <div class="col-md-10"></div>
             <div class="col-md-2">
@@ -141,12 +143,17 @@
     "aaSorting": [[1, "asc"]],
     "colReorder": true,
     "responsive": true,
-    dom: 'fltip',
+    dom: 'flBtip',
     "buttons": [
         {
-            text: "Export to Excel",
-            filename: "Item",
+            text: "Excel",
+            filename: "PO",
             extend: "excelHtml5",
+            exportOptions: { columns: [0, 1, 2, 3] }
+        }, {
+            text: "PDF",
+            filename: "PO",
+            extend: "pdf",
             exportOptions: { columns: [0, 1, 2, 3] }
         }
     ]
@@ -159,7 +166,27 @@
     }
 
     function EditPO(poid) {
-        window.location = "/Transaction/Transaction/EditPurchase?POId=" + poid;
+
+        $.ajax({
+            url: "/Transaction/Transaction/IsPOEditable",
+            type: "POST",
+            data: {
+                POId: poid
+            },
+            datatype: "json",
+            cache: false,
+            success: function (data) {
+                if (data.success) {
+                    window.location = "/Transaction/Transaction/EditPurchase?POId=" + poid;
+                } else {
+                    $(".divlisterror").removeClass("hidden");
+                    $(".divlisterror").html(data.message);
+                    window.setTimeout(function () {
+                        $(".divlisterror").addClass("hidden")
+                    }, 5000);
+                }
+            }
+        });
     }
 
     function DeletePO(poid) {
@@ -180,14 +207,22 @@
             datatype: "json",
             cache: false,
             success: function (data) {
-                POList();
-                $("#DeleteModal").modal("hide");
-                $(".divlistsuccess").removeClass("hidden");
-                $(".divlistsuccess").html("Deleted successfully.");
-                window.setTimeout(function () {
-                    $(".divlistsuccess").addClass("hidden")
-                }, 5000);
-
+                if (data.success) {
+                    POList();
+                    $("#DeleteModal").modal("hide");
+                    $(".divlistsuccess").removeClass("hidden");
+                    $(".divlistsuccess").html("Deleted successfully.");
+                    window.setTimeout(function () {
+                        $(".divlistsuccess").addClass("hidden")
+                    }, 5000);
+                } else {
+                    $("#DeleteModal").modal("hide");
+                    $(".divlisterror").removeClass("hidden");
+                    $(".divlisterror").html(data.message);
+                    window.setTimeout(function () {
+                        $(".divlisterror").addClass("hidden")
+                    }, 5000);
+                }
             }
         });
     });

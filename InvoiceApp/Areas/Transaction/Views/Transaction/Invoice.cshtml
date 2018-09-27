@@ -55,6 +55,11 @@
             <div class="col-md-4">
                 <input type="hidden" id="selectedUserId" value="0" />
                 <input type="text" id="txtCustomerName" class="form-control" />
+                <div class="errorCustomerName custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Choose Customer Name
+                    </p>
+                </div>
             </div>
             <div class="col-md-2">
                 <label><b>Approval Date</b></label>
@@ -78,6 +83,11 @@
 
             <div class="col-md-4">
                 <input type="text" value="" class="form-control" id="txtLocation" />
+                <div class="errorLocation custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Enter Location Name
+                    </p>
+                </div>
             </div>
             <div class="col-md-2">
 
@@ -89,6 +99,11 @@
                     <option value="Customer">Taxable</option>
                     <option value="Supplier">Non Taxable</option>
                 </select>
+                <div class="errorTaxable custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Select Taxable
+                    </p>
+                </div>
             </div>
         </div>
         <br />
@@ -129,6 +144,11 @@
                     <option value="INR">INR</option>
                     <option value="USD">USD</option>
                 </select>
+                <div class="errorCurrency custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Select Currency
+                    </p>
+                </div>
             </div>
             <div class="col-md-2">
                 <label><b>Exchange Rate</b></label>
@@ -145,18 +165,28 @@
                 <label><b>Delivery Type</b><span style="color: red;"> *</span></label>
             </div>
             <div class="col-md-4">
-                <select class="form-control" tabindex="-1" aria-hidden="true">
+                <select class="form-control" tabindex="-1" id="drpDeliveryType" aria-hidden="true">
                     <option value="">-Select-</option>
                     <option value="Road">Road</option>
                     <option value="Railway">Railway</option>
                     <option value="Airway">Airway</option>
                 </select>
+                <div class="errorDeliveryType custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Select Delivery Type
+                    </p>
+                </div>
             </div>
             <div class="col-md-2">
                 <label><b>Place of Supply</b><span style="color: red;"> *</span></label>
             </div>
             <div class="col-md-4">
                 <input type="text" value="" id="txtPlaceSupply" class="form-control" />
+                <div class="errorPlaceSupply custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Enter Place Supply
+                    </p>
+                </div>
             </div>
         </div>
         <br />
@@ -176,14 +206,14 @@
                                 <th class="text-center">Quantity <span style="color: red">*</span></th>
                                 <th class="text-center">Rate <span style="color: red">*</span></th>
                                 <th class="text-center">SubTotal </th>
-                                <th class="text-center">Discount % </th>
-                                <th class="text-center">Discount Amount </th>
                                 <th class="text-center">CGST % </th>
                                 <th class="text-center">CGST Amount </th>
                                 <th class="text-center">SGST % </th>
                                 <th class="text-center">SGST Amount </th>
                                 <th class="text-center">IGST % </th>
                                 <th class="text-center">IGST Amount </th>
+                                <th class="text-center">Discount % </th>
+                                <th class="text-center">Discount Amount </th>
                                 <th class="text-center">Total </th>
                                 <th class="text-center">Action</th>
                             </tr>
@@ -201,11 +231,16 @@
                 <label><b>Payment Type</b><span style="color: red;"> *</span></label>
             </div>
             <div class="col-md-4">
-                <select class="form-control" tabindex="-1" is="drpPaymentType" aria-hidden="true">
+                <select class="form-control" tabindex="-1" id="drpPaymentType" aria-hidden="true">
                     <option value="">-Select-</option>
                     <option value="CC">Credit Card</option>
                     <option value="CH">Cash</option>
                 </select>
+                <div class="errorPaymentType custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Select Payment Type
+                    </p>
+                </div>
             </div>
             <div class="col-md-2">
                 <label><b>Transport</b><span style="color: red;"> *</span></label>
@@ -213,6 +248,11 @@
 
             <div class="col-md-4">
                 <input type="text" value="" id="txtTransport" class="form-control" />
+                <div class="errorTransport custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Enter Transport
+                    </p>
+                </div>
             </div>
         </div>
         <br />
@@ -243,6 +283,11 @@
             </div>
             <div class="col-md-4">
                 <input type="text" value="" id="txtPreparedBy" class="form-control" />
+                <div class="errorPreparedBy custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Enter Prepared By
+                    </p>
+                </div>
             </div>
             <div class="col-md-2">
                 <label><b>Remarks</b></label>
@@ -269,6 +314,7 @@
             </div>
         </div>
         <div class="row">
+
             <div class="col-md-2 text-right">
                 <label><b>Discount %</b></label>
             </div>
@@ -276,16 +322,6 @@
                 <input type="text" class="form-control gridCalculation" onkeypress='return validateFloatKeyPress(this,event);' value="0.00" id="txtDiscountPer" />
             </div>
             <div class="col-md-4"></div>
-            <div class="col-md-2 text-right">
-                <label><b>Discount:</b></label>
-            </div>
-            <div class="col-md-2">
-                <input type="text" class="form-control" value="0.00" id="txtDiscount" disabled />
-            </div>
-        </div>
-        <div class="row">
-
-            <div class="col-md-8"></div>
             <div class="col-md-2 text-right">
                 <label><b>CGST:</b></label>
             </div>
@@ -314,6 +350,24 @@
         <div class="row">
             <div class="col-md-8"></div>
             <div class="col-md-2 text-right">
+                <label><b>Grid Discount:</b></label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" value="0.00" id="txtGridDiscount" disabled />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
+                <label><b>Discount:</b></label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" value="0.00" id="txtDiscount" disabled />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
                 <label><b>Total:</b></label>
             </div>
             <div class="col-md-2">
@@ -326,7 +380,7 @@
 
         <div class="pull-right btnRequest">
             <div class="btn btn-success" id="btnSave" title="Submit">Submit</div>
-            <div class="btn btn-warning" title="Cancel" id="btnclose">Cancel</div>
+            <div class="btn btn-warning" title="Cancel" id="btnCancel">Cancel</div>
 
         </div>
 
@@ -344,6 +398,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+        $("#drpCurrency").val("INR");
         var InvoiceId = getQueryString("InvoiceId");
         if (InvoiceId != null) {
             EditInvoice(InvoiceId);
@@ -406,38 +461,52 @@
             data: { InvoiceId: invoiceid },
             cache: false,
             success: function (result) {
-                $("#hdnGRNId").val(result.GRNModel.GRNId);
-                $("#txtGRNNo").val(result.GRNModel.GRNNO);
-                $("#txtGRNDate").val(moment(result.GRNModel.GRNDate).format("MM/DD/YYYY"));
-                if (result.PoModel.PODate != null) {
-                    $("#txtPODate").val(moment(result.GRNModel.PODate).format("MM/DD/YYYY"));
+
+                if (result.InvoiceModel.InvoiceDate != null) {
+                    $("#txtInvoiceDate").val(moment(result.InvoiceModel.InvoiceDate).format("MM/DD/YYYY"));
                 } else {
-                    $("#txtPODate").val("");
+                    $("#txtInvoiceDate").val("");
                 }
+                $("#drpCurrency").val(result.InvoiceModel.Currency);
+                $("#hdnInvoiceId").val(result.InvoiceModel.InvoiceId);
+                $("#txtInvoiceNo").val(result.InvoiceModel.InvoiceNO);
+                $("#selectedUserId").val(result.InvoiceModel.CustomerId);
+                $("#txtCustomerName").val(result.InvoiceModel.CustomerName);
 
-                $("#selectedPOId").val(result.GRNModel.POId);
-                $("#txtPONO").val(result.GRNModel.PONO);
-                $("#selectedSupplierId").val(result.GRNModel.SupplierId);
-                $("#txtSupplierName").val(result.GRNModel.SupplierName);
-                if (result.PoModel.GateInwardDate != null) {
-                    $("#txtGateInwardDate").val(moment(result.GRNModel.GateInwardDate).format("MM/DD/YYYY"));
+                if (result.InvoiceModel.ApprovalDate != null) {
+                    $("#txtApprovalDate").val(moment(result.InvoiceModel.ApprovalDate).format("MM/DD/YYYY"));
                 } else {
-                    $("#txtGateInwardDate").val("");
+                    $("#txtApprovalDate").val("");
                 }
-                $("#txtRequestedBy").val(result.GRNModel.RequestBy);
-                $("#drpGRNType").val(result.GRNModel.GRNType);
-                $("#txtSuppInvoiceNo").val(result.GRNModel.SuppInvoiceNo);
-                $("#txtSuppInvoiceDate").val(result.GRNModel.SuppInvoiceDate);
-                $("#txtSuppInvoicefile").val(result.GRNModel.SuppInvoiceFile);
-                $("#txtSubTotal").val(result.GRNModel.SubTotal);
-                $("#txtCGST").val(result.GRNModel.CGST);
-                $("#txtSGST").val(result.GRNModel.SGST);
-                $("#txtIGST").val(result.GRNModel.IGST);
-                $("#txtTotal").val(result.GRNModel.Total);
+                $("#txtLocation").val(result.InvoiceModel.Location);
+                $("#drpTaxable").val(result.InvoiceModel.Taxable);
+                $("#txtDCNo").val(result.InvoiceModel.DCNo);
 
-
+                if (result.InvoiceModel.DCDate != null) {
+                    $("#txtDCDate").val(moment(result.InvoiceModel.DCDate).format("MM/DD/YYYY"));
+                } else {
+                    $("#txtDCDate").val("");
+                }
+                $("#txtExchangeRate").val(result.InvoiceModel.ExchangeRate);
+                $("#txtDeliveryType").val(result.InvoiceModel.DeliveryType);
+                $("#txtPlaceSupply").val(result.InvoiceModel.PlaceOfSupply);
+                $("#drpPaymentType").val(result.InvoiceModel.PaymentType);
+                $("#txtTransport").val(result.InvoiceModel.Transport);
+                $("#txtAdvanceAmount").val(result.InvoiceModel.AdvanceAmount);
+                $("#txtBalanceAmount").val(result.InvoiceModel.BalanceAmount);
+                $("#txtPreparedBy").val(result.InvoiceModel.PreparedBy);
+                $("#txtRemarks").val(result.InvoiceModel.Remarks);
+                $("#txtCourierCharges").val(result.InvoiceModel.CourierCharges);
+                $("#txtDiscountPer").val(result.InvoiceModel.DiscountPer);
+                $("#txtDiscount").val(result.InvoiceModel.DiscountAmount);
+                $("#txtSubTotal").val(result.InvoiceModel.SubTotal);
+                $("#txtCGST").val(result.InvoiceModel.CGST);
+                $("#txtSGST").val(result.InvoiceModel.SGST);
+                $("#txtIGST").val(result.InvoiceModel.IGST);
+                $("#txtTotal").val(result.InvoiceModel.Total);
+                $("#drpDeliveryType").val(result.InvoiceModel.DeliveryType);
                 $("#itemtable tbody tr").remove();
-                for (var columnCt = 0; columnCt < result.POItemModel.length; columnCt++) {
+                for (var columnCt = 0; columnCt < result.InvoiceItemModel.length; columnCt++) {
                     AppendTR();
                 }
                 var itemDetailsCount = $("#itemtable tbody tr").length;
@@ -446,18 +515,21 @@
                 if (itemDetailsCount > 0) {
                     $(itemDetailsTable).each(function (i, v) {
 
-                        $(v).find('.hdnItemId').val(result.GRNItemModel[i].ItemId);
-                        $(v).find('.txtquantity').val(result.GRNItemModel[i].Quantity);
-                        $(v).find('.txtcgstpers').val(result.GRNItemModel[i].CGSTPer);
-                        $(v).find('.txtcgstvalue').val(result.GRNItemModel[i].CGSTAmount);
-                        $(v).find('.txtSgstpers').val(result.GRNItemModel[i].SGSTPer);
-                        $(v).find('.txtsgstvalue').val(result.GRNItemModel[i].SGSTAmount);
-                        $(v).find('.txtigstpers').val(result.GRNItemModel[i].IGSTPer);
-                        $(v).find('.txtigstvalue').val(result.GRNItemModel[i].IGSTAmount);
-                        $(v).find('.txttotal').val(result.GRNItemModel[i].Total);
-                        $(v).find('.txtRate').val(result.GRNItemModel[i].Rate);
-                        $(v).find('.txtunit').val(result.GRNItemModel[i].Unit);
-                        $(v).find('.txtItemName').val(result.GRNItemModel[i].ItemName);
+                        $(v).find('.hdnItemId').val(result.InvoiceItemModel[i].ItemId);
+                        $(v).find('.txtquantity').val(result.InvoiceItemModel[i].Quantity);
+                        $(v).find('.txtcgstpers').val(result.InvoiceItemModel[i].CGSTPer);
+                        $(v).find('.txtcgstvalue').val(result.InvoiceItemModel[i].CGSTAmount);
+                        $(v).find('.txtSgstpers').val(result.InvoiceItemModel[i].SGSTPer);
+                        $(v).find('.txtsgstvalue').val(result.InvoiceItemModel[i].SGSTAmount);
+                        $(v).find('.txtigstpers').val(result.InvoiceItemModel[i].IGSTPer);
+                        $(v).find('.txtigstvalue').val(result.InvoiceItemModel[i].IGSTAmount);
+                        $(v).find('.txttotal').val(result.InvoiceItemModel[i].Total);
+                        $(v).find('.txtRate').val(result.InvoiceItemModel[i].Rate);
+                        $(v).find('.txtunit').val(result.InvoiceItemModel[i].Unit);
+                        $(v).find('.txtItemName').val(result.InvoiceItemModel[i].ItemName);
+                        $(v).find('.txtdiscountpers').val(result.InvoiceItemModel[i].DiscountPer);
+                        $(v).find('.txtdiscountvalue').val(result.InvoiceItemModel[i].DiscountAmount);
+                        $(v).find('.txtsubtotal').val(result.InvoiceItemModel[i].SubTotal);
                     });
                 }
                 gridCalculation();
@@ -474,14 +546,14 @@
         str += "<td><input type='Text' value='0' style='width: 125px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtquantity gridCalculation Item approvalcheck form-control'></input></td>";
         str += "<td><input type='Text' value='0.00' style='width: 100px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtRate  gridCalculation approvalcheck form-control'></input></td>";
         str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txtsubtotal  approvalcheck form-control' disabled></input></td>";
-        str += "<td><input type='Text' value='0.00' style='width: 100px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtdiscountpers gridCalculation approvalcheck form-control'></input></td>";
-        str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txtdiscountvalue  approvalcheck form-control' disabled></input></td>";
         str += "<td><input type='Text' value='0.00' style='width: 100px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtcgstpers gridCalculation approvalcheck form-control'></input></td>";
         str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txtcgstvalue  approvalcheck form-control' disabled></input></td>";
         str += "<td><input type='Text' value='0.00' style='width: 100px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtSgstpers gridCalculation approvalcheck form-control'></input></td>";
         str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txtsgstvalue  approvalcheck form-control' disabled></input></td>";
         str += "<td><input type='Text' value='0.00' style='width: 100px;'onkeypress='return validateFloatKeyPress(this,event);' class='txtigstpers gridCalculation approvalcheck form-control'></input></td>";
         str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txtigstvalue  approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtdiscountpers gridCalculation approvalcheck form-control'></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txtdiscountvalue  approvalcheck form-control' disabled></input></td>";
         str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txttotal  approvalcheck form-control' disabled></input></td>";
         str += "<td class='text-center'><button class='addrow btn btn-success btn-xs' title='add row' type='button' aria-label='addRow'><i class='fa fa-plus'></i></button> <button class='delrow btn btn-danger btn-xs' title='Remove this row' type='button' aria-label='addRow'><i class='fa fa-times'></i></button></td>";
         str += "</tr>";
@@ -536,7 +608,7 @@
                     url: "/Transaction/Transaction/GetItemStockItem",
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
-                    data: "{ 'CustomerId':'" + $('#selectedPOId').val() + "','prefix':'" + request.term + "'}",
+                    data: "{ 'CustomerId':'" + $('#selectedUserId').val() + "','prefix':'" + request.term + "'}",
                     success: function (data) {
                         var result;
                         if (!data || data.length === 0) {
@@ -556,7 +628,7 @@
         });
     }
 
-    $("#btnclose").click(function () {
+    $("#btnCancel").click(function () {
         window.location = "/Transaction/Transaction/Invoice";
     });
 
@@ -598,6 +670,9 @@
             var OverAllSGST = parseFloat(0.00);
             var OverAllIGST = parseFloat(0.00);
             var OverAllTotal = parseFloat(0.00);
+            var OverAllDiscount = parseFloat(0.00);
+            var Courier = parseFloat(0.00);
+            var HDDiscount = parseFloat(0.00);
 
             var familyDetailsCount = $("#itemtable tbody tr").length;
             var familyDetailsTable = $("#itemtable").find('tbody tr');
@@ -607,9 +682,14 @@
                 var sgstper = $(v).find('.txtSgstpers').val();
                 var cgstper = $(v).find('.txtcgstpers').val();
                 var igstper = $(v).find('.txtigstpers').val();
+                var discountper = $(v).find('.txtdiscountpers').val();
+                var subtotal;
+
                 rate = parseFloat(rate);
                 var total = 0.00;
-                var subtotal = qty * rate;
+                subtotal = qty * rate;
+                $(v).find('.txtsubtotal').val(parseFloat(subtotal).toFixed(2));
+
                 OverAllSubTotal += parseFloat(subtotal);
                 if (sgstper == "") {
                     sgstper = "0.00";
@@ -623,30 +703,56 @@
                     igstper = "0.00";
                     $(v).find('.txtigstpers').val(igstper);
                 }
+                if (discountper == "") {
+                    discountper = "0.00";
+                    $(v).find('.txtdiscountpers').val(discountper);
+                }
                 sgstper = parseFloat(sgstper);
                 cgstper = parseFloat(cgstper);
                 igstper = parseFloat(igstper);
+                discountper = parseFloat(discountper);                
                 var cgstvalue = subtotal * (cgstper.toFixed(2) / 100.00);
                 var sgstvalue = subtotal * (sgstper.toFixed(2) / 100.00);
                 var igstvalue = subtotal * (igstper.toFixed(2) / 100.00);
                 total = subtotal + cgstvalue + sgstvalue + igstvalue;
                 total = parseFloat(total);
+
+                var discountvalue = total * (discountper.toFixed(2) / 100.00);
                 OverAllCGST += parseFloat(cgstvalue);
                 OverAllSGST += parseFloat(sgstvalue);
                 OverAllIGST += parseFloat(igstvalue);
+                total = total - discountvalue;
+                OverAllDiscount += parseFloat(discountvalue);
                 OverAllTotal += parseFloat(total);
 
                 $(v).find('.txtcgstvalue').val(cgstvalue.toFixed(2));
                 $(v).find('.txtsgstvalue').val(sgstvalue.toFixed(2));
                 $(v).find('.txtigstvalue').val(igstvalue.toFixed(2));
+                $(v).find('.txtdiscountvalue').val(discountvalue.toFixed(2));
+                
                 $(v).find('.txttotal').val(total.toFixed(2));
 
             });
-
+            Courier = $('#txtCourierCharges').val();
+            HDDiscount = $('#txtDiscountPer').val();
+            if (Courier == "") {
+                Courier = "0.00";
+                $('#txtCourierCharges').val(Courier);
+            }
+            if (HDDiscount == "") {
+                HDDiscount = "0.00";
+                $('#txtDiscountPer').val(HDDiscount);
+            }
+            HDDiscount = parseFloat(HDDiscount);
             $("#txtSubTotal").val(OverAllSubTotal.toFixed(2));
             $("#txtCGST").val(OverAllCGST.toFixed(2));
             $("#txtSGST").val(OverAllSGST.toFixed(2));
             $("#txtIGST").val(OverAllIGST.toFixed(2));
+            $("#txtGridDiscount").val(OverAllDiscount.toFixed(2));
+            var caldiscountvalue = OverAllTotal * (HDDiscount.toFixed(2) / 100.00);
+            OverAllTotal -= parseFloat(caldiscountvalue);
+            $("#txtDiscount").val(caldiscountvalue.toFixed(2));
+            OverAllTotal += parseFloat(Courier);
             $("#txtTotal").val(OverAllTotal.toFixed(2));
             TotalCalculation();
         }
@@ -728,71 +834,102 @@
         var txtSGST = $("#txtSGST").val();
         var txtIGST = $("#txtIGST").val();
         var txtTotal = $("#txtTotal").val();
-
+        var drpDeliveryType = $("#drpDeliveryType").val();
 
         var vaild = true;
 
-        $(".errorGRNDate").addClass("hidden");
-        $(".errorPONO").addClass("hidden");
-        $(".errorGateInwardDate").addClass("hidden");
-        $(".errorRequestedBy").addClass("hidden");
-        $(".errorGRNType").addClass("hidden");
-        $(".divitemerrormessage").addClass("hidden");
+        $(".errorCustomerName").addClass("hidden");
+        $(".errorLocation").addClass("hidden");
+        $(".errorTaxable").addClass("hidden");
+        $(".errorCurrency").addClass("hidden");
+        $(".errorDeliveryType").addClass("hidden");
+        $(".errorPlaceSupply").addClass("hidden");
+        $(".errorPaymentType").addClass("hidden");
+        $(".errorPreparedBy").addClass("hidden");
+        $(".errorTransport").addClass("hidden");
 
-        if (selectedPOId == "" || selectedPOId == "0") {
-            $(".errorPONO").removeClass("hidden");
+        if (selectedUserId == "" || selectedUserId == "0") {
+            $(".errorCustomerName").removeClass("hidden");
             vaild = false;
         }
-        if (txtGRNDate == "") {
-            $(".errorGRNDate").removeClass("hidden");
+        if (txtLocation == "") {
+            $(".errorLocation").removeClass("hidden");
             vaild = false;
         }
-        if (txtGateInwardDate == "") {
-            $(".errorGateInwardDate").removeClass("hidden");
+        if (drpTaxable == "") {
+            $(".errorTaxable").removeClass("hidden");
             vaild = false;
         }
-        if (txtRequestedBy == "") {
-            $(".errorRequestedBy").removeClass("hidden");
+        if (txtDeliveryType == "") {
+            $(".errorDeliveryType").removeClass("hidden");
+            vaild = false;
+        }
+        if (txtPlaceSupply == "") {
+            $(".errorPlaceSupply").removeClass("hidden");
+            vaild = false;
+        }
+        if (drpPaymentType == "") {
+            $(".errorPaymentType").removeClass("hidden");
+            vaild = false;
+        }
+        if (txtPreparedBy == "") {
+            $(".errorPreparedBy").removeClass("hidden");
+            vaild = false;
+        }
+        if (txtTransport == "") {
+            $(".errorTransport").removeClass("hidden");
+            vaild = false;
+        }
+        if (drpCurrency == "") {
+            $(".errorCurrency").removeClass("hidden");
+            vaild = false;
+        }
+        if (drpDeliveryType == "") {
+            $(".errorDeliveryType").removeClass("hidden");
             vaild = false;
         }
 
-        if (drpGRNType == "") {
-            $(".errorGRNType").removeClass("hidden");
-            vaild = false;
-        }
 
-
-        var objGRN = {
-            GRNId: hdnGRNId,
-            GRNDate: txtGRNDate,
+        var objInvoice = {
+            InvoiceId: hdnInvoiceId,
             AccountYear: "",
             IncrementId: 0,
-            GRNNO: txtGRNNo,
-            POId: selectedPOId,
-            PODate: txtPODate,
-            GateInwardDate: txtGateInwardDate,
-            SupplierId: selectedSupplierId,
-            RequestBy: txtRequestedBy,
-            GRNType: drpGRNType,
+            InvoiceNO: txtInvoiceNo,
+            InvoiceDate: txtInvoiceDate,
+            Location: txtLocation,
+            Taxable: drpTaxable,
+            DCNo: txtDCNo,
+            DCDate: txtDCDate,
+            CustomerId: selectedUserId,
+            Currency: drpCurrency,
+            ExchangeRate: txtExchangeRate,
+            PlaceOfSupply: txtPlaceSupply,
+            ApprovalDate: txtApprovalDate,
+            PaymentType: drpPaymentType,
+            Transport: txtTransport,
+            PreparedBy: txtPreparedBy,
+            Remarks: txtRemarks,
+            AdvanceAmount: txtAdvanceAmount,
+            BalanceAmount: txtBalanceAmount,
+            DiscountPer: txtDiscountPer,
+            DiscountAmount: txtDiscount,
             SubTotal: txtSubTotal,
             CGST: txtCGST,
             SGST: txtSGST,
             IGST: txtIGST,
+            CourierCharges: txtCourierCharges,
             Total: txtTotal,
-            SuppInvoiceNo: txtSuppInvoiceNo,
-            SuppInvoiceDate: txtSuppInvoiceDate,
-            SuppInvoiceFile: "",
             IsActive: 1,
             Createdby: 0,
             Createdon: null,
             Modifiedby: null,
             Modifiedon: null,
-            CourierCharges: "0.00"
+            DeliveryType: drpDeliveryType
         };
 
         var objModel = {};
-        objModel.GRNModel = objGRN;
-        objModel.GRNSubItemList = [];
+        objModel.InvoiceModel = objInvoice;
+        objModel.InvoiceSubItemList = [];
         var itemDetailsCount = $("#itemtable tbody tr").length;
         var itemDetailsTable = $("#itemtable").find('tbody tr');
         var isValid = checkvalidation();
@@ -818,11 +955,14 @@
                 var txtigstpers = $(v).find('.txtigstpers').val();
                 var txtigstvalue = $(v).find('.txtigstvalue').val();
                 var txttotal = $(v).find('.txttotal').val();
+                var txtdiscountpers = $(v).find('.txtdiscountpers').val();
+                var txtdiscountvalue = $(v).find('.txtdiscountvalue').val();
+                var txtsubtotal = $(v).find('.txtsubtotal').val();
 
                 totalItems.push(ItemId);
                 var objExp = {
-                    SubGRNId: 0,
-                    GRNId: hdnPOId,
+                    SubInvoiceId: 0,
+                    InvoiceId: hdnInvoiceId,
                     ItemId: ItemId,
                     Quantity: txtquantity,
                     Rate: txtRate,
@@ -832,6 +972,9 @@
                     SGSTAmount: txtsgstvalue,
                     IGSTPer: txtigstpers,
                     IGSTAmount: txtigstvalue,
+                    DiscountPer: txtdiscountpers,
+                    DiscountAmount: txtdiscountvalue,
+                    SubTotal: txtsubtotal,
                     Total: txttotal,
                     IsActive: 1,
                     Createdby: 0,
@@ -839,7 +982,7 @@
                     Modifiedby: null,
                     Modifiedon: null
                 };
-                objModel.GRNSubItemList.push(objExp);
+                objModel.InvoiceSubItemList.push(objExp);
             });
         }
 
@@ -855,7 +998,7 @@
         }
 
         $.ajax({
-            url: "/Transaction/Transaction/SaveGRN",
+            url: "/Transaction/Transaction/SaveInvoice",
             contentType: 'application/json',
             cache: false,
             type: "post",
@@ -865,8 +1008,8 @@
             success: function (response) {
                 if (response.success == true) {
                     swal({
-                        title: response.message,
-                        text: "",
+                        title: "",
+                        text: response.message,
                         type: "success",
                         showCancelButton: false,
                         confirmButtonClass: "btn-success",
@@ -874,23 +1017,21 @@
                         closeOnConfirm: true
                     },
                                         function () {
-                                            window.location = "/Transaction/Transaction/GRN"
+                                            window.location = "/Transaction/Transaction/Invoice"
                                         });
-                    //$(".divsuccess").removeClass("hidden");
-                    //$(".divsuccess").html(response.message);
-                    //window.setTimeout(function () {
-                    //    $(".divsuccess").addClass("hidden")
-                    //}, 5000);
-                    ////ItemmapList();
-                    //refreshScreen();
-                    //window.location = "/Transaction/Transaction/GRN"
                 } else {
-                    //$(".diverror").removeClass("hidden");
-                    //$(".diverror").html(response.message);
-                    //window.setTimeout(function () {
-                    //    $(".diverror").addClass("hidden")
-                    //}, 5000);
-                    swal(response.message, "", "danger")
+                    swal({
+                        title: "",
+                        text: response.message,
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+                                       function () {
+
+                                       });
                 }
             },
             error: function (xhr, status, error) {
@@ -901,30 +1042,34 @@
     });
 
     function refreshScreen() {
-
-        $("#txtGRNDate").datepicker().datepicker("setDate", new Date());
-
-
-        $("#hdnGRNId").val("0");
-        $("#txtGRNNo").val("");
-
-        $("#selectedPOId").val("0");
-        $("#txtPONO").val("");
-        $("#txtPODate").val("");
-        $("#selectedSupplierId").val("0");
-        $("#txtSupplierName").val("");
-        $("#txtGateInwardDate").val("");
-        $("#txtRequestedBy").val("");
-        $("#drpGRNType").val("");
+        $("#txtInvoiceDate").datepicker().datepicker("setDate", new Date());
+        $("#drpCurrency").val("INR");
+        $("#hdnInvoiceId").val("0");
+        $("#txtInvoiceNo").val("");
+        $("#selectedUserId").val("0");
+        $("#txtCustomerName").val("");
+        $("#txtApprovalDate").val("");
+        $("#txtLocation").val("");
+        $("#drpTaxable").val("");
+        $("#txtDCNo").val("");
+        $("#txtDCDate").val("");
+        $("#txtExchangeRate").val("0.00");
+        $("#txtDeliveryType").val("");
+        $("#txtPlaceSupply").val("");
+        $("#drpPaymentType").val("");
+        $("#txtTransport").val("");
+        $("#txtAdvanceAmount").val("0.00");
+        $("#txtBalanceAmount").val("0.00");
+        $("#txtPreparedBy").val("");
+        $("#txtRemarks").val("");
+        $("#txtCourierCharges").val("0.00");
+        $("#txtDiscountPer").val("0.00");
+        $("#txtDiscount").val("0.00");
         $("#txtSubTotal").val("0.00");
         $("#txtCGST").val("0.00");
         $("#txtSGST").val("0.00");
         $("#txtIGST").val("0.00");
         $("#txtTotal").val("0.00");
-        $("#txtSuppInvoiceNo").val("0.00");
-        $("#txtSuppInvoiceDate").val("0.00");
-        $("#txtSuppInvoicefile").val("0.00");
-
         getAccountYear();
         $("#itemtable tbody tr").remove();
         AppendTR();

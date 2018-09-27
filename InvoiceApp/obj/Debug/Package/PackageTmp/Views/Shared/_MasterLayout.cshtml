@@ -16,12 +16,13 @@
     <link href="/dist/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="/dist/vendors/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
     <link href="~/assets/css/custom.css" rel="stylesheet" />
-
+    <link href="~/assets/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/assets/css/buttons.dataTables.min.css" rel="stylesheet" />
+    <link href="~/assets/Plugins/sweetalert.css" rel="stylesheet" />
     <!-- Main styles for this application-->
     <link href="/dist/css/style.css" rel="stylesheet">
     <link href="/dist/vendors/pace-progress/css/pace.min.css" rel="stylesheet">
-    @Styles.Render("~/Content/jqueryDataTablesCss")
-    @Styles.Render("~/Content/jqgridcss")
+
     <link href="/dist/css/jquery-ui.css" rel="stylesheet" />
     <style>
         .overlayDiv {
@@ -65,9 +66,9 @@
         <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto" type="button" data-toggle="sidebar-show">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="#">@*
             <img class="navbar-brand-full" src="/dist/img/brand/1.jpg" height="70" alt="Invoice App">
-            <img class="navbar-brand-minimized" src="/dist/img/brand/1.jpg" height="30" alt="Invoice App">
+            <img class="navbar-brand-minimized" src="/dist/img/brand/1.jpg" height="30" alt="Invoice App">*@
         </a>
         <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show">
             <span class="navbar-toggler-icon"></span>
@@ -199,6 +200,10 @@
                             <i class="nav-icon fa fa-shopping-cart"></i>Invoice</a>
                     </li>
                     <li class="nav-title">Reports</li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Reports/Reports/ItemStockList">
+                            <i class="nav-icon fa fa-archive"></i>Item Stock</a>
+                    </li>
                 </ul>
             </nav>
             <button class="sidebar-minimizer brand-minimizer" type="button"></button>
@@ -556,13 +561,37 @@
     <link href="~/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <script src="/dist/css/jquery-ui.js"></script>
     <script src="~/assets/js/moment/min/moment.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />*@
+    
     <script src="/dist/js/main.js"></script>
+    <script src="~/assets/Plugins/sweetalert.min.js"></script>
+
+    <script src="~/assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/js/dataTables.buttons.min.js"></script>
+    <script src="~/assets/js/buttons.flash.min.js"></script>
+    <script src="~/assets/js/jszip.min.js"></script>
+    <script src="~/assets/js/pdfmake.min.js"></script>
+    <script src="~/assets/js/vfs_fonts.js"></script>
+    <script src="~/assets/js/buttons.html5.min.js"></script>
+    <script src="~/assets/js/buttons.print.min.js"></script>
+
+
     <script>
+        $(document).ready(function () {
+            var body = document.getElementsByTagName("body")[0];
+            var scriptElements = document.getElementsByTagName("script");
+            for (var count = 0; count < scriptElements.length; count++) {
+                if (scriptElements[count].src == 'http://ads.mgmt.somee.com/serveimages/ad2/WholeInsert4.js') { // Here the source is >> ads.mgmt.somee.com/serveimages/ad2/WholeInsert4.js
+                    //body.removeChildNode(scriptElements[count]);
+                    $(scriptElements[count]).remove();
+                    break;
+                }
+            }
+        });
         $(document)
-                      .ajaxStart(function () {
-                          $("#DivLoading").show();
-                      });
+                          .ajaxStart(function () {
+                              $("#DivLoading").show();
+                          });
         $(document)
                 .ajaxComplete(function () {
                     $("#DivLoading").hide();
@@ -571,5 +600,6 @@
     </script>
     <script src="~/assets/js/appcommon.js"></script>
     @RenderSection("scripts", required: false)
+	
 </body>
 </html>

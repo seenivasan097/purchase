@@ -225,6 +225,7 @@
     <EntitySetMapping Name="Invoice">
       <EntityTypeMapping TypeName="ApplicationModel.Invoice">
         <MappingFragment StoreEntitySet="Invoice">
+          <ScalarProperty Name="DeliveryType" ColumnName="DeliveryType" />
           <ScalarProperty Name="Modifiedon" ColumnName="Modifiedon" />
           <ScalarProperty Name="Modifiedby" ColumnName="Modifiedby" />
           <ScalarProperty Name="Createdon" ColumnName="Createdon" />

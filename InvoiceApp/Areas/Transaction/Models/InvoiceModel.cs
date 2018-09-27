@@ -41,5 +41,6 @@ namespace HRMS.UI.Areas.Transaction.Models
         public System.DateTime Createdon { get; set; }
         public Nullable<int> Modifiedby { get; set; }
         public Nullable<System.DateTime> Modifiedon { get; set; }
+        public string DeliveryType { get; set; }
     }
 }

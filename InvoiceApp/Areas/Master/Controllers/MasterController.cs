@@ -162,17 +162,20 @@ namespace InvoiceApp.Areas.Master.Controllers
 
         public virtual JsonResult DeleteCustomer(int customerID)
         {
-            bool result = false;
+            var count = db.ItemMappings.Where(x => x.CustomerId == customerID && x.IsActive == 1).ToList().Count;
+            if (count > 0)
+            {
+                return Json(new { success = false, message = "This customer/supplier is linked with item mapping." }, JsonRequestBehavior.AllowGet);
+            }
             Customer customer = db.Customers.Where(x => x.CustomerId == customerID).FirstOrDefault();
             if (customer != null)
             {
                 customer.IsActive = 0;
                 customer.Modifiedon = DateTime.Now;
                 db.SaveChanges();
-                result = true;
             }
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(new { success = true, message = "Deleted Successfully." }, JsonRequestBehavior.AllowGet);
         }
 
         public virtual JsonResult GetItemList()
@@ -260,17 +263,23 @@ namespace InvoiceApp.Areas.Master.Controllers
 
         public virtual JsonResult DeleteItem(int itemID)
         {
-            bool result = false;
+            var count = (from i in db.ItemMappings
+                         join si in db.SubItemMappings on i.ItemMappingId equals si.ItemMappingId
+                         where i.IsActive == 1 && si.IsActive == 1 && si.ItemId == itemID
+                         select i).ToList().Count;
+            if (count > 0)
+            {
+                return Json(new { success = false, message = "This item is linked with item mapping." }, JsonRequestBehavior.AllowGet);
+            }
             Item item = db.Items.Where(x => x.ItemId == itemID).FirstOrDefault();
             if (item != null)
             {
                 item.IsActive = 0;
                 item.Modifiedon = DateTime.Now;
                 db.SaveChanges();
-                result = true;
             }
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(new { success = true, message = "Deleted Successfully." }, JsonRequestBehavior.AllowGet);
         }
 
         public virtual JsonResult getUserList(string type, string prefix)
@@ -383,6 +392,7 @@ namespace InvoiceApp.Areas.Master.Controllers
         {
             bool result = false;
             ItemMapping item = db.ItemMappings.Where(x => x.ItemMappingId == itemID).FirstOrDefault();
+
             if (item != null)
             {
                 item.IsActive = 0;

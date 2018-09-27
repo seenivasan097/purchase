@@ -94,6 +94,7 @@
     <Property Name="Createdon" Type="datetime" Nullable="false" />
     <Property Name="Modifiedby" Type="int" />
     <Property Name="Modifiedon" Type="datetime" />
+    <Property Name="DeliveryType" Type="varchar" MaxLength="100" />
   </EntityType>
   <EntityType Name="Item">
     <Key>

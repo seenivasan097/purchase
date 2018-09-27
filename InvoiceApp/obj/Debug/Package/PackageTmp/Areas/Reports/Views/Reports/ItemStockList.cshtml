@@ -1,0 +1,116 @@
+﻿@{
+    ViewBag.Title = "Item Stock";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+@section styles{
+
+    <script type="text/javascript" src="js/script.js"></script>
+
+}
+
+<div class="card border-primary">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table id="tblpurchaselist" class="display table table-striped table-bordered dataTable no-footer" cellspacing="0">
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@section scripts{
+<script type="text/javascript">
+
+
+
+
+    $(document).ready(function () {
+        List();
+    });
+
+    function List() {
+        $.ajax({
+            url: "/Reports/Reports/getItemStoxkList",
+            type: "POST",
+            data: {},
+            datatype: "json",
+            cache: false,
+            success: function (data) {
+                debugger;
+
+                $('#tblpurchaselist').DataTable(
+{
+    data: data,
+    "aoColumns": [
+
+
+        {
+            title: "Item Code",
+            data: "ItemCode",
+            "sWidth": "20%",
+            "bSortable": true
+        },
+           {
+               title: "Item Name",
+               data: "ItemName",
+               "sWidth": "20%",
+               "bSortable": true
+           },
+        {
+            title: "Unit",
+            data: "Unit",
+            "sWidth": "20%",
+            "bSortable": true
+        },
+        {
+            title: "Quantity",
+            data: "Quantity",
+            "sWidth": "20%",
+            "bSortable": true,
+            "sClass": "text-right"
+        }
+    ],
+
+    "bProcessing": true,
+    "bDestroy": true,
+    "bPaginate": true,
+    "bAutoWidth": true,
+    "bFilter": true,
+    "bInfo": true,
+    "bJQueryUI": false,
+    "lengthMenu": [[10, 25, 50, 100, 250, -1], [10, 25, 50, 100, 250, "All"]],
+    "iDisplayLength": 10,
+    "aaSorting": [[1, "asc"]],
+    "colReorder": true,
+    "responsive": true,
+    dom: 'flBtip',
+    "buttons": [
+        {
+            text: "Excel",
+            filename: "Item Stock",
+            extend: "excelHtml5",
+            exportOptions: { columns: [0, 1, 2, 3] }
+        }, {
+            text: "PDF",
+            filename: "Item Stock",
+            extend: "pdf",
+            exportOptions: { columns: [0, 1, 2, 3] }
+        }
+    ]
+});
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+    }
+
+
+</script>
+}
+
+
+
