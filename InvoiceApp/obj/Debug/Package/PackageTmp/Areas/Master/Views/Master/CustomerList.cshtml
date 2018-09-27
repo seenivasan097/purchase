@@ -1,0 +1,538 @@
+﻿@{
+    ViewBag.Title = "Customer";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+@section styles{
+
+    <script type="text/javascript" src="js/script.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+<style>
+    .textarea {
+        min-height: 62px !important;
+        max-height: 62px !important;
+    }
+</style>
+
+}
+
+
+<div class="card border-primary">
+    <div class="card-body">
+
+
+        <div class="alert alert-success text-center divssuccess hidden">
+            <span class="successmessage"></span>
+        </div>
+        <div class="row">
+            <div class="col-md-10"></div>
+            <div class="col-md-2">
+                <button id="addcustomer" class="btn btn-primary" title="Add customer"><i class="fa fa-plus-square" aria-hidden="true"></i>&nbsp;Add Customer</button>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <table id="example" class="display table table-striped table-bordered dataTable no-footer" cellspacing="0">
+                </table>
+            </div>
+        </div>
+        <div class="gap"></div>
+    </div>
+</div>
+<div class="modal fade" id="DeleteModal" role="dialog">
+
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header  btn-primary">
+                <button type="button" class="close" style="position: relative; right: -79px;" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="position: relative; right: 388px;">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" title="No" data-dismiss="modal">No</button>
+                <a id="confirmdelete" title="Yes" class="btn btn-success">Yes</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade docs-example-modal-lg modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span id="titlechange"></span></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger divsaveerror text-center hidden">
+                </div>
+                <div class="form-group">
+
+                    <label><b>Type </b><font color="red">*</font></label>
+
+                    <select class="form-control" name="billable" id="CustomerType" tabindex="-1" aria-hidden="true">
+
+
+                        <option value="">-Select-</option>
+                        <option value="Customer">Customer</option>
+                        <option value="Supplier">Supplier</option>
+                    </select>
+                    <div class="errorCustomerType custom-error hidden">
+                        <p style="color: red;" class="text-danger">Select Type</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="Customer Name">Customer Name<font color="red">*</font></label>
+                        <input class="form-control" id="CustomerName" type="text" placeholder="Enter Customer name">
+                        <div class="errorCustomerName custom-error hidden">
+                            <p style="color: red" class="text-danger">Enter Customer name</p>
+                        </div>
+                        <input type="text" id="CustomerId" class="hidden" />
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="Phone">Customer Phone Number<font color="red">*</font></label>
+                        <input class="form-control" id="PhoneNumber" type="text" placeholder="Enter Phone Number">
+                        <div class="errorPhoneNumber custom-error hidden">
+                            <p style="color: red" class="text-danger">Enter Phone Number</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="Address">Address 1<font color="red">*</font></label>
+                        <textarea class="form-control textarea" id="AddressFirst" placeholder="Enter Address 1"></textarea>
+                        <div class="errorAddressFirst custom-error hidden">
+                            <p style="color: red" class="text-danger">Enter Address 1</p>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="postal-code">Customer Mobile Number<font color="red">*</font></label>
+                        <input class="form-control" id="MobileNo" type="text" placeholder="Enter Customer Mobile Number">
+                        <div class="errorMobileNo custom-error hidden">
+                            <p style="color: red" class="text-danger">Enter Customer Mobile Number</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="Address2">Address 2</label>
+                        <textarea class="form-control textarea" id="Addresssecond" placeholder="Enter Address 2"></textarea>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="Fax">Fax-No</label>
+                        <input class="form-control" id="Fax" type="text" placeholder="Enter Fax Number">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="Address3">Address 3</label>
+                        <textarea class="form-control textarea" id="Addressthird" placeholder="Enter Address 3"></textarea>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="Fax">Contact Person<font color="red">*</font></label>
+                        <input class="form-control" id="ContactPerson" type="text" placeholder="Enter Contact Person">
+                        <div class="errorContactPerson custom-error hidden">
+                            <p style="color: red" class="text-danger">Enter Contact Person</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="Email">Email<font color="red">*</font></label>
+                        <input class="form-control" id="Email" type="text" placeholder="Enter Email">
+                        <div class="errorEmail custom-error hidden">
+                            <p style="color: red" class="text-danger">Enter Email</p>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="Number1">Alternative Number 1</label>
+                        <input class="form-control" id="Numberone" type="text" placeholder="Enter Alternative Number 1">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="Number2">Alternative Number 2</label>
+                        <input class="form-control" id="Numbertwo" type="text" placeholder="Enter Alternative Number 2">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="Number3">Alternative Number 3</label>
+                        <input class="form-control" id="Numberthree" type="text" placeholder="Enter Alternative Number 3">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="GSTNo">GST No<font color="red">*</font></label>
+                        <input class="form-control" id="GSTNo" type="text" placeholder="Enter GST No">
+                        <div class="errorGSTNo custom-error hidden">
+                            <p style="color: red" class="text-danger">Enter GST No</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSaveCustomer">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section scripts{
+    <link href="~/assets/css/jquery.dataTables.min.css" rel="stylesheet" />
+@*<script type="text/javascript" src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js"></script>
+<link href="cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+*@
+    <script src="~/assets/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        customerList();
+    });
+
+    $("#btnSaveCustomer").click(function () {
+        var CustomerId = $("#CustomerId").val();
+        var CustomerType = $("#CustomerType").val();
+        var CustomerName = $("#CustomerName").val();
+        var PhoneNumber = $("#PhoneNumber").val();
+        var AddressFirst = $("#AddressFirst").val();
+        var MobileNo = $("#MobileNo").val();
+        var Addresssecond = $("#Addresssecond").val();
+        var Fax = $("#Fax").val();
+        var Addressthird = $("#Addressthird").val();
+        var ContactPerson = $("#ContactPerson").val();
+        var Email = $("#Email").val();
+        var Numberone = $("#Numberone").val();
+        var Numbertwo = $("#Numbertwo").val();
+        var Numberthree = $("#Numberthree").val();
+        var GSTNo = $("#GSTNo").val();
+        var vaild = true;
+
+        $(".errorCustomerType").addClass("hidden");
+        $(".errorCustomerName").addClass("hidden");
+        $(".errorPhoneNumber").addClass("hidden");
+        $(".errorAddressFirst").addClass("hidden");
+        $(".errorMobileNo").addClass("hidden");
+        $(".errorEmail").addClass("hidden");
+        $(".errorGSTNo").addClass("hidden");
+
+        if (CustomerType == "") {
+            $(".errorCustomerType").removeClass("hidden");
+            vaild = false;
+        }
+        if (CustomerName == "") {
+            $(".errorCustomerName").removeClass("hidden");
+            vaild = false;
+        }
+        if (PhoneNumber == "") {
+            $(".errorPhoneNumber").removeClass("hidden");
+            vaild = false;
+        }
+        if (AddressFirst == "") {
+            $(".errorAddressFirst").removeClass("hidden");
+            vaild = false;
+        }
+        if (MobileNo == "") {
+            $(".errorMobileNo").removeClass("hidden");
+            vaild = false;
+        }
+        if (Email == "") {
+            $(".errorEmail").removeClass("hidden");
+            vaild = false;
+        }
+        if (GSTNo == "") {
+            $(".errorGSTNo").removeClass("hidden");
+            vaild = false;
+        }
+        if (!vaild) {
+            return;
+        }
+
+        var objCustomer = {
+            CustomerId: CustomerId,
+            CustomerType: CustomerType,
+            IncrementId: 0,
+            CustomerCode: "",
+            CustomerName: CustomerName,
+            Address1: AddressFirst,
+            Address2: Addresssecond,
+            Address3: Addressthird,
+            Email: Email,
+            PhoneNo: PhoneNumber,
+            MobileNo: MobileNo,
+            FaxNo: Fax,
+            ContactPerson: ContactPerson,
+            AltNo1: Numberone,
+            AltNo2: Numbertwo,
+            AltNo3: Numberthree,
+            GSTNo: GSTNo,
+            IsActive: true,
+            Createdby: 0,
+            Createdon: null,
+            Modifiedby: null,
+            Modifiedon: null
+        };
+
+        $.ajax({
+            url: "/Master/Master/SaveCustomer",
+            contentType: 'application/json',
+            cache: false,
+            type: "post",
+            async: true,
+            data: JSON.stringify(objCustomer),
+            success: function (response) {
+                if (response.success == true) {
+                    $('#exampleModalCenter').modal("hide");
+                    $(".divssuccess").removeClass("hidden");
+                    if ($("#CustomerId").val() == "0") {
+                        $(".successmessage").html("Saved Successfully.");
+                    } else {
+                        $(".successmessage").html("Updated Successfully.");
+                    }
+                    window.setTimeout(function () {
+                        $(".divssuccess").addClass("hidden")
+                    }, 5000);
+                    refreshScreen();
+                    customerList();
+                } else {
+                    $(".divsaveerror").removeClass("hidden");
+                    $(".divsaveerror").html(response.message);
+                    window.setTimeout(function () {
+                        $(".divsaveerror").addClass("hidden")
+                    }, 5000);
+                }
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+    });
+
+    function refreshScreen() {
+        $("#CustomerId").val("0");
+        $("#CustomerType").val("");
+        $("#CustomerName").val("");
+        $("#PhoneNumber").val("");
+        $("#AddressFirst").val("");
+        $("#MobileNo").val("");
+        $("#Addresssecond").val("");
+        $("#Fax").val("");
+        $("#Addressthird").val("");
+        $("#ContactPerson").val("");
+        $("#Email").val("");
+        $("#Numberone").val("");
+        $("#Numbertwo").val("");
+        $("#Numberthree").val("");
+        $("#GSTNo").val("");
+    }
+
+    function customerList() {
+        $.ajax({
+            url: "/Master/Master/GetCustomerList",
+            type: "POST",
+            data: {},
+            datatype: "json",
+            cache: false,
+            success: function (data) {
+                debugger;
+
+                $('#example').DataTable(
+{
+    data: data,
+    "aoColumns": [
+{
+    title: "Customer Code",
+    data: "CustomerCode",
+    "sWidth": "20%",
+    "bSortable": true
+},
+        {
+            title: "Customer Name",
+            data: "CustomerName",
+            "sWidth": "20%",
+            "bSortable": true
+        },
+  {
+      title: "Type",
+      data: "CustomerType",
+      "sWidth": "20%",
+      "bSortable": true
+  },
+
+         {
+             title: "Email ID",
+             data: "Email",
+             "sWidth": "20%",
+             "bSortable": true
+         },
+          {
+              title: "GST No",
+              data: "GSTNo",
+              "sWidth": "15%",
+              "bSortable": true,
+              "sClass": "text-right"
+          },
+ {
+     title: "Mobile No",
+     data: "MobileNo",
+     "sWidth": "15%",
+     "bSortable": true,
+     "sClass": "text-right"
+ },
+
+
+        {
+            title: "Action", data: "", "sWidth": "10%", "bSortable": false, "sClass": "text-center",
+            "render": function (data, type, row) {
+
+                return "<span style='cursor:pointer;'class='fa fa-pencil action' onclick='EditCustomer(" + row.CustomerId + ")' class='btn btn-primary'aria-hidden='true' title='Edit'></span>" + " " + "<span style='cursor:pointer;' class='fa fa-trash-o' onclick='DeleteCustomer(" + row.CustomerId + ")' class='btn btn-primary' aria-hidden='true' title='Delete'></span>";
+
+            }
+
+        }
+    ],
+
+    "bProcessing": true,
+    "bDestroy": true,
+    "bPaginate": true,
+    "bAutoWidth": true,
+    "bFilter": true,
+    "bInfo": true,
+    "bJQueryUI": false,
+    "lengthMenu": [[10, 25, 50, 100, 250, -1], [10, 25, 50, 100, 250, "All"]],
+    "iDisplayLength": 10,
+    "aaSorting": [[1, "asc"]],
+    "colReorder": true,
+    "responsive": true,
+    dom: 'fltip',
+    "buttons": [
+        {
+            text: "Export to Excel",
+            filename: "Customer",
+            extend: "excelHtml5",
+            exportOptions: { columns: [0, 1, 2, 3, 4, 5] }
+        }
+    ]
+});
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+
+
+    }
+
+    $("#addcustomer").click(function () {
+        refreshScreen();
+        $(".errorCustomerType").addClass("hidden");
+        $(".errorCustomerName").addClass("hidden");
+        $(".errorPhoneNumber").addClass("hidden");
+        $(".errorAddressFirst").addClass("hidden");
+        $(".errorMobileNo").addClass("hidden");
+        $(".errorEmail").addClass("hidden");
+        $(".errorGSTNo").addClass("hidden");
+        $('#titlechange').html("Add Customer");
+        $('#exampleModalCenter').modal({
+            backdrop: 'static',
+            keyboard: true,
+            show: true
+        });
+    });
+
+
+
+
+
+    function EditCustomer(CustomerId) {
+        $.ajax({
+            url: "/Master/Master/GetCustomer",
+            type: "POST",
+            data: { CustomerId: CustomerId },
+            cache: false,
+            success: function (result) {
+
+                $("#CustomerId").val(result.CustomerId);
+                $("#CustomerType").val(result.CustomerType);
+                $("#CustomerName").val(result.CustomerName);
+                $("#PhoneNumber").val(result.PhoneNo);
+                $("#AddressFirst").val(result.Address1);
+                $("#MobileNo").val(result.MobileNo);
+                $("#Addresssecond").val(result.Address2);
+                $("#Fax").val(result.FaxNo);
+                $("#Addressthird").val(result.Address3);
+                $("#ContactPerson").val(result.ContactPerson);
+                $("#Email").val(result.Email);
+                $("#Numberone").val(result.AltNo1);
+                $("#Numbertwo").val(result.AltNo2);
+                $("#Numberthree").val(result.AltNo3);
+                $("#GSTNo").val(result.GSTNo);
+                $('#titlechange').html("Edit Customer");
+                $('#exampleModalCenter').modal({
+                    backdrop: 'static',
+                    keyboard: true,
+                    show: true
+                });
+            }
+
+        });
+
+    }
+    function DeleteCustomer(CustomerId) {
+        $("#DeleteModal").modal("show");
+        $("#CustomerId").val(CustomerId);
+    }
+
+    $("#confirmdelete").click(function () {
+
+        var id = $("#CustomerId").val();
+
+        $.ajax({
+            url: "/Master/Master/DeleteCustomer",
+            type: "POST",
+            data: {
+                customerID: id
+            },
+            datatype: "json",
+            cache: false,
+            success: function (data) {
+                customerList();
+                refreshScreen();
+                $("#DeleteModal").modal("hide");
+                $(".divssuccess").removeClass("hidden");
+                $(".successmessage").html("Deleted successfully.");
+                window.setTimeout(function () {
+                    $(".divssuccess").addClass("hidden")
+                }, 5000);
+
+            }
+        });
+    });
+
+
+</script>
+}
+
+
+

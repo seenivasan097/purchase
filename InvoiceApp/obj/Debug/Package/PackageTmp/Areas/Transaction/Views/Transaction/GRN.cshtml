@@ -1,0 +1,404 @@
+﻿@{
+    ViewBag.Title = "GRN";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+@section styles{
+
+    <script type="text/javascript" src="js/script.js"></script>
+
+    <style>
+        .textarea {
+            min-height: 62px !important;
+            max-height: 62px !important;
+        }
+    </style>
+
+}
+
+
+
+
+
+
+<div class="card border-primary">
+    <div class="card-body">
+
+
+        <div class="row">
+            <div class="col-md-12"></div>
+            <div class="col-md-2">
+
+                <label><b>GRN NO</b><span style="color: red;"> *</span></label>
+            </div>
+
+            <div class="col-md-4">
+                <input type="text" value="" class="form-control" id="GRN No" />
+            </div>
+            <div class="col-md-2">
+
+                <label><b>PO Date</b><span style="color: red;"> *</span></label>
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                    </div>
+                    <input type="text" id="txtFromDate" onkeydown="return false;" class="form-control">
+                </div>
+            </div>
+
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-md-12"></div>
+            <div class="col-md-2">
+
+                <label><b>PO No</b><span style="color: red;"> *</span></label>
+            </div>
+
+            <div class="col-md-4">
+                <select class="form-control" name="billable" tabindex="-1" aria-hidden="true">
+
+
+                    <option value="">-Select-</option>
+                    <option value="Customer">PO NO1</option>
+                    <option value="Supplier">PO NO1</option>
+                </select>
+                <!-- Dropdown List Option -->
+
+            </div>
+            <div class="col-md-2">
+
+                <label><b>GateInward Date</b><span style="color: red;"> *</span></label>
+            </div>
+            <div class="col-md-4">
+
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                    </div>
+                    <input type="text" id="txtintentdate" onkeydown="return false;" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-md-12"></div>
+            <div class="col-md-2">
+
+                <label><b>Supplier</b><span style="color: red;"> *</span></label>
+            </div>
+
+            <div class="col-md-4">
+                <select class="form-control" name="billable" tabindex="-1" aria-hidden="true">
+
+
+                    <option value="">-Select-</option>
+                    <option value="Customer">Supplier1</option>
+                    <option value="Supplier">Supplier2</option>
+                </select>
+                <!-- Dropdown List Option -->
+
+            </div>
+
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-md-2">
+
+                <label><b>Requested By</b><span style="color: red;"> *</span></label>
+            </div>
+
+            <div class="col-md-4">
+                <input type="text" value="" class="form-control" id="Intent No" />
+                <!-- Dropdown List Option -->
+
+            </div>
+            <div class="col-md-2">
+
+                <label><b>GRN TYPE</b><span style="color: red;"> *</span></label>
+            </div>
+            <div class="col-md-4">
+              
+                    <select class="form-control" name="billable" id="billable" tabindex="-1" aria-hidden="true">
+
+
+                        <option value="">-Select-</option>
+                        <option value="Customer">GRN TYPE1</option>
+                        <option value="Supplier">GRN TYPE2</option>
+                    </select>
+                    <!-- Dropdown List Option -->
+            </div>
+        </div>
+        <br />
+
+
+
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="mappingdiv" style="overflow-x: scroll; position: relative;">
+
+
+                    <table id="customertable" width="100%" class="display table table-striped table-bordered dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Item Name <span style="color: red">*</span></th>
+                                <th class="text-center">Quantity <span style="color: red">*</span></th>
+                                <th class="text-center">Unit<span style="color: red">*</span></th>
+                                <th class="text-center">Rate <span style="color: red">*</span></th>
+                                <th class="text-center">SGST Per <span style="color: red">*</span></th>
+                                <th class="text-center">SGST Value  <span style="color: red">*</span></th>
+                                <th class="text-center">CGST Per  <span style="color: red">*</span></th>
+                                <th class="text-center">CGST Value  <span style="color: red">*</span></th>
+                                <th class="text-center">IGST Per  <span style="color: red">*</span></th>
+                                <th class="text-center">IGST Value  <span style="color: red">*</span></th>
+                                <th class="text-center">Total  <span style="color: red">*</span></th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
+                <label><b>Sub Total:</b></label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" value="" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
+                <label><b>CGST:</b></label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" value="" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
+                <label><b>SGST:</b></label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" value="" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
+                <label><b>IGST:</b></label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" value="" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
+                <label><b>Total:</b></label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" value="" />
+            </div>
+        </div>
+
+        <br />
+
+
+        <div class="pull-right btnRequest">
+            <div class="btn btn-success " id="btnsaveExitRequest" title="Apply">Submit</div>
+            <div class="btn btn-warning " title="Cancel" id="btnclose">Cancel</div>
+
+        </div>
+
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        $(function () {
+            $("#txtFromDate").datepicker().datepicker("setDate", new Date());
+            $("#txtFromDate").datepicker();
+            $("#txtintentdate").datepicker();
+            $("#txtEnquirydate").datepicker();
+            $("#txtQuotationdate").datepicker();
+            $("#txtDuedate").datepicker();
+            $("#txtBilldate").datepicker();
+        });
+    </script>
+    <script type="text/javascript">
+
+
+
+
+        $(document).ready(function () {
+            $("#customertable tbody tr").remove();
+
+            debugger;
+            //$('.sidebar-toggle').click();
+            //$('.sidebar-toggle').css('margin-left', '-150px');
+            //$('.brand-header').css('margin-left', '-109px');
+            //gettimesheetlist();
+            //TimeSheetUpdatedWeeks();
+
+            var initialList = [];
+            var obj = {
+                category: "",
+                Project: "",
+                Task: "",
+                Description: "",
+                TrasactionDate: "",
+                Estimated_effort: "",
+                Actual_effort: "",
+                Status: "",
+                Remarks: ""
+            };
+            initialList.push(obj);
+            AddTimeListTable(initialList, "add");
+        });
+
+        function AppendTR() {
+            var trCount = $("#customertable tbody tr").length;
+            var str = "<tr>";
+            str += "<td><select id='Product" + trCount + "' style='width:100px;' class='Product form-control'><option>Item 1</option></select></td>";
+            str += "<td><input type='Text' value='' style='width: 125px;' class='txtquantity Item approvalcheck form-control'></input></td>";
+            str += "<td><select id='Unit" + trCount + "' style='width:100px;' class='unit form-control'><option>NOS</option></select></td>";
+            str += "<td><input type='Text' value='' style='width: 100px;' class='txtRate  approvalcheck form-control'></input></td>";
+            str += "<td><input type='Text' value='' style='width: 100px;' class='txtSgstpers  approvalcheck form-control'></input></td>";
+            str += "<td><input type='Text' value='' style='width: 100px;' class='txtsgstvalue  approvalcheck form-control'></input></td>";
+            str += "<td><input type='Text' value='' style='width: 100px;' class='txtcgstpers  approvalcheck form-control'></input></td>";
+            str += "<td><input type='Text' value='' style='width: 100px;' class='txtcgstvalue  approvalcheck form-control'></input></td>";
+            str += "<td><input type='Text' value='' style='width: 100px;' class='txtiostpers  approvalcheck form-control'></input></td>";
+            str += "<td><input type='Text' value='' style='width: 100px;' class='txtiostvalue  approvalcheck form-control'></input></td>";
+
+            str += "<td><input type='Text' value='' style='width: 100px;' class='txttotal  approvalcheck form-control'></input></td>";
+
+            str += "<td class='text-center'><button class='addrow btn btn-success btn-xs' title='add row' type='button' aria-label='addRow'><i class='fa fa-plus'></i></button> <button class='delrow btn btn-danger btn-xs' title='Remove this row' type='button' aria-label='addRow'><i class='fa fa-times'></i></button></td>";
+            str += "</tr>";
+            $('#customertable').append(str);
+            var rowCount = $('#customertable >tbody >tr').length;
+
+            //$('#customertable tbody tr:first').find('.delrow').addClass('hidden');
+        }
+
+        function AddTimeListTable(initialList, type) {
+
+            if (type == "add") {
+                AppendTR();
+
+            }
+
+        }
+        $("#btnCancel").click(function () {
+
+            location.reload();
+
+
+        });
+
+        function checkvalidation() {
+            var formCollectionResult = {};
+            formCollectionResult.timesubtransaction = [];
+            var familyDetailsCount = $("#customertable tbody tr").length;
+            var familyDetailsTable = $("#customertable").find('tbody tr');
+            var isValid = true;
+            $(familyDetailsTable).each(function (i, v) {
+                if ($(v).find('.txtItemName').val() === "") {
+                    isValid = false;
+                }
+                if ($(v).find('.Customer').val() === "") {
+                    isValid = true;
+                }
+                if ($(v).find('.Quantity').val() === "") {
+                    isValid = false;
+                }
+                if ($(v).find('.unit').val() === "") {
+                    isValid = false;
+                }
+                if ($(v).find('.Package').val() === "") {
+                    isValid = true;
+                }
+                if ($(v).find('.Rate').val() === "") {
+                    isValid = false;
+                }
+            });
+            return isValid;
+        }
+        $("#customertable tbody").on('click', '.addrow', function () {
+            debugger;
+
+            var isValid = checkvalidation();
+            if (isValid) {
+
+                AppendTR();
+            }
+            else {
+                $(".divErrorMessage").removeClass("hidden").html("Marked * field are mandatory");
+                window.setTimeout(function () {
+                    $(".divErrorMessage").addClass("hidden")
+                }, 5000);
+            }
+
+
+        });
+
+        $("#customertable tbody").on('click', '.delrow', function () {
+            if ($(this).parent().parent()[0].rowIndex > 1) {
+                $(this).parents('tr').remove();
+                //var table = $('#customertable').DataTable();
+                //table.row($(this).parents('tr')).remove().draw();
+            } else if ($("#tblTimesheetDetails tbody tr").length > 1) {
+                $(this).parent().parent().remove();
+            }
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+        $("#btnclose").click(function () {
+
+            location.reload();
+
+
+        });
+
+
+
+
+
+
+
+    </script>
+}
+
+
+

@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Session Expired";
+    Layout = "";
+}
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Expired</title>
+    <link href="~/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/assets/css/nifty.min.css" rel="stylesheet">
+    <link href="~/assets/css/custom.css" rel="stylesheet">
+</head>
+<body>
+    <div id="container" class="cls-container" style="background-color: #f1f4f7;">
+        <!-- CONTENT -->
+        <!--===================================================-->
+        <div class="cls-content">
+            <h1 class="error-code text-primary" style="font-size: 50px;"><i class="fa fa-exclamation-triangle fa-li fa-lg"></i>
+            </h1>
+            @*<h1 class="text-primary" style="color: #afb9c3;">Your current session expired.<br/><a class="link-default" href="@Url.Action(MVC.Home.Index())" >Click here</a> to begin a new session.</h1>*@
+            <h1 class="text-primary" style="color: #afb9c3;">
+                <img src="~/assets/img/sessionexpired.png"/><br/><a class="link-default" href="@Url.Action(MVC.Home.Index())" >Click here</a> to begin a new session.</h1>
+        </div>
+    </div>
+</body>
+</html>

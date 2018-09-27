@@ -1,0 +1,9 @@
+C:\GMI TFS\Widget_Collections\HRMS Integrated\HRMS_Web_New\HRMS.UI\bin\HRMS.UI.dll
+C:\GMI TFS\Widget_Collections\HRMS Integrated\HRMS_Web_New\HRMS.UI\bin\HRMS.UI.pdb
+C:\GMI TFS\Widget_Collections\HRMS Integrated\HRMS_Web_New\HRMS.UI\bin\HRMS.Client.dll
+C:\GMI TFS\Widget_Collections\HRMS Integrated\HRMS_Web_New\HRMS.UI\bin\LMS.Client.dll
+C:\GMI TFS\Widget_Collections\HRMS Integrated\HRMS_Web_New\HRMS.UI\bin\HRMS.Client.pdb
+C:\GMI TFS\Widget_Collections\HRMS Integrated\HRMS_Web_New\HRMS.UI\bin\LMS.Client.pdb
+C:\GMI TFS\Widget_Collections\HRMS Integrated\HRMS_Web_New\HRMS.UI\obj\Debug\HRMS.UI.csprojResolveAssemblyReference.cache
+C:\GMI TFS\Widget_Collections\HRMS Integrated\HRMS_Web_New\HRMS.UI\obj\Debug\HRMS.UI.dll
+C:\GMI TFS\Widget_Collections\HRMS Integrated\HRMS_Web_New\HRMS.UI\obj\Debug\HRMS.UI.pdb

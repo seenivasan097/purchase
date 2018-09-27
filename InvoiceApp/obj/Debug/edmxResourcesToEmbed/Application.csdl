@@ -1,0 +1,619 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ApplicationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="ApplicationEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Customers" EntityType="ApplicationModel.Customer" />
+    <EntitySet Name="Items" EntityType="ApplicationModel.Item" />
+    <EntitySet Name="ItemMappings" EntityType="ApplicationModel.ItemMapping" />
+    <EntitySet Name="SubItemMappings" EntityType="ApplicationModel.SubItemMapping" />
+    <FunctionImport Name="getAccountYear" ReturnType="Collection(ApplicationModel.getAccountYear_Result)" />
+    <EntitySet Name="ItemStockTran" EntityType="ApplicationModel.ItemStockTran" />
+    <EntitySet Name="OpeningStock" EntityType="ApplicationModel.OpeningStock" />
+    <EntitySet Name="PurchaseOrder" EntityType="ApplicationModel.PurchaseOrder" />
+    <EntitySet Name="SubGRN" EntityType="ApplicationModel.SubGRN" />
+    <EntitySet Name="SubPurchaseOrder" EntityType="ApplicationModel.SubPurchaseOrder" />
+    <AssociationSet Name="FK__PurchaseO__Suppl__59FA5E80" Association="ApplicationModel.FK__PurchaseO__Suppl__59FA5E80">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="PurchaseOrder" EntitySet="PurchaseOrder" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ItemStock__ItemI__4222D4EF" Association="ApplicationModel.FK__ItemStock__ItemI__4222D4EF">
+      <End Role="Item" EntitySet="Items" />
+      <End Role="ItemStockTran" EntitySet="ItemStockTran" />
+    </AssociationSet>
+    <AssociationSet Name="FK__OpeningSt__ItemI__3C69FB99" Association="ApplicationModel.FK__OpeningSt__ItemI__3C69FB99">
+      <End Role="Item" EntitySet="Items" />
+      <End Role="OpeningStock" EntitySet="OpeningStock" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SubGRN__ItemId__571DF1D5" Association="ApplicationModel.FK__SubGRN__ItemId__571DF1D5">
+      <End Role="Item" EntitySet="Items" />
+      <End Role="SubGRN" EntitySet="SubGRN" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SubPurcha__ItemI__5CD6CB2B" Association="ApplicationModel.FK__SubPurcha__ItemI__5CD6CB2B">
+      <End Role="Item" EntitySet="Items" />
+      <End Role="SubPurchaseOrder" EntitySet="SubPurchaseOrder" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SubPurchas__POId__5DCAEF64" Association="ApplicationModel.FK__SubPurchas__POId__5DCAEF64">
+      <End Role="PurchaseOrder" EntitySet="PurchaseOrder" />
+      <End Role="SubPurchaseOrder" EntitySet="SubPurchaseOrder" />
+    </AssociationSet>
+    <FunctionImport Name="proc_ItemStock">
+      <Parameter Name="Type" Mode="In" Type="String" />
+      <Parameter Name="TranId" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="proc_ItemOpeningStock" ReturnType="Collection(ApplicationModel.proc_ItemOpeningStock_Result)">
+      <Parameter Name="Type" Mode="In" Type="String" />
+      <Parameter Name="TranId" Mode="In" Type="String" />
+      <Parameter Name="TranDate" Mode="In" Type="DateTime" />
+      <Parameter Name="ItemId" Mode="In" Type="Int32" />
+      <Parameter Name="Quantity" Mode="In" Type="Decimal" />
+    </FunctionImport>
+    <EntitySet Name="ItemStock" EntityType="ApplicationModel.ItemStock" />
+    <AssociationSet Name="FK__ItemStock__ItemI__3F466844" Association="ApplicationModel.FK__ItemStock__ItemI__3F466844">
+      <End Role="Item" EntitySet="Items" />
+      <End Role="ItemStock" EntitySet="ItemStock" />
+    </AssociationSet>
+    <EntitySet Name="Invoice" EntityType="ApplicationModel.Invoice" />
+    <EntitySet Name="SubInvoice" EntityType="ApplicationModel.SubInvoice" />
+    <AssociationSet Name="FK__Invoice__Custome__07C12930" Association="ApplicationModel.FK__Invoice__Custome__07C12930">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="Invoice" EntitySet="Invoice" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SubInvoic__Invoi__0A9D95DB" Association="ApplicationModel.FK__SubInvoic__Invoi__0A9D95DB">
+      <End Role="Invoice" EntitySet="Invoice" />
+      <End Role="SubInvoice" EntitySet="SubInvoice" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SubInvoic__ItemI__0B91BA14" Association="ApplicationModel.FK__SubInvoic__ItemI__0B91BA14">
+      <End Role="Item" EntitySet="Items" />
+      <End Role="SubInvoice" EntitySet="SubInvoice" />
+    </AssociationSet>
+    <EntitySet Name="GRN" EntityType="ApplicationModel.GRN" />
+    <AssociationSet Name="FK__GRN__SupplierId__534D60F1" Association="ApplicationModel.FK__GRN__SupplierId__534D60F1">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="GRN" EntitySet="GRN" />
+    </AssociationSet>
+    <AssociationSet Name="FK__GRN__POId__0F624AF8" Association="ApplicationModel.FK__GRN__POId__0F624AF8">
+      <End Role="PurchaseOrder" EntitySet="PurchaseOrder" />
+      <End Role="GRN" EntitySet="GRN" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SubGRN__GRNId__5629CD9C" Association="ApplicationModel.FK__SubGRN__GRNId__5629CD9C">
+      <End Role="GRN" EntitySet="GRN" />
+      <End Role="SubGRN" EntitySet="SubGRN" />
+    </AssociationSet>
+    <FunctionImport Name="proc_getPendingGRNPO" ReturnType="Collection(ApplicationModel.proc_getPendingGRNPO_Result)">
+      <Parameter Name="prefix" Mode="In" Type="String" />
+    </FunctionImport>
+    <EntitySet Name="ViwPendingGRNPO" EntityType="ApplicationModel.ViwPendingGRNPO" />
+    <EntitySet Name="ViwItemStock" EntityType="ApplicationModel.ViwItemStock" />
+  </EntityContainer>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="CustomerId" />
+    </Key>
+    <Property Name="CustomerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CustomerType" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="IncrementId" Type="Int32" Nullable="false" />
+    <Property Name="CustomerCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="CustomerName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="Address1" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
+    <Property Name="Address2" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+    <Property Name="Address3" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="PhoneNo" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="MobileNo" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="FaxNo" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="ContactPerson" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="AltNo1" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="AltNo2" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="AltNo3" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="GSTNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="IsActive" Type="Int32" Nullable="false" />
+    <Property Name="Createdby" Type="Int32" Nullable="false" />
+    <Property Name="Createdon" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Modifiedby" Type="Int32" />
+    <Property Name="Modifiedon" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="PurchaseOrder" Relationship="ApplicationModel.FK__PurchaseO__Suppl__59FA5E80" FromRole="Customer" ToRole="PurchaseOrder" />
+    <NavigationProperty Name="Invoice" Relationship="ApplicationModel.FK__Invoice__Custome__07C12930" FromRole="Customer" ToRole="Invoice" />
+    <NavigationProperty Name="GRN" Relationship="ApplicationModel.FK__GRN__SupplierId__534D60F1" FromRole="Customer" ToRole="GRN" />
+  </EntityType>
+  <EntityType Name="Item">
+    <Key>
+      <PropertyRef Name="ItemId" />
+    </Key>
+    <Property Name="ItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ItemCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="IncrementId" Type="Int32" Nullable="false" />
+    <Property Name="ItemName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Description" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
+    <Property Name="Unit" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="Rate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IsActive" Type="Int32" Nullable="false" />
+    <Property Name="Createdby" Type="Int32" Nullable="false" />
+    <Property Name="Createdon" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Modifiedby" Type="Int32" />
+    <Property Name="Modifiedon" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="ItemStockTran" Relationship="ApplicationModel.FK__ItemStock__ItemI__4222D4EF" FromRole="Item" ToRole="ItemStockTran" />
+    <NavigationProperty Name="OpeningStock" Relationship="ApplicationModel.FK__OpeningSt__ItemI__3C69FB99" FromRole="Item" ToRole="OpeningStock" />
+    <NavigationProperty Name="SubGRN" Relationship="ApplicationModel.FK__SubGRN__ItemId__571DF1D5" FromRole="Item" ToRole="SubGRN" />
+    <NavigationProperty Name="SubPurchaseOrder" Relationship="ApplicationModel.FK__SubPurcha__ItemI__5CD6CB2B" FromRole="Item" ToRole="SubPurchaseOrder" />
+    <NavigationProperty Name="ItemStock" Relationship="ApplicationModel.FK__ItemStock__ItemI__3F466844" FromRole="Item" ToRole="ItemStock" />
+    <Property Name="HSNCode" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="SubInvoice" Relationship="ApplicationModel.FK__SubInvoic__ItemI__0B91BA14" FromRole="Item" ToRole="SubInvoice" />
+  </EntityType>
+  <EntityType Name="ItemMapping">
+    <Key>
+      <PropertyRef Name="ItemMappingId" />
+    </Key>
+    <Property Name="ItemMappingId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CustomerId" Type="Int32" Nullable="false" />
+    <Property Name="IsActive" Type="Int32" Nullable="false" />
+    <Property Name="Createdby" Type="Int32" Nullable="false" />
+    <Property Name="Createdon" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Modifiedby" Type="Int32" />
+    <Property Name="Modifiedon" Type="DateTime" Precision="3" />
+    <Property Name="CustomerType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="SubItemMapping">
+    <Key>
+      <PropertyRef Name="SubItemMappingId" />
+    </Key>
+    <Property Name="SubItemMappingId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ItemMappingId" Type="Int32" Nullable="false" />
+    <Property Name="ItemId" Type="Int32" Nullable="false" />
+    <Property Name="CustomerItemCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Package" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Rate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IsActive" Type="Int32" Nullable="false" />
+    <Property Name="Createdby" Type="Int32" Nullable="false" />
+    <Property Name="Createdon" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Modifiedby" Type="Int32" />
+    <Property Name="Modifiedon" Type="DateTime" Precision="3" />
+  </EntityType>
+  <ComplexType Name="getAccountYear_Result">
+    <Property Type="String" Name="FYEAR" Nullable="true" MaxLength="20" />
+    <Property Type="DateTime" Name="CurrentDate" Nullable="false" Precision="23" />
+  </ComplexType>
+  <EntityType Name="ItemStockTran">
+    <Key>
+      <PropertyRef Name="ItemStockTranId" />
+    </Key>
+    <Property Name="ItemStockTranId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TranId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="TranDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="ItemId" Type="Int32" Nullable="false" />
+    <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="TranType" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Item" Relationship="ApplicationModel.FK__ItemStock__ItemI__4222D4EF" FromRole="ItemStockTran" ToRole="Item" />
+    <Property Name="OutTranId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ScreenType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="OpeningStock">
+    <Key>
+      <PropertyRef Name="OpeningStockId" />
+    </Key>
+    <Property Name="OpeningStockId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountYear" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="IncrementId" Type="Int32" Nullable="false" />
+    <Property Name="OpeningStockNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ItemId" Type="Int32" Nullable="false" />
+    <Property Name="ActualStock" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="PhysicalStock" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="PreparedBy" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Remarks" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+    <Property Name="IsActive" Type="Int32" Nullable="false" />
+    <Property Name="Createdby" Type="Int32" Nullable="false" />
+    <Property Name="Createdon" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Modifiedby" Type="Int32" />
+    <Property Name="Modifiedon" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Item" Relationship="ApplicationModel.FK__OpeningSt__ItemI__3C69FB99" FromRole="OpeningStock" ToRole="Item" />
+  </EntityType>
+  <EntityType Name="PurchaseOrder">
+    <Key>
+      <PropertyRef Name="POId" />
+    </Key>
+    <Property Name="POId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PODate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="AccountYear" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="IncrementId" Type="Int32" Nullable="false" />
+    <Property Name="PONo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="IntentNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="IntentDate" Type="DateTime" Precision="0" />
+    <Property Name="EnquiryNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="EnquiryDate" Type="DateTime" Precision="0" />
+    <Property Name="QuotationNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="QuotationDate" Type="DateTime" Precision="0" />
+    <Property Name="SupplierId" Type="Int32" Nullable="false" />
+    <Property Name="BillDate" Type="DateTime" Precision="0" />
+    <Property Name="RequestedBy" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="POType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="DueDate" Type="DateTime" Precision="0" />
+    <Property Name="SubTotal" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="CGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="SGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="Total" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="DeliverySchedule" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="DeliveryType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="IsActive" Type="Int32" Nullable="false" />
+    <Property Name="Createdby" Type="Int32" Nullable="false" />
+    <Property Name="Createdon" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Modifiedby" Type="Int32" />
+    <Property Name="Modifiedon" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Customer" Relationship="ApplicationModel.FK__PurchaseO__Suppl__59FA5E80" FromRole="PurchaseOrder" ToRole="Customer" />
+    <NavigationProperty Name="SubPurchaseOrder" Relationship="ApplicationModel.FK__SubPurchas__POId__5DCAEF64" FromRole="PurchaseOrder" ToRole="SubPurchaseOrder" />
+    <Property Name="CourierCharges" Type="Decimal" Precision="18" Scale="2" />
+    <NavigationProperty Name="GRN" Relationship="ApplicationModel.FK__GRN__POId__0F624AF8" FromRole="PurchaseOrder" ToRole="GRN" />
+  </EntityType>
+  <EntityType Name="SubGRN">
+    <Key>
+      <PropertyRef Name="SubGRNId" />
+    </Key>
+    <Property Name="SubGRNId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GRNId" Type="Int32" Nullable="false" />
+    <Property Name="ItemId" Type="Int32" Nullable="false" />
+    <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="Rate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="CGSTPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="CGSTAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="SGSTPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="SGSTAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IGSTPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IGSTAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="Total" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IsActive" Type="Int32" Nullable="false" />
+    <Property Name="Createdby" Type="Int32" Nullable="false" />
+    <Property Name="Createdon" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Modifiedby" Type="Int32" />
+    <Property Name="Modifiedon" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Item" Relationship="ApplicationModel.FK__SubGRN__ItemId__571DF1D5" FromRole="SubGRN" ToRole="Item" />
+    <NavigationProperty Name="GRN" Relationship="ApplicationModel.FK__SubGRN__GRNId__5629CD9C" FromRole="SubGRN" ToRole="GRN" />
+  </EntityType>
+  <EntityType Name="SubPurchaseOrder">
+    <Key>
+      <PropertyRef Name="SubPOId" />
+    </Key>
+    <Property Name="SubPOId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="POId" Type="Int32" Nullable="false" />
+    <Property Name="ItemId" Type="Int32" Nullable="false" />
+    <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="Rate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="CGSTPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="CGSTAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="SGSTPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="SGSTAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IGSTPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IGSTAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="Total" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IsActive" Type="Int32" Nullable="false" />
+    <Property Name="Createdby" Type="Int32" Nullable="false" />
+    <Property Name="Createdon" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Modifiedby" Type="Int32" />
+    <Property Name="Modifiedon" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Item" Relationship="ApplicationModel.FK__SubPurcha__ItemI__5CD6CB2B" FromRole="SubPurchaseOrder" ToRole="Item" />
+    <NavigationProperty Name="PurchaseOrder" Relationship="ApplicationModel.FK__SubPurchas__POId__5DCAEF64" FromRole="SubPurchaseOrder" ToRole="PurchaseOrder" />
+  </EntityType>
+  <Association Name="FK__PurchaseO__Suppl__59FA5E80">
+    <End Type="ApplicationModel.Customer" Role="Customer" Multiplicity="1" />
+    <End Type="ApplicationModel.PurchaseOrder" Role="PurchaseOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="CustomerId" />
+      </Principal>
+      <Dependent Role="PurchaseOrder">
+        <PropertyRef Name="SupplierId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ItemStock__ItemI__4222D4EF">
+    <End Type="ApplicationModel.Item" Role="Item" Multiplicity="1" />
+    <End Type="ApplicationModel.ItemStockTran" Role="ItemStockTran" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Item">
+        <PropertyRef Name="ItemId" />
+      </Principal>
+      <Dependent Role="ItemStockTran">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__OpeningSt__ItemI__3C69FB99">
+    <End Type="ApplicationModel.Item" Role="Item" Multiplicity="1" />
+    <End Type="ApplicationModel.OpeningStock" Role="OpeningStock" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Item">
+        <PropertyRef Name="ItemId" />
+      </Principal>
+      <Dependent Role="OpeningStock">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SubGRN__ItemId__571DF1D5">
+    <End Type="ApplicationModel.Item" Role="Item" Multiplicity="1" />
+    <End Type="ApplicationModel.SubGRN" Role="SubGRN" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Item">
+        <PropertyRef Name="ItemId" />
+      </Principal>
+      <Dependent Role="SubGRN">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SubPurcha__ItemI__5CD6CB2B">
+    <End Type="ApplicationModel.Item" Role="Item" Multiplicity="1" />
+    <End Type="ApplicationModel.SubPurchaseOrder" Role="SubPurchaseOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Item">
+        <PropertyRef Name="ItemId" />
+      </Principal>
+      <Dependent Role="SubPurchaseOrder">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SubPurchas__POId__5DCAEF64">
+    <End Type="ApplicationModel.PurchaseOrder" Role="PurchaseOrder" Multiplicity="1" />
+    <End Type="ApplicationModel.SubPurchaseOrder" Role="SubPurchaseOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PurchaseOrder">
+        <PropertyRef Name="POId" />
+      </Principal>
+      <Dependent Role="SubPurchaseOrder">
+        <PropertyRef Name="POId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="proc_ItemOpeningStock_Result">
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="PType" Nullable="false" MaxLength="7" />
+    <Property Type="String" Name="PError" Nullable="false" MaxLength="1" />
+  </ComplexType>
+  <EntityType Name="ItemStock">
+    <Key>
+      <PropertyRef Name="ItemStockId" />
+    </Key>
+    <Property Name="ItemStockId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ItemId" Type="Int32" Nullable="false" />
+    <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <NavigationProperty Name="Item" Relationship="ApplicationModel.FK__ItemStock__ItemI__3F466844" FromRole="ItemStock" ToRole="Item" />
+    <Property Name="TranId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="TranType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <Association Name="FK__ItemStock__ItemI__3F466844">
+    <End Type="ApplicationModel.Item" Role="Item" Multiplicity="1" />
+    <End Type="ApplicationModel.ItemStock" Role="ItemStock" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Item">
+        <PropertyRef Name="ItemId" />
+      </Principal>
+      <Dependent Role="ItemStock">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Invoice">
+    <Key>
+      <PropertyRef Name="InvoiceId" />
+    </Key>
+    <Property Name="InvoiceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountYear" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="IncrementId" Type="Int32" Nullable="false" />
+    <Property Name="InvoiceNO" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="InvoiceDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Location" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Taxable" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="DCNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="DCDate" Type="DateTime" Precision="0" />
+    <Property Name="CustomerId" Type="Int32" Nullable="false" />
+    <Property Name="Currency" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ExchangeRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="PlaceOfSupply" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="ApprovalDate" Type="DateTime" Precision="0" />
+    <Property Name="PaymentType" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Transport" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="PreparedBy" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Remarks" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+    <Property Name="AdvanceAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="BalanceAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="SubTotal" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="CGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="SGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="DiscountPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="DiscountAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="CourierCharges" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="Total" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IsActive" Type="Int32" Nullable="false" />
+    <Property Name="Createdby" Type="Int32" Nullable="false" />
+    <Property Name="Createdon" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Modifiedby" Type="Int32" />
+    <Property Name="Modifiedon" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Customer" Relationship="ApplicationModel.FK__Invoice__Custome__07C12930" FromRole="Invoice" ToRole="Customer" />
+    <NavigationProperty Name="SubInvoice" Relationship="ApplicationModel.FK__SubInvoic__Invoi__0A9D95DB" FromRole="Invoice" ToRole="SubInvoice" />
+  </EntityType>
+  <EntityType Name="SubInvoice">
+    <Key>
+      <PropertyRef Name="SubInvoiceId" />
+    </Key>
+    <Property Name="SubInvoiceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InvoiceId" Type="Int32" Nullable="false" />
+    <Property Name="ItemId" Type="Int32" Nullable="false" />
+    <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="Rate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="SubTotal" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="CGSTPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="CGSTAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="SGSTPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="SGSTAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IGSTPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IGSTAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="DiscountPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="DiscountAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="Total" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IsActive" Type="Int32" Nullable="false" />
+    <Property Name="Createdby" Type="Int32" Nullable="false" />
+    <Property Name="Createdon" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Modifiedby" Type="Int32" />
+    <Property Name="Modifiedon" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Invoice" Relationship="ApplicationModel.FK__SubInvoic__Invoi__0A9D95DB" FromRole="SubInvoice" ToRole="Invoice" />
+    <NavigationProperty Name="Item" Relationship="ApplicationModel.FK__SubInvoic__ItemI__0B91BA14" FromRole="SubInvoice" ToRole="Item" />
+  </EntityType>
+  <Association Name="FK__Invoice__Custome__07C12930">
+    <End Type="ApplicationModel.Customer" Role="Customer" Multiplicity="1" />
+    <End Type="ApplicationModel.Invoice" Role="Invoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="CustomerId" />
+      </Principal>
+      <Dependent Role="Invoice">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SubInvoic__Invoi__0A9D95DB">
+    <End Type="ApplicationModel.Invoice" Role="Invoice" Multiplicity="1" />
+    <End Type="ApplicationModel.SubInvoice" Role="SubInvoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Invoice">
+        <PropertyRef Name="InvoiceId" />
+      </Principal>
+      <Dependent Role="SubInvoice">
+        <PropertyRef Name="InvoiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SubInvoic__ItemI__0B91BA14">
+    <End Type="ApplicationModel.Item" Role="Item" Multiplicity="1" />
+    <End Type="ApplicationModel.SubInvoice" Role="SubInvoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Item">
+        <PropertyRef Name="ItemId" />
+      </Principal>
+      <Dependent Role="SubInvoice">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="GRN">
+    <Key>
+      <PropertyRef Name="GRNId" />
+    </Key>
+    <Property Name="GRNId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountYear" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="IncrementId" Type="Int32" Nullable="false" />
+    <Property Name="GRNNO" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="GRNDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="PODate" Type="DateTime" Precision="0" />
+    <Property Name="GateInwardDate" Type="DateTime" Precision="0" />
+    <Property Name="SupplierId" Type="Int32" Nullable="false" />
+    <Property Name="RequestBy" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="GRNType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SubTotal" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="CGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="SGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="Total" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IsActive" Type="Int32" Nullable="false" />
+    <Property Name="Createdby" Type="Int32" Nullable="false" />
+    <Property Name="Createdon" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Modifiedby" Type="Int32" />
+    <Property Name="Modifiedon" Type="DateTime" Precision="3" />
+    <Property Name="SuppInvoiceNo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="SuppInvoiceDate" Type="DateTime" Precision="0" />
+    <Property Name="SuppInvoiceFile" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="CourierCharges" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="POId" Type="Int32" />
+    <NavigationProperty Name="Customer" Relationship="ApplicationModel.FK__GRN__SupplierId__534D60F1" FromRole="GRN" ToRole="Customer" />
+    <NavigationProperty Name="PurchaseOrder" Relationship="ApplicationModel.FK__GRN__POId__0F624AF8" FromRole="GRN" ToRole="PurchaseOrder" />
+    <NavigationProperty Name="SubGRN" Relationship="ApplicationModel.FK__SubGRN__GRNId__5629CD9C" FromRole="GRN" ToRole="SubGRN" />
+  </EntityType>
+  <Association Name="FK__GRN__SupplierId__534D60F1">
+    <End Type="ApplicationModel.Customer" Role="Customer" Multiplicity="1" />
+    <End Type="ApplicationModel.GRN" Role="GRN" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="CustomerId" />
+      </Principal>
+      <Dependent Role="GRN">
+        <PropertyRef Name="SupplierId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__GRN__POId__0F624AF8">
+    <End Type="ApplicationModel.PurchaseOrder" Role="PurchaseOrder" Multiplicity="0..1" />
+    <End Type="ApplicationModel.GRN" Role="GRN" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PurchaseOrder">
+        <PropertyRef Name="POId" />
+      </Principal>
+      <Dependent Role="GRN">
+        <PropertyRef Name="POId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SubGRN__GRNId__5629CD9C">
+    <End Type="ApplicationModel.GRN" Role="GRN" Multiplicity="1" />
+    <End Type="ApplicationModel.SubGRN" Role="SubGRN" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GRN">
+        <PropertyRef Name="GRNId" />
+      </Principal>
+      <Dependent Role="SubGRN">
+        <PropertyRef Name="GRNId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="proc_getPendingGRNPO_Result">
+    <Property Type="Int32" Name="POId" Nullable="true" />
+    <Property Type="DateTime" Name="PODate" Nullable="false" />
+    <Property Type="String" Name="PONo" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="SupplierId" Nullable="false" />
+    <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="150" />
+    <Property Type="Int32" Name="ItemId" Nullable="false" />
+    <Property Type="String" Name="ItemCode" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="HSNCode" Nullable="true" MaxLength="150" />
+    <Property Type="String" Name="ItemName" Nullable="false" MaxLength="250" />
+    <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="38" Scale="2" />
+    <Property Type="String" Name="Unit" Nullable="true" MaxLength="10" />
+    <Property Type="Decimal" Name="Rate" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="CGSTPer" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="IGSTPer" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="SGSTPer" Nullable="false" Precision="18" Scale="2" />
+  </ComplexType>
+  <EntityType Name="ViwPendingGRNPO">
+    <Key>
+      <PropertyRef Name="PODate" />
+      <PropertyRef Name="PONo" />
+      <PropertyRef Name="SupplierId" />
+      <PropertyRef Name="SupplierName" />
+      <PropertyRef Name="ItemId" />
+      <PropertyRef Name="ItemCode" />
+      <PropertyRef Name="ItemName" />
+      <PropertyRef Name="Rate" />
+      <PropertyRef Name="CGSTPer" />
+      <PropertyRef Name="IGSTPer" />
+      <PropertyRef Name="SGSTPer" />
+    </Key>
+    <Property Name="POId" Type="Int32" />
+    <Property Name="PODate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="PONo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SupplierId" Type="Int32" Nullable="false" />
+    <Property Name="SupplierName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="ItemId" Type="Int32" Nullable="false" />
+    <Property Name="ItemCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="HSNCode" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="ItemName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Unit" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="Rate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="CGSTPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="IGSTPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="SGSTPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="Quantity" Type="Decimal" Precision="38" Scale="2" />
+  </EntityType>
+  <EntityType Name="ViwItemStock">
+    <Key>
+      <PropertyRef Name="ItemId" />
+    </Key>
+    <Property Name="ItemId" Type="Int32" Nullable="false" />
+    <Property Name="Quantity" Type="Decimal" Precision="38" Scale="2" />
+  </EntityType>
+</Schema>

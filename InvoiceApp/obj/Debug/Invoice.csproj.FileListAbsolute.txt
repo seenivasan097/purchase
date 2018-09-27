@@ -1,0 +1,4 @@
+C:\Widget\Project\Invoice_app\HRMS.UI\obj\Debug\HRMS.UI.dll
+C:\Widget\Project\Invoice_app\HRMS.UI\obj\Debug\HRMS.UI.pdb
+C:\Widget\Project\Invoice_app\HRMS.UI\bin\HRMS.UI.dll
+C:\Widget\Project\Invoice_app\HRMS.UI\bin\HRMS.UI.pdb

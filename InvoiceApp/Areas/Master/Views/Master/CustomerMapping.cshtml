@@ -1,0 +1,697 @@
+﻿@{
+    ViewBag.Title = "Item Mapping";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+@section styles{
+
+@*<link href="~/assets/Plugins/tautocomplete.css" rel="stylesheet" />*@
+
+}
+<div class="card border-primary">
+    <div class="card-body">
+        <div class="alert alert-success text-center divsuccess hidden">
+        </div>
+        <div class="alert alert-danger text-center diverror hidden">
+        </div>
+
+        <div class="form-group">
+            <label><b>Type </b><font color="red">*</font></label>
+            <select class="form-control" name="type" id="drptype" tabindex="-1" aria-hidden="true">
+                <option value="Customer">Customer</option>
+                <option value="Supplier">Supplier</option>
+            </select>
+            <input type="hidden" id="selectedUserId" />
+            <input type="hidden" id="ItemMappingId" />
+        </div>
+        <div class="form-group">
+            <label><b class="labeltype">Customer</b><font color="red"> *</font></label>
+
+            <input class="form-control" id="txtcustomer" type="text" placeholder="Search...">
+            <div class="errorCustomer custom-error hidden">
+                <p style="color: red;" class="help-block">
+                    Choose
+                    <span class="labeltype">Customer</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-danger text-center divitemerrormessage hidden">
+                </div>
+                <div class="mappingdiv" style="overflow-x: scroll; position: relative;">
+
+
+                    <table id="itemtable" width="100%" class="display table table-striped table-bordered dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Item Name <span style="color: red">*</span></th>
+                                <th class="text-center">Item Code <span style="color: red"></span></th>
+
+                                <th class="text-center">Unit <span style="color: red"></span></th>
+                                <th class="text-center">Package </th>
+                                <th class="text-center">Rate <span style="color: red">*</span></th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="outputjson"></div>
+        <div class="row" style="margin-top: 13px;">
+            <div class="col-md-12">
+                <div class="pull-right">
+                    <a class="btn btn-warning" id="btnCancel" title="Cancel"><b>Cancel</b></a>
+                    <button type="button" class="btn btn-primary" id="btnSave">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-primary">
+    <div class="card-body">
+        <div class="alert alert-success text-center divlistsuccess hidden">
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <table id="tblitemmaplist" class="display table table-striped table-bordered dataTable no-footer" cellspacing="0">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="DeleteModal" role="dialog">
+
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header  btn-primary">
+                <button type="button" class="close" style="position: relative; right: -79px;" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="position: relative; right: 388px;">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" title="No" id="confirmno" data-dismiss="modal">No</button>
+                <a id="confirmdelete" title="Yes" class="btn btn-success">Yes</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="ViewItemModel" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header  btn-primary">
+                <button type="button" class="close" style="position: relative; right: -79px;" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="position: relative; right: 388px;">Item List</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="tblviewitemlist" class="display table table-striped table-bordered dataTable no-footer" cellspacing="0">
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" title="Close" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts{
+@*<script src="~/assets/Plugins/tautocomplete.js"></script>*@
+        <link href="~/assets/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+<script src="~/assets/js/jquery.dataTables.min.js"></script>
+
+
+<script type="text/javascript">
+    var i = 0;
+    var dataTable;
+
+
+    $(document).ready(function () {
+        refreshScreen();
+        ItemmapList();
+        $("#txtcustomer").mcautocomplete({
+            showHeader: true,
+            columns: [{
+                name: 'Code',
+                width: '150px',
+                valueField: 'CustomerCode'
+            }, {
+                name: 'Name',
+                width: '150px',
+                valueField: 'CustomerName'
+            }],
+            select: function (event, ui) {
+                this.value = (ui.item ? ui.item.CustomerName : '');
+                $("#selectedUserId").val(ui.item.CustomerId);
+                return false;
+            },
+            change: function (event, ui) {
+                if (!ui.item) {
+                    this.value = "";
+                    $("#selectedUserId").val("0");
+                }
+            },
+            minLength: 1,
+            source: function (request, response) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Master/Master/getUserList",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ 'type':'" + $("#drptype").val() + "','prefix':'" + request.term + "'}",
+                    success: function (data) {
+                        var result;
+                        if (!data || data.length === 0) {
+                            result = [{
+                                CustomerCode: 'No records found.',
+                                CustomerName: ""
+                            }];
+                        } else {
+                            result = data;
+                        }
+                        response(result);
+                    }
+                });
+            }
+        });
+
+    });
+
+    $("#drptype").change(function () {
+        $(".labeltype").html($("#drptype").val());
+        $("#txtcustomer").val("");
+        $("#selectedUserId").val("0");
+    });
+
+    function AppendTR() {
+        var trCount = $("#itemtable tbody tr").length;
+        var str = "<tr>";
+        str += "<td><input type='hidden' value='0' class='hdnItemId'/><input type='Text' value='' id='txtgriditemname' style='width: 200px;' placeholder='Search item...' class='txtItemName approvalcheck form-control'></input></td>";
+        str += "<td><input type='Text' value='' style='width: 125px;' class='txtItemCode Item approvalcheck form-control' disabled></input></td>";
+        //str += "<td><input type='Text' value='' style='width: 100px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtQuantity Item approvalcheck form-control'></input></td>";
+        str += "<td><input type='Text' value='' style='width: 100px;' class='txtUnit Item approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='' style='width: 100px;' class='txtPackage Item approvalcheck form-control'></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtRate Item approvalcheck form-control'></input></td>";
+        str += "<td class='text-center'><button class='addrow btn btn-success btn-xs' title='add row' type='button' aria-label='addRow'><i class='fa fa-plus'></i></button> <button class='delrow btn btn-danger btn-xs' title='Remove this row' type='button' aria-label='addRow'><i class='fa fa-times'></i></button></td>";
+        str += "</tr>";
+        $('#itemtable').append(str);
+        var rowCount = $('#itemtable >tbody >tr').length;
+        var str = 'txtgriditemname' + rowCount + getAppRandomNumber();
+        var transactiondate = $('#itemtable tr:last').find('.txtItemName').attr('id', str);
+        gridAutocomplete('#' + str);
+    }
+
+    function gridAutocomplete(selector) {
+        $(selector).mcautocomplete({
+            showHeader: true,
+            columns: [{
+                name: 'Code',
+                width: '150px',
+                valueField: 'ItemCode'
+            }, {
+                name: 'Name',
+                width: '150px',
+                valueField: 'ItemName'
+            }, {
+                name: 'Unit',
+                width: '100px',
+                valueField: 'Unit'
+            }, {
+                name: 'Rate',
+                width: '80px',
+                valueField: 'Rate'
+            }],
+            select: function (event, ui) {
+                this.value = (ui.item ? ui.item.ItemName : '');
+                $(selector).closest('tr').find(".hdnItemId").val(ui.item.ItemId);
+                $(selector).closest('tr').find(".txtItemCode").val(ui.item.ItemCode);
+                $(selector).closest('tr').find(".txtUnit").val(ui.item.Unit);
+                $(selector).closest('tr').find(".txtRate").val(ui.item.Rate);
+                // $("#selectedUserId").html(ui.item.ItemId);
+                return false;
+            },
+            change: function (event, ui) {
+                if (!ui.item) {
+                    this.value = "";
+                    $(selector).closest('tr').find(".hdnItemId").val("0");
+                    $(selector).closest('tr').find(".txtItemCode").val("");
+                    $(selector).closest('tr').find(".txtUnit").val("");
+                    $(selector).closest('tr').find(".txtRate").val("");
+                }
+            },
+            minLength: 1,
+            source: function (request, response) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Master/Master/getAutocomplteItemList",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ 'prefix':'" + request.term + "'}",
+                    success: function (data) {
+                        var result;
+                        if (!data || data.length === 0) {
+                            result = [{
+                                ItemCode: 'No records found.',
+                                ItemName: "",
+                                Unit: "",
+                                Rate: ""
+                            }];
+                        } else {
+                            result = data;
+                        }
+                        response(result);
+                    }
+                });
+            }
+        });
+    }
+
+    $("#btnSave").click(function () {
+        var selectedUserId = $("#selectedUserId").val();
+        var CustomerType = $("#drptype").val();
+        var ItemMappingId = $("#ItemMappingId").val();
+        var vaild = true;
+        $(".errorCustomer").addClass("hidden");
+        $(".divitemerrormessage").addClass("hidden");
+
+        if (selectedUserId == "" || selectedUserId == "0") {
+            $(".errorCustomer").removeClass("hidden");
+            vaild = false;
+        }
+
+        var objItemMapping = {
+            ItemMappingId: ItemMappingId,
+            CustomerId: selectedUserId,
+            CustomerType: CustomerType,
+            IsActive: 1,
+            Createdby: 0,
+            Createdon: null,
+            Modifiedby: null,
+            Modifiedon: null
+        };
+      
+        var objModel = {};
+        objModel.itemMappingModel = objItemMapping;
+        objModel.subItemMappingList = [];
+        var itemDetailsCount = $("#itemtable tbody tr").length;
+        var itemDetailsTable = $("#itemtable").find('tbody tr');
+        var isValid = checkvalidation();
+        if (isValid == false) {
+            vaild = isValid;
+            $(".divitemerrormessage").removeClass("hidden").html("Marked * field are mandatory");
+        }
+        if (!vaild) {
+            return;
+        }
+        var totalItems = [];
+        if (itemDetailsCount > 0) {
+            $(itemDetailsTable).each(function (i, v) {
+
+                var ItemId = $(v).find('.hdnItemId').val();
+                var txtItemCode = $(v).find('.txtItemCode').val();
+                var txtPackage = $(v).find('.txtPackage').val();
+                var txtRate = $(v).find('.txtRate').val();
+                if (txtPackage == undefined) {
+                    txtPackage = "";
+                }
+                totalItems.push(ItemId);
+                var objExp = {
+                    SubItemMappingId: 0,
+                    ItemMappingId: ItemMappingId,
+                    ItemId: ItemId,
+                    CustomerItemCode: txtItemCode,
+                    Package: txtPackage,
+                    Rate: txtRate,
+                    IsActive: 1,
+                    Createdby: 0,
+                    Createdon: null,
+                    Modifiedby: null,
+                    Modifiedon: null
+                };
+                objModel.subItemMappingList.push(objExp);
+            });
+        }
+
+        var uinqItem = [];
+        $.each(totalItems, function (i, el) {
+            if ($.inArray(el, uinqItem) == -1) {
+                uinqItem.push(el);
+            }
+        });
+        if (uinqItem.length != itemDetailsCount) {
+            $(".divitemerrormessage").removeClass("hidden").html("Duplicate items found.");
+            return;
+        }
+
+        $.ajax({
+            url: "/Master/Master/SaveItemMapping",
+            contentType: 'application/json',
+            cache: false,
+            type: "post",
+            traditional: true,
+            async: true,
+            data: JSON.stringify({ model: objModel }),
+            success: function (response) {
+                if (response.success == true) {
+                    $(".divsuccess").removeClass("hidden");
+                    $(".divsuccess").html(response.message);
+                    window.setTimeout(function () {
+                        $(".divsuccess").addClass("hidden")
+                    }, 5000);
+                    ItemmapList();
+                    refreshScreen();
+                } else {
+                    $(".diverror").removeClass("hidden");
+                    $(".diverror").html(response.message);
+                    window.setTimeout(function () {
+                        $(".diverror").addClass("hidden")
+                    }, 5000);
+                }
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+
+    });
+
+    function refreshScreen() {
+        $("#selectedUserId").val("0");
+        $("#ItemMappingId").val("0");
+        $("#itemtable tbody tr").remove();
+        $(".labeltype").html($("#drptype").val());
+        $("#txtcustomer").val("");
+        AppendTR();
+    }
+
+    $("#btnCancel").click(function () {
+
+        refreshScreen();
+    });
+
+    function checkvalidation() {
+        var formCollectionResult = {};
+        formCollectionResult.itemsubtransaction = [];
+        var familyDetailsCount = $("#itemtable tbody tr").length;
+        var familyDetailsTable = $("#itemtable").find('tbody tr');
+        var isValid = true;
+        $(familyDetailsTable).each(function (i, v) {
+            if ($(v).find('.txtItemName').val() === "") {
+                isValid = false;
+            }
+            if ($(v).find('.hdnItemId').val() === "0") {
+                isValid = false;
+            }
+            //if ($(v).find('.txtQuantity').val() === "") {
+            //    isValid = false;
+            //}
+            if ($(v).find('.txtRate').val() === "") {
+                isValid = false;
+            } else if (!checkIsNumber($(v).find('.txtRate').val())) {
+                isValid = false;
+            }
+        });
+        return isValid;
+    }
+
+    $("#itemtable tbody").on('click', '.addrow', function () {
+        var isValid = checkvalidation();
+        if (isValid) {
+            AppendTR();
+        }
+        else {
+            $(".divitemerrormessage").removeClass("hidden").html("Marked * field are mandatory");
+            window.setTimeout(function () {
+                $(".divitemerrormessage").addClass("hidden")
+            }, 5000);
+        }
+    });
+
+    $("#itemtable tbody").on('click', '.delrow', function () {
+        if ($(this).parent().parent()[0].rowIndex > 1) {
+            $(this).parents('tr').remove();
+        } else if ($("#itemtable tbody tr").length > 1) {
+            $(this).parent().parent().remove();
+        }
+
+    });
+
+    function ItemmapList() {
+        $.ajax({
+            url: "/Master/Master/GetItemMapList",
+            type: "POST",
+            data: {},
+            datatype: "json",
+            cache: false,
+            success: function (data) {
+                debugger;
+
+                $('#tblitemmaplist').DataTable(
+{
+    data: data,
+    "aoColumns": [
+
+
+        {
+            title: "Type",
+            data: "CustomerType",
+            "sWidth": "20%",
+            "bSortable": true
+        },
+          {
+              title: "Name",
+              data: "CustomerName",
+              "sWidth": "20%",
+              "bSortable": true
+          },
+        {
+            title: "Item Count", data: "", "sWidth": "10%", "bSortable": false, "sClass": "text-center",
+            "render": function (data, type, row) {
+
+                return "<a style='cursor:pointer;color: #20a8d8;text-decoration: underline;' class='action' onclick='itemListModel(" + row.ItemMappingId + ")'>" + row.ItemCount + "</a>";
+
+            }
+
+        },
+
+        {
+            title: "Action", data: "", "sWidth": "10%", "bSortable": false, "sClass": "text-center",
+            "render": function (data, type, row) {
+
+                return "<span style='cursor:pointer;'class='fa fa-pencil action' onclick='EditItem(" + row.ItemMappingId + ")' class='btn btn-primary'aria-hidden='true' title='Edit'></span>" + " " + "<span style='cursor:pointer;' class='fa fa-trash-o' onclick='DeleteItem(" + row.ItemMappingId + ")' class='btn btn-primary' aria-hidden='true' title='Delete'></span>";
+
+            }
+
+        }
+    ],
+
+    "bProcessing": true,
+    "bDestroy": true,
+    "bPaginate": true,
+    "bAutoWidth": true,
+    "bFilter": true,
+    "bInfo": true,
+    "bJQueryUI": false,
+    "lengthMenu": [[10, 25, 50, 100, 250, -1], [10, 25, 50, 100, 250, "All"]],
+    "iDisplayLength": 10,
+    "aaSorting": [[1, "asc"]],
+    "colReorder": true,
+    "responsive": true,
+    dom: 'fltip',
+    "buttons": [
+        {
+            text: "Export to Excel",
+            filename: "Item",
+            extend: "excelHtml5",
+            exportOptions: { columns: [0, 1, 2] }
+        }
+    ]
+});
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+    }
+
+    function itemListModel(mapid) {
+        $.ajax({
+            url: "/Master/Master/GetItemMapping",
+            type: "POST",
+            data: { itemMappingId: mapid },
+            cache: false,
+            success: function (result) {
+                $('#ViewItemModel').modal({
+                    backdrop: 'static',
+                    keyboard: true,
+                    show: true
+                });
+
+                $('#tblviewitemlist').DataTable(
+{
+    data: result.subItemMappingList,
+    "aoColumns": [
+
+
+        {
+            title: "Item Code",
+            data: "CustomerItemCode",
+            "sWidth": "20%",
+            "bSortable": true
+        },
+          {
+              title: "Item  Name",
+              data: "ItemName",
+              "sWidth": "20%",
+              "bSortable": true
+          },
+          {
+              title: "Unit",
+              data: "Unit",
+              "sWidth": "20%",
+              "bSortable": true
+          },
+          {
+              title: "Package",
+              data: "Package",
+              "sWidth": "20%",
+              "bSortable": true
+          },
+          {
+              title: "Rate",
+              data: "Rate",
+              "sWidth": "20%",
+              "bSortable": true
+          }
+    ],
+
+    "bProcessing": true,
+    "bDestroy": true,
+    "bPaginate": true,
+    "bAutoWidth": true,
+    "bFilter": true,
+    "bInfo": true,
+    "bJQueryUI": false,
+    "lengthMenu": [[10, 25, 50, 100, 250, -1], [10, 25, 50, 100, 250, "All"]],
+    "iDisplayLength": 10,
+    "aaSorting": [[1, "asc"]],
+    "colReorder": true,
+    "responsive": true,
+    dom: 'fltip',
+    "buttons": [
+        {
+            text: "Export to Excel",
+            filename: "Item",
+            extend: "excelHtml5",
+            exportOptions: { columns: [0, 1, 2, 3, 4] }
+        }
+    ]
+});
+
+
+            }
+
+        });
+    }
+
+    function EditItem(ItemId) {
+        $.ajax({
+            url: "/Master/Master/GetItemMapping",
+            type: "POST",
+            data: { itemMappingId: ItemId },
+            cache: false,
+            success: function (result) {
+                refreshScreen();
+                $("#drptype").val(result.itemMapping.CustomerType);
+                $("#selectedUserId").val(result.itemMapping.CustomerId);
+                $("#ItemMappingId").val(result.itemMapping.ItemMappingId);
+                $("#txtcustomer").val(result.itemMapping.CustomerName);
+                $("#itemtable tbody tr").remove();
+                for (var columnCt = 0; columnCt < result.subItemMappingList.length; columnCt++) {
+                    AppendTR();
+                }
+                var itemDetailsCount = $("#itemtable tbody tr").length;
+                var itemDetailsTable = $("#itemtable").find('tbody tr');
+
+                if (itemDetailsCount > 0) {
+                    $(itemDetailsTable).each(function (i, v) {
+                                  
+                        $(v).find('.hdnItemId').val(result.subItemMappingList[i].ItemId);
+                        $(v).find('.txtItemCode').val(result.subItemMappingList[i].CustomerItemCode);
+                        $(v).find('.txtPackage').val(result.subItemMappingList[i].Package);
+                        $(v).find('.txtRate').val(result.subItemMappingList[i].Rate);
+                        $(v).find('.txtUnit').val(result.subItemMappingList[i].Unit);
+                        $(v).find('.txtItemName').val(result.subItemMappingList[i].ItemName);
+                    });
+                }
+            }
+
+        });
+
+    }
+
+    function DeleteItem(ItemId) {
+
+        $("#DeleteModal").modal("show");
+        $("#ItemMappingId").val(ItemId);
+    }
+    $("#confirmno").click(function () {
+        refreshScreen();
+    });
+
+
+    $("#confirmdelete").click(function () {
+
+
+        $("#DeleteModal").modal("hide");
+
+        var id = $("#ItemMappingId").val();
+
+        $.ajax({
+            url: "/Master/Master/DeleteItemMapping",
+            type: "POST",
+            data: {
+                itemID: id
+            },
+            datatype: "json",
+            cache: false,
+            success: function (data) {
+                ItemmapList();
+                refreshScreen();
+                $("#DeleteModal").modal("hide");
+                $(".divssuccess").removeClass("hidden");
+                $(".successmessage").html("Deleted successfully.");
+                window.setTimeout(function () {
+                    $(".divssuccess").addClass("hidden")
+                }, 5000);
+            }
+
+
+        });
+
+
+
+
+
+
+    });
+
+</script>
+}

@@ -1,0 +1,946 @@
+﻿@{
+    ViewBag.Title = "GRN";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+@section styles{
+
+    <script type="text/javascript" src="js/script.js"></script>
+
+<style>
+    .textarea {
+        min-height: 62px !important;
+        max-height: 62px !important;
+    }
+</style>
+
+}
+
+
+
+
+<div class="row">
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+        <a class="btn btn-success" href="/Transaction/Transaction/GRNList" title="GRN List">GRN List</a>
+    </div>
+</div>
+</br>
+
+<div class="card border-primary">
+    <div class="card-body">
+  <div class="alert alert-success text-center divsuccess hidden">
+        </div>
+        <div class="alert alert-danger text-center diverror hidden">
+        </div>
+
+        <div class="row">
+            <div class="col-md-12"></div>
+            <div class="col-md-2">
+
+                <label><b>GRN NO</b></label>
+            </div>
+
+            <div class="col-md-4">
+                <input type="text" value="" class="form-control" id="txtGRNNo" disabled />
+            </div>
+            <div class="col-md-2">
+
+                <label><b>GRN Date</b><span style="color: red;"> *</span></label>
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                    </div>
+                    <input type="text" id="txtGRNDate" onkeydown="return false;" class="form-control">
+                    <div class="errorGRNDate custom-error hidden">
+                        <p style="color: red;" class="help-block">
+                            Select GRN Date
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-md-12"></div>
+            <div class="col-md-2">
+
+                <label><b>PO NO</b><span style="color: red;"> *</span></label>
+            </div>
+
+            <div class="col-md-4">
+                <input type="hidden" id="hdnGRNId" value="0" />
+                <input type="hidden" id="selectedPOId" value="0" />
+                <input class="form-control" id="txtPONO" type="text" placeholder="Search...">
+                <div class="errorPONO custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Choose PO NO
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-2">
+
+                <label><b>PO Date</b></label>
+            </div>
+            <div class="col-md-4">
+
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                    </div>
+                    <input type="text" id="txtPODate" onkeydown="return false;" class="form-control" disabled />
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+
+            <div class="col-md-2">
+
+                <label><b>Supplier</b></label>
+            </div>
+
+            <div class="col-md-4">
+                <input type="hidden" id="selectedSupplierId" value="0" />
+                <input class="form-control" id="txtSupplierName" type="text" placeholder="" disabled />
+            </div>
+            <div class="col-md-2">
+
+                <label><b>GateInward Date</b><span style="color: red;"> *</span></label>
+            </div>
+            <div class="col-md-4">
+
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                    </div>
+                    <input type="text" id="txtGateInwardDate" onkeydown="return false;" class="form-control">
+                    <div class="errorGateInwardDate custom-error hidden">
+                        <p style="color: red;" class="help-block">
+                            Select GateInward Date
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-md-2">
+
+                <label><b>Requested By</b><span style="color: red;"> *</span></label>
+            </div>
+
+            <div class="col-md-4">
+                <input type="text" value="" class="form-control" id="txtRequestedBy" />
+                <div class="errorRequestedBy custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Enter Requested By
+                    </p>
+                </div>
+
+            </div>
+            <div class="col-md-2">
+
+                <label><b>GRN TYPE</b><span style="color: red;"> *</span></label>
+            </div>
+            <div class="col-md-4">
+
+                <select class="form-control" name="drpGRNType" id="drpGRNType" tabindex="-1" aria-hidden="true">
+
+
+                    <option value="">-Select-</option>
+                    <option value="Customer">GRN TYPE1</option>
+                    <option value="Supplier">GRN TYPE2</option>
+                </select>
+                <div class="errorGRNType custom-error hidden">
+                    <p style="color: red;" class="help-block">
+                        Selecct GRN Type
+                    </p>
+                </div>
+            </div>
+        </div>
+        <br />
+
+
+        <div class="row">
+            <div class="col-md-2">
+
+                <label><b>Supplier Invoice NO</b></label>
+            </div>
+
+            <div class="col-md-4">
+                <input type="text" value="" class="form-control" id="txtSuppInvoiceNo" />
+                <!-- Dropdown List Option -->
+
+            </div>
+            <div class="col-md-2">
+
+                <label><b>Supplier Invoice Date</b></label>
+            </div>
+            <div class="col-md-4">
+
+                <input type="text" value="" class="form-control" id="txtSuppInvoiceDate" />
+            </div>
+        </div>
+        <br />
+
+
+
+        <div class="row">
+            <div class="col-md-2">
+
+                <label><b>Supplier Invoice File</b></label>
+            </div>
+
+            <div class="col-md-4">
+                <input type="file" value="" class="form-control" id="txtSuppInvoicefile" />
+
+
+            </div>
+
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-danger text-center divitemerrormessage hidden">
+                </div>
+                <div class="mappingdiv" style="overflow-x: scroll; position: relative;">
+
+
+                    <table id="itemtable" width="100%" class="display table table-striped table-bordered dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Item Name <span style="color: red">*</span></th>
+                                <th class="text-center">Unit </th>
+                                <th class="text-center">Quantity <span style="color: red">*</span></th>
+                                <th class="text-center">Rate  <span style="color: red">*</span></th>
+                                <th class="text-center">SGST %</th>
+                                <th class="text-center">SGST Amount</th>
+                                <th class="text-center">CGST %</th>
+                                <th class="text-center">CGST Amount</th>
+                                <th class="text-center">IGST %</th>
+                                <th class="text-center">IGST Amount</th>
+                                <th class="text-center">Total</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
+                <label><b>Sub Total:</b></label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" value="0.00" id="txtSubTotal" disabled />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
+                <label><b>CGST:</b></label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" value="0.00" id="txtCGST" disabled />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
+                <label><b>SGST:</b></label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" value="0.00" id="txtSGST" disabled />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
+                <label><b>IGST:</b></label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" value="0.00" id="txtIGST" disabled />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2 text-right">
+                <label><b>Total:</b></label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" value="0.00" id="txtTotal" disabled />
+            </div>
+        </div>
+
+        <br />
+
+
+        <div class="pull-right btnRequest">
+            <div class="btn btn-success " id="btnSave" title="Submit">Submit</div>
+            <div class="btn btn-warning " title="Cancel" id="btnCancel">Cancel</div>
+
+        </div>
+
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        $(function () {
+            $("#txtGRNDate").datepicker().datepicker("setDate", new Date());
+            $("#txtGateInwardDate").datepicker();
+
+        });
+    </script>
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        var GRNId = getQueryString("GRNId");
+        if (GRNId != null) {
+            EditGRN(GRNId);
+        } else {
+            getAccountYear();
+            AppendTR();
+        }
+        $("#txtPONO").mcautocomplete({
+            showHeader: true,
+            columns: [{
+                name: 'PO NO',
+                width: '150px',
+                valueField: 'PONo'
+            }, {
+                name: 'PO Date',
+                width: '150px',
+                valueField: 'PODate'
+            }, {
+                name: 'Supplier Name',
+                width: '150px',
+                valueField: 'SupplierName'
+            }],
+            select: function (event, ui) {
+                this.value = (ui.item ? ui.item.PONo : '');
+                $("#selectedPOId").val(ui.item.POId);
+                $("#txtPODate").val(ui.item.PODate);
+                $("#selectedSupplierId").val(ui.item.SupplierId);
+                $("#txtSupplierName").val(ui.item.SupplierName);
+                $("#itemtable tbody tr").remove();
+                AppendTR();
+                return false;
+            },
+            change: function (event, ui) {
+                if (!ui.item) {
+                    this.value = "";
+                    $("#selectedPOId").val("0");
+                    $("#txtPODate").val("");
+                    $("#selectedSupplierId").val("0");
+                    $("#txtSupplierName").val("");
+                    $("#itemtable tbody tr").remove();
+                    AppendTR();
+                }
+            },
+            minLength: 1,
+            source: function (request, response) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Transaction/Transaction/GetPendingGRNPO",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ 'type':'Supplier','prefix':'" + request.term + "'}",
+                    success: function (data) {
+                        var result;
+                        if (!data || data.length === 0) {
+                            result = [{
+                                PONo: 'No records found.',
+                                PODate: "",
+                                SupplierId: "0",
+                                SupplierName: ""
+                            }];
+                        } else {
+                            result = data;
+                        }
+                        response(result);
+                    }
+                });
+            }
+        });
+
+    });
+
+    function EditGRN(grnid) {
+        $.ajax({
+            url: "/Transaction/Transaction/GetGRNById",
+            type: "GET",
+            data: { GRNId: grnid },
+            cache: false,
+            success: function (result) {
+                $("#hdnGRNId").val(result.GRNModel.GRNId);
+                $("#txtGRNNo").val(result.GRNModel.GRNNO);
+                $("#txtGRNDate").val(moment(result.GRNModel.GRNDate).format("MM/DD/YYYY"));
+                if (result.GRNModel.PODate != null) {
+                    $("#txtPODate").val(moment(result.GRNModel.PODate).format("MM/DD/YYYY"));
+                } else {
+                    $("#txtPODate").val("");
+                }
+
+                $("#selectedPOId").val(result.GRNModel.POId);
+                $("#txtPONO").val(result.GRNModel.PONO);
+                $("#selectedSupplierId").val(result.GRNModel.SupplierId);
+                $("#txtSupplierName").val(result.GRNModel.SupplierName);
+                if (result.GRNModel.GateInwardDate != null) {
+                    $("#txtGateInwardDate").val(moment(result.GRNModel.GateInwardDate).format("MM/DD/YYYY"));
+                } else {
+                    $("#txtGateInwardDate").val("");
+                }
+                $("#txtRequestedBy").val(result.GRNModel.RequestBy);
+                $("#drpGRNType").val(result.GRNModel.GRNType);
+                $("#txtSuppInvoiceNo").val(result.GRNModel.SuppInvoiceNo);
+                $("#txtSuppInvoiceDate").val(result.GRNModel.SuppInvoiceDate);
+                $("#txtSuppInvoicefile").val(result.GRNModel.SuppInvoiceFile);
+                $("#txtSubTotal").val(result.GRNModel.SubTotal);
+                $("#txtCGST").val(result.GRNModel.CGST);
+                $("#txtSGST").val(result.GRNModel.SGST);
+                $("#txtIGST").val(result.GRNModel.IGST);
+                $("#txtTotal").val(result.GRNModel.Total);
+
+
+                $("#itemtable tbody tr").remove();
+                for (var columnCt = 0; columnCt < result.GRNItemModel.length; columnCt++) {
+                    AppendTR();
+                }
+                var itemDetailsCount = $("#itemtable tbody tr").length;
+                var itemDetailsTable = $("#itemtable").find('tbody tr');
+
+                if (itemDetailsCount > 0) {
+                    $(itemDetailsTable).each(function (i, v) {
+
+                        $(v).find('.hdnItemId').val(result.GRNItemModel[i].ItemId);
+                        $(v).find('.txtquantity').val(result.GRNItemModel[i].Quantity);
+                        $(v).find('.txtcgstpers').val(result.GRNItemModel[i].CGSTPer);
+                        $(v).find('.txtcgstvalue').val(result.GRNItemModel[i].CGSTAmount);
+                        $(v).find('.txtSgstpers').val(result.GRNItemModel[i].SGSTPer);
+                        $(v).find('.txtsgstvalue').val(result.GRNItemModel[i].SGSTAmount);
+                        $(v).find('.txtigstpers').val(result.GRNItemModel[i].IGSTPer);
+                        $(v).find('.txtigstvalue').val(result.GRNItemModel[i].IGSTAmount);
+                        $(v).find('.txttotal').val(result.GRNItemModel[i].Total);
+                        $(v).find('.txtRate').val(result.GRNItemModel[i].Rate);
+                        $(v).find('.txtunit').val(result.GRNItemModel[i].Unit);
+                        $(v).find('.txtItemName').val(result.GRNItemModel[i].ItemName);
+                    });
+                }
+                gridCalculation();
+            }
+
+        });
+    }
+
+    function AppendTR() {
+        var trCount = $("#itemtable tbody tr").length;
+        var str = "<tr>";
+        str += "<td><input type='hidden' value='0' class='hdnItemId'/><input type='Text' value='' id='txtgriditemname' style='width: 200px;' placeholder='Search item...' class='txtItemName approvalcheck form-control'></input></td>";
+        str += "<td><input type='Text' value='' style='width: 125px;' class='txtunit Item approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='0' style='width: 125px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtquantity gridCalculation Item approvalcheck form-control'></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtRate  gridCalculation approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtcgstpers gridCalculation approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txtcgstvalue  approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' onkeypress='return validateFloatKeyPress(this,event);' class='txtSgstpers gridCalculation approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txtsgstvalue  approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;'onkeypress='return validateFloatKeyPress(this,event);' class='txtigstpers gridCalculation approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txtigstvalue  approvalcheck form-control' disabled></input></td>";
+        str += "<td><input type='Text' value='0.00' style='width: 100px;' class='txttotal  approvalcheck form-control' disabled></input></td>";
+        str += "<td class='text-center'><button class='addrow btn btn-success btn-xs' title='add row' type='button' aria-label='addRow'><i class='fa fa-plus'></i></button> <button class='delrow btn btn-danger btn-xs' title='Remove this row' type='button' aria-label='addRow'><i class='fa fa-times'></i></button></td>";
+        str += "</tr>";
+        $('#itemtable').append(str);
+        var rowCount = $('#itemtable >tbody >tr').length;
+        var str = 'txtgriditemname' + rowCount + getAppRandomNumber();
+        var transactiondate = $('#itemtable tr:last').find('.txtItemName').attr('id', str);
+        gridAutocomplete('#' + str);
+        $(".gridCalculation").change(function () {
+            gridCalculation();
+        });
+    }
+
+    function gridAutocomplete(selector) {
+        $(selector).mcautocomplete({
+            showHeader: true,
+            columns: [{
+                name: 'Code',
+                width: '150px',
+                valueField: 'ItemCode'
+            }, {
+                name: 'Name',
+                width: '150px',
+                valueField: 'ItemName'
+            }, {
+                name: 'Unit',
+                width: '100px',
+                valueField: 'Unit'
+            }, {
+                name: 'Quantity',
+                width: '80px',
+                valueField: 'Quantity'
+            }, {
+                name: 'Rate',
+                width: '80px',
+                valueField: 'Rate'
+            }],
+            select: function (event, ui) {
+                this.value = (ui.item ? ui.item.ItemName : '');
+                $(selector).closest('tr').find(".hdnItemId").val(ui.item.ItemId);
+                $(selector).closest('tr').find(".txtunit").val(ui.item.Unit);
+                $(selector).closest('tr').find(".txtRate").val(ui.item.Rate);
+                $(selector).closest('tr').find(".txtquantity").val(ui.item.Quantity);
+                $(selector).closest('tr').find(".txtcgstpers").val(ui.item.CGSTPer);
+                $(selector).closest('tr').find(".txtSgstpers").val(ui.item.SGSTPer);
+                $(selector).closest('tr').find(".txtigstpers").val(ui.item.IGSTPer);
+                gridCalculation();
+                return false;
+            },
+            change: function (event, ui) {
+                if (!ui.item) {
+                    this.value = "";
+                    $(selector).closest('tr').find(".hdnItemId").val("0");
+                    $(selector).closest('tr').find(".txtunit").val("");
+                    $(selector).closest('tr').find(".txtRate").val("0.00");
+                    $(selector).closest('tr').find(".txtquantity").val("0.00");
+                    $(selector).closest('tr').find(".txtcgstpers").val("0.00");
+                    $(selector).closest('tr').find(".txtSgstpers").val("0.00");
+                    $(selector).closest('tr').find(".txtigstpers").val("0.00");
+                }
+            },
+            minLength: 1,
+            source: function (request, response) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Transaction/Transaction/GetPendingGRNPOItem",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ 'POId':'" + $('#selectedPOId').val() + "','prefix':'" + request.term + "'}",
+                    success: function (data) {
+                        var result;
+                        if (!data || data.length === 0) {
+                            result = [{
+                                ItemCode: 'No records found.',
+                                ItemName: "",
+                                Unit: "",
+                                Rate: "0.00",
+                                Quantity: "0.00",
+                                CGSTPer: "0.00",
+                                SGSTPer: "0.00",
+                                IGSTPer: "0.00"
+                            }];
+                        } else {
+                            result = data;
+                        }
+                        response(result);
+                    }
+                });
+            }
+        });
+    }
+
+    $("#btnCancel").click(function () {
+
+        window.location = "/Transaction/Transaction/GRN";
+    });
+
+    function checkvalidation() {
+        var formCollectionResult = {};
+        formCollectionResult.timesubtransaction = [];
+        var familyDetailsCount = $("#itemtable tbody tr").length;
+        var familyDetailsTable = $("#itemtable").find('tbody tr');
+        var isValid = true;
+        $(familyDetailsTable).each(function (i, v) {
+            if ($(v).find('.txtItemName').val() == "") {
+                isValid = false;
+            }
+            if ($(v).find('.hdnItemId').val() == "0") {
+                isValid = false;
+            }
+            if ($(v).find('.txtquantity').val() === "") {
+                isValid = false;
+            } else if (!checkIsNumber($(v).find('.txtquantity').val())) {
+                isValid = false;
+            } else if (checkIsZero($(v).find('.txtquantity').val())) {
+                isValid = false;
+            }
+            if ($(v).find('.txtRate').val() === "") {
+                isValid = false;
+            } else if (!checkIsNumber($(v).find('.txtRate').val())) {
+                isValid = false;
+            } else if (checkIsZero($(v).find('.txtRate').val())) {
+                isValid = false;
+            }
+        });
+        return isValid;
+    }
+
+    function gridCalculation() {
+        if (checkvalidation() == true) {
+            var OverAllSubTotal = parseFloat(0.00);
+            var OverAllCGST = parseFloat(0.00);
+            var OverAllSGST = parseFloat(0.00);
+            var OverAllIGST = parseFloat(0.00);
+            var OverAllTotal = parseFloat(0.00);
+
+            var familyDetailsCount = $("#itemtable tbody tr").length;
+            var familyDetailsTable = $("#itemtable").find('tbody tr');
+            $(familyDetailsTable).each(function (i, v) {
+                var qty = $(v).find('.txtquantity').val();
+                var rate = $(v).find('.txtRate').val();
+                var sgstper = $(v).find('.txtSgstpers').val();
+                var cgstper = $(v).find('.txtcgstpers').val();
+                var igstper = $(v).find('.txtigstpers').val();
+                rate = parseFloat(rate);
+                var total = 0.00;
+                var subtotal = qty * rate;
+                OverAllSubTotal += parseFloat(subtotal);
+                if (sgstper == "") {
+                    sgstper = "0.00";
+                    $(v).find('.txtSgstpers').val(sgstper);
+                }
+                if (cgstper == "") {
+                    cgstper = "0.00";
+                    $(v).find('.txtcgstpers').val(cgstper);
+                }
+                if (igstper == "") {
+                    igstper = "0.00";
+                    $(v).find('.txtigstpers').val(igstper);
+                }
+                sgstper = parseFloat(sgstper);
+                cgstper = parseFloat(cgstper);
+                igstper = parseFloat(igstper);
+                var cgstvalue = subtotal * (cgstper.toFixed(2) / 100.00);
+                var sgstvalue = subtotal * (sgstper.toFixed(2) / 100.00);
+                var igstvalue = subtotal * (igstper.toFixed(2) / 100.00);
+                total = subtotal + cgstvalue + sgstvalue + igstvalue;
+                total = parseFloat(total);
+                OverAllCGST += parseFloat(cgstvalue);
+                OverAllSGST += parseFloat(sgstvalue);
+                OverAllIGST += parseFloat(igstvalue);
+                OverAllTotal += parseFloat(total);
+
+                $(v).find('.txtcgstvalue').val(cgstvalue.toFixed(2));
+                $(v).find('.txtsgstvalue').val(sgstvalue.toFixed(2));
+                $(v).find('.txtigstvalue').val(igstvalue.toFixed(2));
+                $(v).find('.txttotal').val(total.toFixed(2));
+
+            });
+
+            $("#txtSubTotal").val(OverAllSubTotal.toFixed(2));
+            $("#txtCGST").val(OverAllCGST.toFixed(2));
+            $("#txtSGST").val(OverAllSGST.toFixed(2));
+            $("#txtIGST").val(OverAllIGST.toFixed(2));
+            $("#txtTotal").val(OverAllTotal.toFixed(2));
+            TotalCalculation();
+        }
+    }
+
+    function TotalCalculation() {
+
+    }
+
+    $("#itemtable tbody").on('click', '.addrow', function () {
+        var isValid = checkvalidation();
+        if (isValid) {
+
+            AppendTR();
+        }
+        else {
+            $(".divitemerrormessage").removeClass("hidden").html("Marked * field are mandatory");
+            window.setTimeout(function () {
+                $(".divitemerrormessage").addClass("hidden")
+            }, 5000);
+        }
+
+
+    });
+
+    $("#itemtable tbody").on('click', '.delrow', function () {
+        if ($(this).parent().parent()[0].rowIndex > 1) {
+            $(this).parents('tr').remove();
+            gridCalculation();
+            //var table = $('#customertable').DataTable();
+            //table.row($(this).parents('tr')).remove().draw();
+        } else if ($("#itemtable tbody tr").length > 1) {
+            $(this).parent().parent().remove();
+            gridCalculation();
+        }
+
+    });
+
+
+    function getAccountYear() {
+        $.ajax({
+            type: "POST",
+            url: "/Transaction/Transaction/GetCurrentGRNNo",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $("#txtGRNNo").val(data);
+            }
+        });
+    }
+
+    $("#btnSave").click(function () {
+        gridCalculation();
+        var hdnGRNId = $("#hdnGRNId").val();
+        var txtGRNNo = $("#txtGRNNo").val();
+        var txtGRNDate = $("#txtGRNDate").val();
+        var selectedPOId = $("#selectedPOId").val();
+        var txtPONO = $("#txtPONO").val();
+        var txtPODate = $("#txtPODate").val();
+        var selectedSupplierId = $("#selectedSupplierId").val();
+        var txtSupplierName = $("#txtSupplierName").val();
+        var txtGateInwardDate = $("#txtGateInwardDate").val();
+        var txtRequestedBy = $("#txtRequestedBy").val();
+        var drpGRNType = $("#drpGRNType").val();
+        var txtSubTotal = $("#txtSubTotal").val();
+        var txtCGST = $("#txtCGST").val();
+        var txtSGST = $("#txtSGST").val();
+        var txtIGST = $("#txtIGST").val();
+        var txtTotal = $("#txtTotal").val();
+        var txtSuppInvoiceNo = $("#txtSuppInvoiceNo").val();
+        var txtSuppInvoiceDate = $("#txtSuppInvoiceDate").val();
+        var txtSuppInvoicefile = $("#txtSuppInvoicefile").val();
+
+        var vaild = true;
+
+        $(".errorGRNDate").addClass("hidden");
+        $(".errorPONO").addClass("hidden");
+        $(".errorGateInwardDate").addClass("hidden");
+        $(".errorRequestedBy").addClass("hidden");
+        $(".errorGRNType").addClass("hidden");
+        $(".divitemerrormessage").addClass("hidden");
+
+        if (selectedPOId == "" || selectedPOId == "0") {
+            $(".errorPONO").removeClass("hidden");
+            vaild = false;
+        }
+        if (txtGRNDate == "") {
+            $(".errorGRNDate").removeClass("hidden");
+            vaild = false;
+        }
+        if (txtGateInwardDate == "") {
+            $(".errorGateInwardDate").removeClass("hidden");
+            vaild = false;
+        }
+        if (txtRequestedBy == "") {
+            $(".errorRequestedBy").removeClass("hidden");
+            vaild = false;
+        }
+
+        if (drpGRNType == "") {
+            $(".errorGRNType").removeClass("hidden");
+            vaild = false;
+        }
+
+
+        var objGRN = {
+            GRNId: hdnGRNId,
+            GRNDate: txtGRNDate,
+            AccountYear: "",
+            IncrementId: 0,
+            GRNNO: txtGRNNo,
+            POId: selectedPOId,
+            PODate: txtPODate,
+            GateInwardDate: txtGateInwardDate,
+            SupplierId: selectedSupplierId,
+            RequestBy: txtRequestedBy,
+            GRNType: drpGRNType,
+            SubTotal: txtSubTotal,
+            CGST: txtCGST,
+            SGST: txtSGST,
+            IGST: txtIGST,
+            Total: txtTotal,
+            SuppInvoiceNo: txtSuppInvoiceNo,
+            SuppInvoiceDate: txtSuppInvoiceDate,
+            SuppInvoiceFile: "",
+            IsActive: 1,
+            Createdby: 0,
+            Createdon: null,
+            Modifiedby: null,
+            Modifiedon: null,
+            CourierCharges: "0.00"
+        };
+
+        var objModel = {};
+        objModel.GRNModel = objGRN;
+        objModel.GRNSubItemList = [];
+        var itemDetailsCount = $("#itemtable tbody tr").length;
+        var itemDetailsTable = $("#itemtable").find('tbody tr');
+        var isValid = checkvalidation();
+        if (isValid == false) {
+            vaild = isValid;
+            $(".divitemerrormessage").removeClass("hidden").html("Marked * field are mandatory");
+        }
+        if (!vaild) {
+            return;
+        }
+
+        var totalItems = [];
+        if (itemDetailsCount > 0) {
+            $(itemDetailsTable).each(function (i, v) {
+
+                var ItemId = $(v).find('.hdnItemId').val();
+                var txtquantity = $(v).find('.txtquantity').val();
+                var txtRate = $(v).find('.txtRate').val();
+                var txtcgstpers = $(v).find('.txtcgstpers').val();
+                var txtcgstvalue = $(v).find('.txtcgstvalue').val();
+                var txtSgstpers = $(v).find('.txtSgstpers').val();
+                var txtsgstvalue = $(v).find('.txtsgstvalue').val();
+                var txtigstpers = $(v).find('.txtigstpers').val();
+                var txtigstvalue = $(v).find('.txtigstvalue').val();
+                var txttotal = $(v).find('.txttotal').val();
+
+                totalItems.push(ItemId);
+                var objExp = {
+                    SubGRNId: 0,
+                    GRNId: hdnGRNId,
+                    ItemId: ItemId,
+                    Quantity: txtquantity,
+                    Rate: txtRate,
+                    CGSTPer: txtcgstpers,
+                    CGSTAmount: txtcgstvalue,
+                    SGSTPer: txtSgstpers,
+                    SGSTAmount: txtsgstvalue,
+                    IGSTPer: txtigstpers,
+                    IGSTAmount: txtigstvalue,
+                    Total: txttotal,
+                    IsActive: 1,
+                    Createdby: 0,
+                    Createdon: null,
+                    Modifiedby: null,
+                    Modifiedon: null
+                };
+                objModel.GRNSubItemList.push(objExp);
+            });
+        }
+
+        var uinqItem = [];
+        $.each(totalItems, function (i, el) {
+            if ($.inArray(el, uinqItem) == -1) {
+                uinqItem.push(el);
+            }
+        });
+        if (uinqItem.length != itemDetailsCount) {
+            $(".divitemerrormessage").removeClass("hidden").html("Duplicate items found.");
+            return;
+        }
+
+        $.ajax({
+            url: "/Transaction/Transaction/SaveGRN",
+            contentType: 'application/json',
+            cache: false,
+            type: "post",
+            traditional: true,
+            async: true,
+            data: JSON.stringify({ model: objModel }),
+            success: function (response) {
+                if (response.success == true) {
+                    swal({
+                        title: "",
+                        text: response.message,
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-success",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+                                        function () {
+                                            window.location = "/Transaction/Transaction/GRN"
+                                        });
+                    //$(".divsuccess").removeClass("hidden");
+                    //$(".divsuccess").html(response.message);
+                    //window.setTimeout(function () {
+                    //    $(".divsuccess").addClass("hidden")
+                    //}, 5000);
+                    ////ItemmapList();
+                    //refreshScreen();
+                    //window.location = "/Transaction/Transaction/GRN"
+                } else {
+                    //$(".diverror").removeClass("hidden");
+                    //$(".diverror").html(response.message);
+                    //window.setTimeout(function () {
+                    //    $(".diverror").addClass("hidden")
+                    //}, 5000);
+                    swal({
+                        title: "",
+                        text: response.message,
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+                                        function () {
+                                            
+                                        });
+                }
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+
+    });
+
+    function refreshScreen() {
+
+        $("#txtGRNDate").datepicker().datepicker("setDate", new Date());
+
+
+        $("#hdnGRNId").val("0");
+        $("#txtGRNNo").val("");
+
+        $("#selectedPOId").val("0");
+        $("#txtPONO").val("");
+        $("#txtPODate").val("");
+        $("#selectedSupplierId").val("0");
+        $("#txtSupplierName").val("");
+        $("#txtGateInwardDate").val("");
+        $("#txtRequestedBy").val("");
+        $("#drpGRNType").val("");
+        $("#txtSubTotal").val("0.00");
+        $("#txtCGST").val("0.00");
+        $("#txtSGST").val("0.00");
+        $("#txtIGST").val("0.00");
+        $("#txtTotal").val("0.00");
+        $("#txtSuppInvoiceNo").val("0.00");
+        $("#txtSuppInvoiceDate").val("0.00");
+        $("#txtSuppInvoicefile").val("0.00");
+
+        getAccountYear();
+        $("#itemtable tbody tr").remove();
+        AppendTR();
+    }
+
+
+</script>
+}
+
+
+

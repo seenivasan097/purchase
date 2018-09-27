@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Customer";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<div id="customerdetails" class="modal fade in" id="modal-default" style="display: none; padding-right: 17px;" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header btn-primary">
+                <button type="button" class="close" style="color: #ffffff; opacity: 1;" data-dismiss="modal" title="Close" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title"><span id="titlechange"></span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="modal-body">
+                    <div class="alert alertdanger alert-dismissible  fade in text-center hidden ValidationMessage">
+                    </div>
+                   <div class="card-body">
+                    <div class="form-group">
+                      <label for="company">Company</label>
+                      <input class="form-control" id="company" type="text" placeholder="Enter your company name">
+                    </div>
+                    <div class="form-group">
+                      <label for="vat">VAT</label>
+                      <input class="form-control" id="vat" type="text" placeholder="PL1234567890">
+                    </div>
+                    <div class="form-group">
+                      <label for="street">Street</label>
+                      <input class="form-control" id="street" type="text" placeholder="Enter street name">
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-8">
+                        <label for="city">City</label>
+                        <input class="form-control" id="city" type="text" placeholder="Enter your city">
+                      </div>
+                      <div class="form-group col-sm-4">
+                        <label for="postal-code">Postal Code</label>
+                        <input class="form-control" id="postal-code" type="text" placeholder="Postal Code">
+                      </div>
+                    </div>
+                    <!-- /.row-->
+                    <div class="form-group">
+                      <label for="country">Country</label>
+                      <input class="form-control" id="country" type="text" placeholder="Country name">
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="modal-footer ">
+                <div class="pull-right">
+                    <a button class="btn btn-warning " id="btncancel" data-dismiss="modal" title="Close">Close</a>
+                    <button button class="btn btn-success " id="btnsave"><span id="deletechange"></span></button>
+                </div>
+
+            </div>
+        </div>
+
+
+
+    </div>
+</div>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="287a606bfaa54ff0958565be67c6a675" Name="Diagram1" ZoomLevel="50" >
+        <EntityTypeShape EntityType="ApplicationModel.Customer" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ApplicationModel.Item" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ApplicationModel.ItemMapping" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ApplicationModel.SubItemMapping" Width="1.5" PointX="3.375" PointY="5.75" />
+        <EntityTypeShape EntityType="ApplicationModel.GRN" Width="1.5" PointX="4.75" PointY="10.25" />
+        <EntityTypeShape EntityType="ApplicationModel.ItemStockTran" Width="1.5" PointX="5" PointY="26.5" />
+        <EntityTypeShape EntityType="ApplicationModel.OpeningStock" Width="1.5" PointX="5" PointY="21.875" />
+        <EntityTypeShape EntityType="ApplicationModel.PurchaseOrder" Width="1.5" PointX="7.75" PointY="10.625" />
+        <EntityTypeShape EntityType="ApplicationModel.SubGRN" Width="1.5" PointX="7" PointY="0.75" />
+        <EntityTypeShape EntityType="ApplicationModel.SubPurchaseOrder" Width="1.5" PointX="10" PointY="0.75" />
+        <AssociationConnector Association="ApplicationModel.FK__GRN__SupplierId__534D60F1" />
+        <AssociationConnector Association="ApplicationModel.FK__PurchaseO__Suppl__59FA5E80" />
+        <AssociationConnector Association="ApplicationModel.FK__SubGRN__GRNId__5629CD9C" />
+        <AssociationConnector Association="ApplicationModel.FK__ItemStock__ItemI__4222D4EF" />
+        <AssociationConnector Association="ApplicationModel.FK__OpeningSt__ItemI__3C69FB99" />
+        <AssociationConnector Association="ApplicationModel.FK__SubGRN__ItemId__571DF1D5" />
+        <AssociationConnector Association="ApplicationModel.FK__SubPurcha__ItemI__5CD6CB2B" />
+        <AssociationConnector Association="ApplicationModel.FK__SubPurchas__POId__5DCAEF64" />
+        <EntityTypeShape EntityType="ApplicationModel.ItemStock" Width="1.5" PointX="5" PointY="17.375" />
+        <AssociationConnector Association="ApplicationModel.FK__ItemStock__ItemI__3F466844" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
